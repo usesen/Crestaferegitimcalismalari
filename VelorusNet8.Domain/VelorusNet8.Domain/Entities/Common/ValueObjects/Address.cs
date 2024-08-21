@@ -2,14 +2,18 @@
 
 public class Address : ValueObject
 {
-    public string Street { get; }
-    public string City { get; }
-    public string PostalCode { get; }
-    public string Country { get; }
+    public string Street { get; private set; }  // Sokak
+    public string Neighborhood { get; private set; }  // Mahalle
+    public string District { get; private set; }  // İlçe
+    public string City { get; private set; }  // Şehir
+    public string PostalCode { get; private set; }  // Posta Kodu
+    public string Country { get; private set; }  // Ülke
 
-    public Address(string street, string city, string postalCode, string country)
+    public Address(string street, string neighborhood, string district, string city, string postalCode, string country)
     {
         Street = street;
+        Neighborhood = neighborhood;
+        District = district;
         City = city;
         PostalCode = postalCode;
         Country = country;
@@ -20,6 +24,8 @@ public class Address : ValueObject
     {
         return obj is Address address &&
                Street == address.Street &&
+               Neighborhood == address.Neighborhood &&
+               District == address.District &&
                City == address.City &&
                PostalCode == address.PostalCode &&
                Country == address.Country;
@@ -27,12 +33,14 @@ public class Address : ValueObject
     protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Street;
+        yield return Neighborhood;
+        yield return District;
         yield return City;
         yield return PostalCode;
         yield return Country;
     }
     public override int GetHashCode()
     {
-        return HashCode.Combine(Street, City, PostalCode, Country);
+        return HashCode.Combine(Street,Neighborhood,District, City, PostalCode, Country);
     }
 }

@@ -38,6 +38,8 @@ public class Customer : EntityBase
     {
         Address = newAddress ?? throw new ArgumentNullException(nameof(newAddress));
     }
+
+
     public override bool Equals(object obj)
     {
         return obj is Customer customer && Id == customer.Id;
