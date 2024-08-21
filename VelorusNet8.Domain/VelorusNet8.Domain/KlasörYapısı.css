@@ -1,0 +1,18 @@
+﻿Domain/
+├── Entities/
+│ ├── Aggregates/
+│ │ ├── CustomerAggregate/
+│ │ │ ├── Customer.cs
+│ │ │ ├── Address.cs
+│ │ │ └── Order.cs
+│ │ ├── SalesAggregate/
+│ │ │ ├── Product.cs
+│ │ │ ├── Invoice.cs
+│ │ │ └── Payment.cs
+│ │ └── ... (diğer Aggregates)
+│ ├── BaseEntity.cs
+│ ├── IEntity.cs
+│ ├── ValueObjects/
+│ │ ├── Money.cs
+│ │ └── Address.cs
+│ └── ... (diğer Entity'ler)

@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.34928.147
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VelorusNet8.Domain", "VelorusNet8.Domain\VelorusNet8.Domain\VelorusNet8.Domain.csproj", "{48FDAB5D-A0CB-47CC-8F3B-5EA4263AF38A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VelorusNet8.Application", "VelorusNet8.Application\VelorusNet8.Application\VelorusNet8.Application.csproj", "{7E72353C-1B03-4625-859A-1303B9F686F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VelorusNet8.Infrastructure", "VelorusNet8.Infrastructure\VelorusNet8.Infrastructure\VelorusNet8.Infrastructure.csproj", "{E90F7A42-FDF6-4287-8D42-1B5DDAD8E64B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VelorusNet8.TestConsole", "VelorusNet8.TestConsole\VelorusNet8.TestConsole\VelorusNet8.TestConsole.csproj", "{2CC7F618-6773-4A5F-A4E2-002EABDF4DD6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VelorusNet8.UnitTest", "VelorusNet8.UnitTest\VelorusNet8.UnitTest\VelorusNet8.UnitTest.csproj", "{26A4A6A8-9C38-4642-9A6E-7E3FD5B38E21}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VelorusNet8.WebApi", "VelorusNet8.Presentation\VelorusNet8.WebApi\VelorusNet8.WebApi.csproj", "{F5D97C50-9461-458A-85B1-EFA8C33DF564}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{48FDAB5D-A0CB-47CC-8F3B-5EA4263AF38A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48FDAB5D-A0CB-47CC-8F3B-5EA4263AF38A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48FDAB5D-A0CB-47CC-8F3B-5EA4263AF38A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48FDAB5D-A0CB-47CC-8F3B-5EA4263AF38A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E72353C-1B03-4625-859A-1303B9F686F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E72353C-1B03-4625-859A-1303B9F686F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E72353C-1B03-4625-859A-1303B9F686F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E72353C-1B03-4625-859A-1303B9F686F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E90F7A42-FDF6-4287-8D42-1B5DDAD8E64B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E90F7A42-FDF6-4287-8D42-1B5DDAD8E64B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E90F7A42-FDF6-4287-8D42-1B5DDAD8E64B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E90F7A42-FDF6-4287-8D42-1B5DDAD8E64B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CC7F618-6773-4A5F-A4E2-002EABDF4DD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CC7F618-6773-4A5F-A4E2-002EABDF4DD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CC7F618-6773-4A5F-A4E2-002EABDF4DD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CC7F618-6773-4A5F-A4E2-002EABDF4DD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26A4A6A8-9C38-4642-9A6E-7E3FD5B38E21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26A4A6A8-9C38-4642-9A6E-7E3FD5B38E21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26A4A6A8-9C38-4642-9A6E-7E3FD5B38E21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26A4A6A8-9C38-4642-9A6E-7E3FD5B38E21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5D97C50-9461-458A-85B1-EFA8C33DF564}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5D97C50-9461-458A-85B1-EFA8C33DF564}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5D97C50-9461-458A-85B1-EFA8C33DF564}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5D97C50-9461-458A-85B1-EFA8C33DF564}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7ADE8722-150C-4380-A157-D24EF943E7CF}
+	EndGlobalSection
+EndGlobal
