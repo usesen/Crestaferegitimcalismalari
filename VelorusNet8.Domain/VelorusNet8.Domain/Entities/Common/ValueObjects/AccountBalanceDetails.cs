@@ -1,4 +1,4 @@
-﻿namespace VelorusNet8.Domain.Entities.Aggregates.Business.ValueOnject;
+﻿namespace VelorusNet8.Domain.Entities.Common.ValueObjects;
 
 public class AccountBalanceDetails
 {
@@ -21,7 +21,7 @@ public class AccountBalanceDetails
     }
     public decimal CalculateNetBalance()
     {
-        return (DebitBalance - CreditBalance) + (OpeningDebitBalance - OpeningCreditBalance);
+        return DebitBalance - CreditBalance + (OpeningDebitBalance - OpeningCreditBalance);
     }
 
     public override bool Equals(object obj)

@@ -43,13 +43,5 @@ public class Branch
         return HashCode.Combine(BranchName, BranchCode, BranchAddress);
     }
 
-    public override string ToString()
-    {
-        return $"Branch: {BranchName} (Code: {BranchCode}), Address: {BranchAddress}";
-    }
-
-    public string GetFormattedAddress()
-    {
-        return BranchAddress.ToString();
-    }
+     
 }

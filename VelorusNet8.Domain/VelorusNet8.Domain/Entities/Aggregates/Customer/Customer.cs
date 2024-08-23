@@ -1,4 +1,4 @@
-﻿using VelorusNet8.Domain.Entities.Aggregates.User;
+﻿using VelorusNet8.Domain.Entities.Aggregates.Users;
 using VelorusNet8.Domain.Entities.Common;
 using VelorusNet8.Domain.Entities.Common.ValueObjects;
 
@@ -11,7 +11,7 @@ public class Customer : EntityBase
     public Address Address { get; private set; }
     
 
-    public Customer(int id, string firstName, string lastName, EmailAddress email, Address address, UserAccount userAccount)   : base (userAccount)
+    public Customer(int id, string firstName, string lastName, EmailAddress email, Address address, int userId ) : base(userId)    
     {
         Id = id;
         FirstName = firstName ?? throw new ArgumentNullException(nameof(firstName));

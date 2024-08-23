@@ -55,17 +55,29 @@ public class FinanceGeneralSettings
     }
     public override int GetHashCode()
     {
-        return HashCode.Combine(InvoiceDueDays, GeneralPaymentDueDays, DiscountByDueDate, BranchPaymentDueDays,
-                                ReceiptPortfolio, InterestRate, DiscountRate1, DiscountAmount1, DiscountRate2,
-                                DiscountAmount2, RiskAmountLocal, RiskAmountForeign, CustomerLocation);
+        int hash = HashCode.Combine(InvoiceDueDays, GeneralPaymentDueDays, DiscountByDueDate, BranchPaymentDueDays,
+                                    ReceiptPortfolio, InterestRate, DiscountRate1, DiscountAmount1);
+
+        hash = HashCode.Combine(hash, DiscountRate2, DiscountAmount2, RiskAmountLocal, RiskAmountForeign, CustomerLocation);
+
+        return hash;
+    }
+    public override bool Equals(object obj)
+    {
+        return obj is FinanceGeneralSettings settings &&
+               InvoiceDueDays == settings.InvoiceDueDays &&
+               GeneralPaymentDueDays == settings.GeneralPaymentDueDays &&
+               DiscountByDueDate == settings.DiscountByDueDate &&
+               BranchPaymentDueDays == settings.BranchPaymentDueDays &&
+               ReceiptPortfolio == settings.ReceiptPortfolio &&
+               InterestRate == settings.InterestRate &&
+               DiscountRate1 == settings.DiscountRate1 &&
+               DiscountAmount1 == settings.DiscountAmount1 &&
+               DiscountRate2 == settings.DiscountRate2 &&
+               DiscountAmount2 == settings.DiscountAmount2 &&
+               RiskAmountLocal == settings.RiskAmountLocal &&
+               RiskAmountForeign == settings.RiskAmountForeign &&
+               CustomerLocation == settings.CustomerLocation;
     }
 
-    public override string ToString()
-    {
-        return $"Invoice Due Days: {InvoiceDueDays}, General Payment Due Days: {GeneralPaymentDueDays}, " +
-               $"Discount By Due Date: {DiscountByDueDate}, Branch Payment Due Days: {BranchPaymentDueDays}, " +
-               $"Receipt Portfolio: {ReceiptPortfolio}, Interest Rate: {InterestRate}, Discount Rate 1: {DiscountRate1}%, " +
-               $"Discount Amount 1: {DiscountAmount1} TL, Discount Rate 2: {DiscountRate2}%, Discount Amount 2: {DiscountAmount2} TL, " +
-               $"Risk Amount Local: {RiskAmountLocal}, Risk Amount Foreign: {RiskAmountForeign}, Customer Location: {CustomerLocation}";
-    }
 }

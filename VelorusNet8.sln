@@ -3,17 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.34928.147
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VelorusNet8.Domain", "VelorusNet8.Domain\VelorusNet8.Domain\VelorusNet8.Domain.csproj", "{48FDAB5D-A0CB-47CC-8F3B-5EA4263AF38A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VelorusNet8.Domain", "VelorusNet8.Domain\VelorusNet8.Domain\VelorusNet8.Domain.csproj", "{48FDAB5D-A0CB-47CC-8F3B-5EA4263AF38A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VelorusNet8.Application", "VelorusNet8.Application\VelorusNet8.Application\VelorusNet8.Application.csproj", "{7E72353C-1B03-4625-859A-1303B9F686F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VelorusNet8.Application", "VelorusNet8.Application\VelorusNet8.Application\VelorusNet8.Application.csproj", "{7E72353C-1B03-4625-859A-1303B9F686F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VelorusNet8.Infrastructure", "VelorusNet8.Infrastructure\VelorusNet8.Infrastructure\VelorusNet8.Infrastructure.csproj", "{E90F7A42-FDF6-4287-8D42-1B5DDAD8E64B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VelorusNet8.Infrastructure", "VelorusNet8.Infrastructure\VelorusNet8.Infrastructure\VelorusNet8.Infrastructure.csproj", "{E90F7A42-FDF6-4287-8D42-1B5DDAD8E64B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VelorusNet8.TestConsole", "VelorusNet8.TestConsole\VelorusNet8.TestConsole\VelorusNet8.TestConsole.csproj", "{2CC7F618-6773-4A5F-A4E2-002EABDF4DD6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VelorusNet8.TestConsole", "VelorusNet8.TestConsole\VelorusNet8.TestConsole\VelorusNet8.TestConsole.csproj", "{2CC7F618-6773-4A5F-A4E2-002EABDF4DD6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VelorusNet8.UnitTest", "VelorusNet8.UnitTest\VelorusNet8.UnitTest\VelorusNet8.UnitTest.csproj", "{26A4A6A8-9C38-4642-9A6E-7E3FD5B38E21}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VelorusNet8.UnitTest", "VelorusNet8.UnitTest\VelorusNet8.UnitTest\VelorusNet8.UnitTest.csproj", "{26A4A6A8-9C38-4642-9A6E-7E3FD5B38E21}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VelorusNet8.WebApi", "VelorusNet8.Presentation\VelorusNet8.WebApi\VelorusNet8.WebApi.csproj", "{F5D97C50-9461-458A-85B1-EFA8C33DF564}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VelorusNet8.WebApi", "VelorusNet8.Presentation\VelorusNet8.WebApi\VelorusNet8.WebApi.csproj", "{F5D97C50-9461-458A-85B1-EFA8C33DF564}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserSubeEntegrasyonTest", "UserSubeEntegrasyonTest\UserSubeEntegrasyonTest.csproj", "{121A4AC0-3C5E-4868-86D0-01C7C3BC489F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{F5D97C50-9461-458A-85B1-EFA8C33DF564}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5D97C50-9461-458A-85B1-EFA8C33DF564}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5D97C50-9461-458A-85B1-EFA8C33DF564}.Release|Any CPU.Build.0 = Release|Any CPU
+		{121A4AC0-3C5E-4868-86D0-01C7C3BC489F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{121A4AC0-3C5E-4868-86D0-01C7C3BC489F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{121A4AC0-3C5E-4868-86D0-01C7C3BC489F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{121A4AC0-3C5E-4868-86D0-01C7C3BC489F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

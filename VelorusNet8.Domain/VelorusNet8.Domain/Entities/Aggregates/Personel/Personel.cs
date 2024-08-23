@@ -1,81 +1,69 @@
-﻿using VelorusNet8.Domain.Entities.Aggregates.User;
+﻿using VelorusNet8.Domain.Entities.Aggregates.Users;
 using VelorusNet8.Domain.Entities.Common;
 using VelorusNet8.Domain.Entities.Common.ValueObjects;
 
 namespace VelorusNet8.Domain.Entities.Aggregates.Personel;
 
-public class Personel : EntityBase
+public class PersonnelInformation : EntityBase // personel bilgileri
 {
-    public string FirstName { get; private set; }  // Personelin Adı
-    public string LastName { get; private set; }  // Personelin Soyadı
-    public string NationalId { get; private set; }  // T.C. Kimlik Numarası
-    public string Email { get; private set; }  // Personel E-posta Adresi
-    public string PhoneNumber { get; private set; }  // Telefon Numarası
-    public Address Address { get; private set; }  // Adres Bilgisi (Value Object olarak tanımlanmış Address)
-    public DateTime HireDate { get; private set; }  // İşe Başlama Tarihi
-    public string Position { get; private set; }  // Personelin Pozisyonu
-    public decimal Salary { get; private set; }  // Maaş Bilgisi
-    public bool IsActive { get; private set; }  // Aktif mi Pasif mi?
-    public string OtomasyonKodu { get; private set; }  // Otomasyon Kodu
-    public string Department { get; private set; }  // Departman
-    public string Grubu { get; private set; }  // Grubu
-    public decimal BorcBakiye { get; private set; }  // Borç Bakiye
-    public decimal AlacakBakiye { get; private set; }  // Alacak Bakiye
-    public decimal Prim { get; private set; }  // Prim
-    public DateTime GirisTarihi { get; private set; }  // Giriş Tarihi
-    public string Aciklama { get; private set; }  // Açıklama
-
-    public Personel(int id, UserAccount account, string firstName, string lastName, string nationalId, string email, string phoneNumber, Address address, DateTime hireDate, string position, decimal salary, string otomasyonKodu, string department, string grubu, decimal borcBakiye, decimal alacakBakiye, decimal prim, DateTime girisTarihi, string aciklama)
-        : base(account)
+    public string PersonnelCode { get; set; }  // Personel Kodu
+    public string FullName { get; set; }  // Adı Soyadı
+    public string AutomationCode { get; set; }  // Otomasyon Kodu
+    public string Group { get; set; }  // Grubu
+    public Address Address { get; set; }  // Adres
+    public EmailAddress Email { get; set; }  // Eposta
+    public string Phone { get; set; }  // Telefon
+    public string Mobile { get; set; }  // Gsm
+    public decimal Commission { get; set; }  // Prim
+    public decimal NetSalary { get; set; }  // Net Maaş
+    public decimal TaxReduction { get; set; }  // iA.G.İ (Income Tax Reduction)
+    public DateTime StartDate { get; set; }  // Giriş tarihi
+    public DateTime? TerminationDate { get; set; }  // İşten ayrılma tarihi
+    public string NationalId { get; set; }  // Kimlik No
+    public string VendorCode { get; set; }  // Satıcı Kod
+    public string TerminationReason { get; set; }  // Ayrılma Sebebi
+    public bool IsActive { get; set; } // aktif / pasif
+   
+ 
+    // Tüm özellikleri alan constructor
+    public PersonnelInformation(
+        string personnelCode,
+        string fullName,
+        string automationCode,
+        string group,
+        Address address,
+        EmailAddress email,
+        string phone,
+        string mobile,
+        decimal commission,
+        decimal netSalary,
+        decimal taxReduction,
+        DateTime startDate,
+        DateTime? terminationDate,
+        string nationalId,
+        string vendorCode,
+        string terminationReason,
+        int userId)  : base(userId)
     {
-        FirstName = firstName;
-        LastName = lastName;
-        NationalId = nationalId;
-        Email = email;
-        PhoneNumber = phoneNumber;
+        PersonnelCode = personnelCode;
+        FullName = fullName;
+        AutomationCode = automationCode;
+        Group = group;
         Address = address;
-        HireDate = hireDate;
-        Position = position;
-        Salary = salary;
-        OtomasyonKodu = otomasyonKodu;
-        Department = department;
-        Grubu = grubu;
-        BorcBakiye = borcBakiye;
-        AlacakBakiye = alacakBakiye;
-        Prim = prim;
-        GirisTarihi = girisTarihi;
-        Aciklama = aciklama;
-        IsActive = true; // Default olarak aktif
-    }
-
-    // Personelin bilgilerini güncellemek için metodlar
-    public void UpdateContactInformation(string email, string phoneNumber)
-    {
         Email = email;
-        PhoneNumber = phoneNumber;
-        UpdateEntity();
+        Phone = phone;
+        Mobile = mobile;
+        Commission = commission;
+        NetSalary = netSalary;
+        TaxReduction = taxReduction;
+        StartDate = startDate;
+        TerminationDate = terminationDate;
+        NationalId = nationalId;
+        VendorCode = vendorCode;
+        TerminationReason = terminationReason;
     }
 
-    public void UpdateAddress(Address newAddress)
-    {
-        Address = newAddress;
-        UpdateEntity();
-    }
 
-    public void ChangePosition(string newPosition, decimal newSalary)
-    {
-        Position = newPosition;
-        Salary = newSalary;
-        UpdateEntity();
-    }
-
-    public void UpdateFinancials(decimal borcBakiye, decimal alacakBakiye, decimal prim)
-    {
-        BorcBakiye = borcBakiye;
-        AlacakBakiye = alacakBakiye;
-        Prim = prim;
-        UpdateEntity();
-    }
 
     public void Deactivate()
     {
@@ -88,5 +76,38 @@ public class Personel : EntityBase
         IsActive = true;
         UpdateEntity();
     }
+
+    public override int GetHashCode()
+    {
+        int hash1 = HashCode.Combine(PersonnelCode, FullName, AutomationCode, Group, Address, Email, Phone, Mobile);
+        int hash2 = HashCode.Combine(Commission, NetSalary, TaxReduction, StartDate, TerminationDate);
+        int hash3 = HashCode.Combine(NationalId, VendorCode, TerminationReason);
+
+        return HashCode.Combine(hash1, hash2, hash3);
+    }
+    public override bool Equals(object? obj)
+    {
+        if (obj == null || GetType() != obj.GetType())
+            return false;
+
+        var other = (PersonnelInformation)obj;
+        return PersonnelCode == other.PersonnelCode &&
+               FullName == other.FullName &&
+               AutomationCode == other.AutomationCode &&
+               Group == other.Group &&
+               Address == other.Address &&
+               Email == other.Email &&
+               Phone == other.Phone &&
+               Mobile == other.Mobile &&
+               Commission == other.Commission &&
+               NetSalary == other.NetSalary &&
+               TaxReduction == other.TaxReduction &&
+               StartDate == other.StartDate &&
+               TerminationDate == other.TerminationDate &&
+               NationalId == other.NationalId &&
+               VendorCode == other.VendorCode &&
+               TerminationReason == other.TerminationReason;
+    }
+
 }
 

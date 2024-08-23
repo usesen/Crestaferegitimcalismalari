@@ -1,5 +1,5 @@
 ﻿using VelorusNet8.Domain.Entities.Aggregates.Business.ValueOnject;
-using VelorusNet8.Domain.Entities.Aggregates.User;
+using VelorusNet8.Domain.Entities.Aggregates.Users;
 using VelorusNet8.Domain.Entities.Common;
 using VelorusNet8.Domain.Entities.Common.Enum;
 using VelorusNet8.Domain.Entities.Common.ValueObjects;
@@ -36,8 +36,7 @@ public class BusinessEntity : EntityBase
                              string customerRepresentativeCode, string identityNumber,
                              IList<BankAccount> bankAccounts, FinanceGeneralSettings financeGeneralSettings,
                              FinancialSummary financialSummary, UserAccount userAccount, TaxInformation taxInformation,
-                             AccountBalanceDetails accountBalanceDetails, Branch branch, ContactInformation contactInformation, bool isActive = true )
-           : base(userAccount)
+                             AccountBalanceDetails accountBalanceDetails, Branch branch, ContactInformation contactInformation, int userId , bool isActive = true) : base(userId)
     {
         CompanyName = companyName;
         Address = address;
