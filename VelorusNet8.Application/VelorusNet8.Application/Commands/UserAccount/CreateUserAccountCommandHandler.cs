@@ -15,7 +15,7 @@ public class CreateUserAccountCommandHandler : IRequestHandler<CreateUserAccount
 
     public async Task<int> Handle(CreateUserAccountCommand request, CancellationToken cancellationToken)
     {
-        var userAccount = new VelorusNet8.Domain.Entities.Aggregates.Users.UserAccount(0,request.UserName, request.Email, HashPassword(request.Password));
+        var userAccount = new VelorusNet8.Domain.Entities.Aggregates.Users.UserAccount(0,request.UserName, request.Email, HashPassword(request.PasswordHash));
 
         await _userRepository.CreateAsync(userAccount, cancellationToken);
 

@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
+using MediatR;
+using VelorusNet8.Application.Commands.UserAccount;
 using VelorusNet8.Application.Dto.User;
 using VelorusNet8.Application.Exception;
 using VelorusNet8.Application.Interface;
+using VelorusNet8.Application.Queries;
 using VelorusNet8.Domain.Entities.Aggregates.Users;
 using VelorusNet8.Domain.Repositories;
 
@@ -11,11 +14,15 @@ public class UserService : IUserAccountService
 {
     private readonly IUserAccountRepository _userAccountRepository;
     private readonly IMapper _mapper;
+    private readonly UserAccountCommandValidator _validator;
+    private readonly IMediator _mediator;
 
-    public UserService(IUserAccountRepository userRepository, IMapper mapper)
+
+    public UserService(IUserAccountRepository userRepository, IMapper mapper, UserAccountCommandValidator validator)
     {
         _userAccountRepository = userRepository;
         _mapper = mapper;
+        _validator = validator;
     }
 
     public async Task CreateUserAsync(CreateUserDto createUserDto, CancellationToken cancellationToken)
@@ -54,16 +61,14 @@ public class UserService : IUserAccountService
 
     public async Task<UserAccountDto> GetUserByIdAsync(int id, CancellationToken cancellationToken)
     {
-        var user = await _userAccountRepository.GetByIdAsync(id, cancellationToken);
-        if (user == null)
-        {
-            throw new NotFoundException($"User with ID {id} not found.");
-        }
-        return _mapper.Map<UserAccountDto>(user);
+        var query = new GetUserAcountByIdQuery(id);
+        return await _mediator.Send(query, cancellationToken);
+       
     }
 
     public async Task UpdateUserAsync(int id, UpdateUserDto updateUserDto, CancellationToken cancellationToken)
     {
+
         var user = await _userAccountRepository.GetByIdAsync(id, cancellationToken);
         if (user == null)
         {
