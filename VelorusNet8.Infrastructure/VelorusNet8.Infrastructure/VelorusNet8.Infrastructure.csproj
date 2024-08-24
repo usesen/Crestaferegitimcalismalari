@@ -8,6 +8,10 @@
 
   <ItemGroup>
     <Folder Include="CrossCutting\" />
+    <Folder Include="Configurations\" />
+    <Folder Include="Mapping\" />
+    <Folder Include="Extensions\" />
+    <Folder Include="Utilities\" />
     <Folder Include="Repositories\" />
     <Folder Include="Services\" />
   </ItemGroup>

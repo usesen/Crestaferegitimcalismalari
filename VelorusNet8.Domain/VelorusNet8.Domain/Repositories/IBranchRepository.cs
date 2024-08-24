@@ -2,12 +2,12 @@
 
 namespace VelorusNet8.Domain.Repositories;
 
-public interface IBranchRepository : IBaseRepository<Branch>
+public interface IBranchRepository : IBaseRepository<BranchEntity>
 {
-    Task CreateAsync(Branch entity, CancellationToken cancellationToken);
-    Task<Branch> GetByIdAsync(int id, CancellationToken cancellationToken);
-    Task<IEnumerable<Branch>> GetAllAsync(CancellationToken cancellationToken);
-    Task UpdateAsync(Branch entity, CancellationToken cancellationToken);
-    Task DeleteAsync(Branch entity, CancellationToken cancellationToken);
-    Task<Branch> GetBranchNameAsync(string username, CancellationToken cancellationToken);
+    Task CreateAsync(BranchEntity entity, CancellationToken cancellationToken);
+    Task<BranchEntity> GetByIdAsync(int id, CancellationToken cancellationToken);
+    Task<IEnumerable<BranchEntity>> GetAllAsync(CancellationToken cancellationToken);
+    Task UpdateAsync(BranchEntity entity, CancellationToken cancellationToken);
+    Task DeleteAsync(BranchEntity entity, CancellationToken cancellationToken);
+    Task<BranchEntity> GetBranchNameAsync(string username, CancellationToken cancellationToken);
 }

@@ -8,7 +8,7 @@ public class UserBranch
     public UserAccount UserAccount { get; private set; }
 
     public int BranchId { get; private set; }
-    public Branch Branch { get; private set; }
+    public BranchEntity Branch { get; private set; }
 
     // Constructor'da sadece mapped (veritabanında doğrudan eşlenen) özellikleri kullanıyoruz
     public UserBranch(int userId, int branchId)
@@ -23,7 +23,7 @@ public class UserBranch
         UserAccount = userAccount ?? throw new ArgumentNullException(nameof(userAccount));
     }
 
-    public void SetBranch(Branch branch)
+    public void SetBranch(BranchEntity branch)
     {
         Branch = branch ?? throw new ArgumentNullException(nameof(branch));
     }

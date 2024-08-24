@@ -1,6 +1,6 @@
 ﻿namespace VelorusNet8.Domain.Entities.Aggregates.Branchs;
 
-public class Branch
+public class BranchEntity
 {
     public string BranchCode { get; set; }  // Şube Kodu
     public string BranchName { get; set; }  // Şube Adı
@@ -14,13 +14,15 @@ public class Branch
     public bool IsHeadOffice { get; set; }  // Merkez
     public bool IsSalesEnabled { get; set; }  // Satış
     public bool IsAutomationIntegrationEnabled { get; set; }  // Otomasyon Entegrasyon
+    public bool IsActive { get; set; } = true; // aktif pasif olayları
+
 
     public override bool Equals(object obj)
     {
         if (obj == null || GetType() != obj.GetType())
             return false;
 
-        var other = (Branch)obj;
+        var other = (BranchEntity)obj;
         return BranchCode == other.BranchCode &&
                BranchName == other.BranchName &&
                Address == other.Address &&

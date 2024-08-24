@@ -17,7 +17,7 @@ public class UserAccountDomainService : IUserAccountDomainService
     {
         if (entity == null)
         {
-            throw new ArgumentNullException(nameof(entity));
+            throw new NotFoundException(nameof(entity));
         }
 
         // İlgili iş mantığını burada gerçekleştirin
@@ -30,7 +30,7 @@ public class UserAccountDomainService : IUserAccountDomainService
     {
         if (entity == null)
         {
-            throw new ArgumentNullException(nameof(entity));
+            throw new NotFoundException(nameof(entity));
         }
 
         // Kullanıcıyı silme işlemine başlamadan önce iş mantığı burada yapılabilir
@@ -49,7 +49,7 @@ public class UserAccountDomainService : IUserAccountDomainService
     {
         if (string.IsNullOrWhiteSpace(email))
         {
-            throw new ArgumentException("Email cannot be null or empty.", nameof(email));
+            throw new NotFoundException("Email cannot be null or empty." + nameof(email).ToString());
         }
 
         // Kullanıcıyı email ile almak için repository metodunu çağırıyoruz
@@ -67,7 +67,7 @@ public class UserAccountDomainService : IUserAccountDomainService
     {
         if (id <= 0)
         {
-            throw new ArgumentException("ID must be greater than zero.", nameof(id));
+            throw new NotFoundException("ID must be greater than zero." + nameof(id).ToString());
         }
 
         // Kullanıcıyı ID ile almak için repository metodunu çağırıyoruz
@@ -85,7 +85,7 @@ public class UserAccountDomainService : IUserAccountDomainService
     {
         if (string.IsNullOrWhiteSpace(username))
         {
-            throw new ArgumentException("Username cannot be null or empty.", nameof(username));
+            throw new NotFoundException("Username cannot be null or empty." + nameof(username).ToString());
         }
 
         // Kullanıcıyı kullanıcı adı ile almak için repository metodunu çağırıyoruz
@@ -103,7 +103,7 @@ public class UserAccountDomainService : IUserAccountDomainService
     {
         if (entity == null)
         {
-            throw new ArgumentNullException(nameof(entity));
+            throw new NotFoundException(nameof(entity));
         }
 
         // Kullanıcıyı güncellemeden önce iş mantığı burada yapılabilir

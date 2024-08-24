@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using VelorusNet8.Application.Dto.User;
 
-namespace VelorusNet8.Application.Queries;
+namespace VelorusNet8.Application.Queries.UserAccount;
 
-public  class GetUserAcountByIdQuery :IRequest<UserAccountDto>
+public class GetUserAcountByIdQuery : IRequest<UserAccountDto>
 {
     public int userId { get; set; }
 

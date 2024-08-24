@@ -5,7 +5,7 @@ namespace VelorusNet8.Domain.Entities.Aggregates.Users;
 public class UserAccount : EntityBase
 {
 
-   
+    public int UserId { get; set; }
     public string UserName { get; private set; } // Kullanıcı ismi
     public string Email { get; private set; } // kullanıcı mail
     public string PasswordHash { get; private set; }  // Şifreyi hash olarak tutmak daha güvenli
@@ -15,6 +15,7 @@ public class UserAccount : EntityBase
 
     public UserAccount(int userId, string username, string email, string passwordHash , bool isActive) : base(userId)  // UserId'yi EntityBase constructor'ına geçiyoruz
     {
+        UserId = userId;
         UserName = username ?? throw new ArgumentNullException(nameof(username));
         Email = email ?? throw new ArgumentNullException(nameof(email));
         PasswordHash = passwordHash ?? throw new ArgumentNullException(nameof(passwordHash));

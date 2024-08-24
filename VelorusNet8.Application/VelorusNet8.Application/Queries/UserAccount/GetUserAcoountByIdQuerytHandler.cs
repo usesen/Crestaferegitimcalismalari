@@ -4,7 +4,7 @@ using VelorusNet8.Application.Dto.User;
 using VelorusNet8.Application.Exception;
 using VelorusNet8.Domain.Repositories;
 
-namespace VelorusNet8.Application.Queries;
+namespace VelorusNet8.Application.Queries.UserAccount;
 
 public class GetUserAcoountByIdQuerytHandler : IRequestHandler<GetUserAcountByIdQuery, UserAccountDto>
 {
@@ -19,7 +19,7 @@ public class GetUserAcoountByIdQuerytHandler : IRequestHandler<GetUserAcountById
 
     public async Task<UserAccountDto> Handle(GetUserAcountByIdQuery request, CancellationToken cancellationToken)
     {
-        var userAccount = await _userAccountRepository.GetByIdAsync(request.userId,cancellationToken);
+        var userAccount = await _userAccountRepository.GetByIdAsync(request.userId, cancellationToken);
         if (userAccount == null)
         {
             throw new NotFoundException($"UserAccount with ID {request.userId} not found.");
@@ -27,5 +27,5 @@ public class GetUserAcoountByIdQuerytHandler : IRequestHandler<GetUserAcountById
         // UserAccount domain nesnesini UserAccountDto'ya dönüştürüyoruz.
         return _mapper.Map<UserAccountDto>(userAccount);
     }
-      
+
 }
