@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace VelorusNet8.Application.Commands.UserAccount;
+namespace VelorusNet8.Application.Commands.UserAccountDto;
 
 public class CreateUserAccountCommand : IRequest<int>  // int burada command sonucunda dönecek değeri temsil eder, örneğin yeni kullanıcının ID'si
 {
@@ -14,5 +14,6 @@ public class CreateUserAccountCommand : IRequest<int>  // int burada command son
         Email = email;
         IsActive = isActive;
         PasswordHash = passwordHash;
+         
     }
 }

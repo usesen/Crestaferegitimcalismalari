@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace VelorusNet8.Application.Commands.UserAccount;
+namespace VelorusNet8.Application.Commands.UserAccountDto;
 
 public class UpdateUserAccountCommand : IRequest<Unit>
 {

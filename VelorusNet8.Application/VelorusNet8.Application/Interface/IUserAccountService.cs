@@ -3,7 +3,7 @@ using VelorusNet8.Application.Dto.User;
 
 namespace VelorusNet8.Application.Interface;
 
-public interface IUserAccountService
+public interface IUserAccountApplicationService
 {
     Task<UserAccountDto> GetUserByIdAsync(int id, CancellationToken cancellationToken);
     Task<IEnumerable<UserAccountDto>> GetAllUsersAsync(CancellationToken cancellationToken);

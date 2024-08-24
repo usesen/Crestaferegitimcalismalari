@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VelorusNet8.Application.Dto.User;
 
-namespace VelorusNet8.Application.Commands.UserAccount;
+namespace VelorusNet8.Application.Commands.UserAccountDto;
 
-public  class UserAccountCommandValidator : AbstractValidator<CreateUserAccountCommand>
+public  class UserAccountCommandValidator : AbstractValidator<CreateUserDto>
 {
     public UserAccountCommandValidator()
     {

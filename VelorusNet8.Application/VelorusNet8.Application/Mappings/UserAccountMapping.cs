@@ -16,7 +16,7 @@ public class UserAccountMapping : Profile
 
         // UserDto -> UserAccount Mapping
         CreateMap<UserAccountDto, UserAccount>()
-            .ConstructUsing(dto => new UserAccount(0, dto.UserName, dto.Email, string.Empty)) // PasswordHash varsayılan olarak boş veriliyor
+            .ConstructUsing(dto => new UserAccount(0, dto.UserName, dto.Email, dto.PasswordHash, dto.IsActive)) // PasswordHash varsayılan olarak boş veriliyor
             .ForMember(dest => dest.PasswordHash, opt => opt.Ignore()); // PasswordHash'i DTO'dan map etmiyoruz
     }
 }

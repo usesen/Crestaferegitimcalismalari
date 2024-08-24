@@ -2,7 +2,7 @@
 using VelorusNet8.Application.Exception;
 using VelorusNet8.Domain.Repositories;
 
-namespace VelorusNet8.Application.Commands.UserAccount;
+namespace VelorusNet8.Application.Commands.UserAccountDto;
 
 public class UpdateUserAccountCommandHandler : IRequestHandler<UpdateUserAccountCommand, Unit>
 {

@@ -13,12 +13,12 @@ public class UserAccount : EntityBase
     // UserBranches özelliği: Bir kullanıcı birden fazla şubeye atanabilir
     public List<UserBranch> UserBranches { get; private set; } = new List<UserBranch>();
 
-    public UserAccount(int userId, string username, string email, string passwordHash ) : base(userId)  // UserId'yi EntityBase constructor'ına geçiyoruz
+    public UserAccount(int userId, string username, string email, string passwordHash , bool isActive) : base(userId)  // UserId'yi EntityBase constructor'ına geçiyoruz
     {
         UserName = username ?? throw new ArgumentNullException(nameof(username));
         Email = email ?? throw new ArgumentNullException(nameof(email));
         PasswordHash = passwordHash ?? throw new ArgumentNullException(nameof(passwordHash));
-
+        IsActive = isActive;
     }
 
 

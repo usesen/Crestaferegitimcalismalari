@@ -19,14 +19,16 @@ public sealed class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<
 
         var context = new ValidationContext<TRequest>(request);
 
-        var errors = _validators
-            .Select(x => x.Validate(context))
-            .SelectMany(x => x.Errors)
-            .Where(x => x != null)
-            .Select(x => x.ErrorMessage)
-            .Distinct()
-            .ToArray();
-
+        var failures = _validators
+         .Select(v => v.Validate(context))
+         .SelectMany(result => result.Errors)
+         .Where(f => f != null)
+         .ToList();
+       
+        if (failures.Count != 0)
+        {
+            throw new ValidationException(failures);
+        }
 
 
         return await next();
