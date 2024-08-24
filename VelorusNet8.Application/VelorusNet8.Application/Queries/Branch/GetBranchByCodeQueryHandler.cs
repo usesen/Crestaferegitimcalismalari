@@ -20,6 +20,6 @@ public class GetBranchByCodeQueryHandler : IRequestHandler<GetBranchByCodeQuery,
 
     public async Task<BranchDto> Handle(GetBranchByCodeQuery request, CancellationToken cancellationToken)
     {
-        return await _branchService.GetBranchByCodeAsync(request.BranchCode, cancellationToken);
+        return await _branchService.GetBranchByIdAsync(request.BranchId, cancellationToken);
     }
 }

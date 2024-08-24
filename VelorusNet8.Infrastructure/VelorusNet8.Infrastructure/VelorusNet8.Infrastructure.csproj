@@ -9,11 +9,11 @@
   <ItemGroup>
     <Folder Include="CrossCutting\" />
     <Folder Include="Configurations\" />
-    <Folder Include="Mapping\" />
     <Folder Include="Extensions\" />
+    <Folder Include="Mapping\" />
+    <Folder Include="Services\" />
     <Folder Include="Utilities\" />
     <Folder Include="Repositories\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
   <ItemGroup>

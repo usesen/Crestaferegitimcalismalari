@@ -1,72 +1,68 @@
 ﻿using VelorusNet8.Domain.Entities.Aggregates.Branchs;
+using VelorusNet8.Domain.Exceptions;
 
 namespace VelorusNet8.Domain.Services.Branchs;
 
-public  class BranchDomainService
+public class BranchDomainService : IBranchDomainService
 {
-    private readonly List<BranchEntity> _branches = new List<BranchEntity>();
+    private readonly IBranchDomainService _branchDomainService;
 
-    public async Task<BranchEntity> GetByIdAsync(string branchCode, CancellationToken cancellationToken)
+    public async Task<BranchEntity> GetByIdAsync(int branchId, CancellationToken cancellationToken)
     {
-        return await Task.FromResult(_branches.FirstOrDefault(b => b.BranchCode == branchCode));
+        var branch = await _branchDomainService.GetByIdAsync(branchId, cancellationToken);
+        if (branch == null)
+        {
+            // Kaydın bulunamadığını belirten bir özel durum fırlatın veya uygun bir değer döndürün
+            throw new NotFoundException($"Branch with code {branchId} not found");
+        }
+        return await _branchDomainService.GetByIdAsync(branchId, cancellationToken);
     }
 
     public async Task<IEnumerable<BranchEntity>> GetAllAsync(CancellationToken cancellationToken)
     {
-        return await Task.FromResult(_branches.AsEnumerable());
+        return await _branchDomainService.GetAllAsync(cancellationToken);
     }
 
     public async Task CreateAsync(BranchEntity branch, CancellationToken cancellationToken)
     {
-        if (_branches.Any(b => b.BranchCode == branch.BranchCode))
+        if (branch == null)
         {
-            throw new InvalidOperationException("Branch already exists.");
+            throw new ArgumentNullException(nameof(branch), "Branch cannot be null");
         }
 
-        _branches.Add(branch);
-        await Task.CompletedTask;
+        await _branchDomainService.CreateAsync(branch, cancellationToken);
     }
 
     public async Task UpdateAsync(BranchEntity branch, CancellationToken cancellationToken)
     {
-        var existingBranch = _branches.FirstOrDefault(b => b.BranchCode == branch.BranchCode);
-
-        if (existingBranch == null)
+        var branchet = await _branchDomainService.GetByIdAsync(branch.Id, cancellationToken);
+        if (branch == null)
         {
-            throw new KeyNotFoundException("Branch not found.");
+            // Kaydın bulunamadığını belirten bir özel durum fırlatın veya uygun bir değer döndürün
+            throw new NotFoundException($"Branch with code {branch.Id} not found");
         }
 
-        // Update properties
-        existingBranch.BranchName = branch.BranchName;
-        existingBranch.Address = branch.Address;
-        existingBranch.Phone = branch.Phone;
-        existingBranch.Fax = branch.Fax;
-        existingBranch.Email = branch.Email;
-        existingBranch.CommissionRate = branch.CommissionRate;
-        existingBranch.CommissionAmount = branch.CommissionAmount;
-        existingBranch.DefaultShrinkageRate = branch.DefaultShrinkageRate;
-        existingBranch.IsHeadOffice = branch.IsHeadOffice;
-        existingBranch.IsSalesEnabled = branch.IsSalesEnabled;
-        existingBranch.IsAutomationIntegrationEnabled = branch.IsAutomationIntegrationEnabled;
 
-        await Task.CompletedTask;
+        await _branchDomainService.UpdateAsync(branch, cancellationToken);
     }
 
     public async Task DeleteAsync(string branchCode, CancellationToken cancellationToken)
     {
-        var branch = _branches.FirstOrDefault(b => b.BranchCode == branchCode);
-
-        if (branch == null)
+        if (string.IsNullOrWhiteSpace(branchCode))
         {
-            throw new KeyNotFoundException("Branch not found.");
+            throw new ArgumentException("Branch code cannot be null or empty", nameof(branchCode));
         }
 
-        _branches.Remove(branch);
-        await Task.CompletedTask;
+        await _branchDomainService.DeleteAsync(branchCode, cancellationToken);
     }
 
     public async Task<BranchEntity> GetByEmailAsync(string email, CancellationToken cancellationToken)
     {
-        return await Task.FromResult(_branches.FirstOrDefault(b => b.Email == email));
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            throw new ArgumentException("Email cannot be null or empty", nameof(email));
+        }
+
+        return await _branchDomainService.GetByEmailAsync(email, cancellationToken);
     }
 }

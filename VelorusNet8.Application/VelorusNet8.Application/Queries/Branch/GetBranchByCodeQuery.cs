@@ -5,5 +5,5 @@ namespace VelorusNet8.Application.Queries.Branch;
 
 public class GetBranchByCodeQuery : IRequest<BranchDto>
 {
-    public string BranchCode { get; set; }
+    public int BranchId { get; set; }
 }

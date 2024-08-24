@@ -2,6 +2,7 @@
 
 public class BranchEntity
 {
+    public int Id { get; set; }
     public string BranchCode { get; set; }  // Şube Kodu
     public string BranchName { get; set; }  // Şube Adı
     public string Address { get; set; }  // Adres

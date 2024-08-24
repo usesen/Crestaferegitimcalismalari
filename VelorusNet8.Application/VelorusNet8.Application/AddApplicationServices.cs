@@ -14,6 +14,7 @@ public static class DependencyInjection
     {
         // AutoMapper'ı konfigüre et
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
         // FluentValidation'ı konfigüre et
         services.AddValidatorsFromAssemblyContaining<UserAccountCommandValidator>();
         // MediatR'ı konfigüre et

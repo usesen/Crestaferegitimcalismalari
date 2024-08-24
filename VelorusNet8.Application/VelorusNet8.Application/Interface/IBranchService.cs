@@ -7,7 +7,7 @@ public interface IBranchService
     Task<int> CreateBranchAsync(CreateBranchDto dto, CancellationToken cancellationToken);
     Task UpdateBranchAsync(UpdateBranchDto dto, CancellationToken cancellationToken);
     Task DeleteBranchAsync(string branchCode, CancellationToken cancellationToken);
-    Task<BranchDto> GetBranchByCodeAsync(string branchCode, CancellationToken cancellationToken);
+    Task<BranchDto> GetBranchByIdAsync(int branchId, CancellationToken cancellationToken);
     Task<IEnumerable<BranchDto>> GetAllBranchesAsync(CancellationToken cancellationToken);
 
 }

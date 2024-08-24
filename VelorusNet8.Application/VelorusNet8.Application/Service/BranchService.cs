@@ -36,9 +36,9 @@ public class BranchService : IBranchService
         await _branchDomainService.DeleteAsync(branchCode, cancellationToken);
     }
 
-    public async Task<BranchDto> GetBranchByCodeAsync(string branchCode, CancellationToken cancellationToken)
+    public async Task<BranchDto> GetBranchByIdAsync(int branchId, CancellationToken cancellationToken)
     {
-        var branch = await _branchDomainService.GetByIdAsync(branchCode, cancellationToken);
+        var branch = await _branchDomainService.GetByIdAsync(branchId, cancellationToken);
         return _mapper.Map<BranchDto>(branch);
     }
 

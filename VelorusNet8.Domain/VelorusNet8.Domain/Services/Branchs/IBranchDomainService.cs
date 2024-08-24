@@ -4,7 +4,7 @@ namespace VelorusNet8.Domain.Services.Branchs;
 
 public interface IBranchDomainService
 {
-    Task<BranchEntity> GetByIdAsync(string branchCode, CancellationToken cancellationToken);
+    Task<BranchEntity> GetByIdAsync(int branchId, CancellationToken cancellationToken);
     Task<IEnumerable<BranchEntity>> GetAllAsync(CancellationToken cancellationToken);
     Task CreateAsync(BranchEntity branch, CancellationToken cancellationToken);
     Task UpdateAsync(BranchEntity branch, CancellationToken cancellationToken);

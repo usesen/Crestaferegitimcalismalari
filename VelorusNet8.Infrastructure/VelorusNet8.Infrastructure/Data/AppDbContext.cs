@@ -2,6 +2,7 @@
 using VelorusNet8.Domain.Entities.Aggregates.Branchs;
 using VelorusNet8.Domain.Entities.Aggregates.Users;
 using VelorusNet8.Infrastructure.DataSeeding;
+using VelorusNet8.Infrastructure.Models;
 
 namespace VelorusNet8.Infrastructure.Data;
 
@@ -10,6 +11,12 @@ public class AppDbContext : DbContext
     public DbSet<UserAccount> UserAccounts { get; set; }
     public DbSet<UserBranch> UserBranches { get; set; }
     public DbSet<BranchEntity> Branches { get; set; }
+    public DbSet<Log> Logs { get; set; }
+
+    public AppDbContext(DbContextOptions<AppDbContext> options)
+           : base(options)
+    {
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -46,4 +53,3 @@ public class AppDbContext : DbContext
     //dotnet ef migrations add SeedDataMigration
     //dotnet ef database update
 }
-"
