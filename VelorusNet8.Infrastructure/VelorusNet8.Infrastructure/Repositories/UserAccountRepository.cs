@@ -2,58 +2,58 @@
 using VelorusNet8.Domain.Repositories;
 using VelorusNet8.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using VelorusNet8.Application.Service;
 
 namespace VelorusNet8.Infrastructure.Repositories;
 
 
     public class UserAccountRepository : IUserAccountRepository
     {
-        private readonly AppDbContext _context;
+    private readonly UserAccounService _userAccountService;
 
-        public UserAccountRepository(AppDbContext context)
-        {
-            _context = context;
-        }
-
-        public async Task CreateAsync(UserAccount entity, CancellationToken cancellationToken)
-        {
-            await _context.UserAccounts.AddAsync(entity, cancellationToken);
-            await _context.SaveChangesAsync(cancellationToken);
-        }
-
-    public async Task<UserAccount> GetByIdAsync(int id, CancellationToken cancellationToken)
+    public UserAccountRepository(UserAccounService userAccountService)
     {
-        return await _context.UserAccounts
-            .FirstOrDefaultAsync(u => u.UserId == id, cancellationToken);
+        _userAccountService = userAccountService;
     }
 
-    public async Task<IEnumerable<UserAccount>> GetAllAsync(CancellationToken cancellationToken)
-        {
-            return await _context.UserAccounts.ToListAsync(cancellationToken);
-        }
-
-        public async Task UpdateAsync(UserAccount entity, CancellationToken cancellationToken)
-        {
-            _context.UserAccounts.Update(entity);
-            await _context.SaveChangesAsync(cancellationToken);
-        }
-
-        public async Task DeleteAsync(UserAccount entity, CancellationToken cancellationToken)
-        {
-            _context.UserAccounts.Remove(entity);
-            await _context.SaveChangesAsync(cancellationToken);
-        }
-
-        public async Task<UserAccount> GetByEmailAsync(string email, CancellationToken cancellationToken)
-        {
-            return await _context.UserAccounts
-                .FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
-        }
-
-        public async Task<UserAccount> GetByUserNameAsync(string username, CancellationToken cancellationToken)
-        {
-            return await _context.UserAccounts
-                .FirstOrDefaultAsync(u => u.UserName == username, cancellationToken);
-        }
+    public Task CreateAsync(UserAccount entity, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
     }
+
+    public Task DeleteAsync(UserAccount entity, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IEnumerable<UserAccount>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<UserAccount> GetByEmailAsync(string email, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<UserAccount> GetByIdAsync(int id, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<UserAccount> GetByUserNameAsync(string username, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<UserAccount> GetUsersWithBranchesAsync(int id, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task UpdateAsync(UserAccount entity, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+}
 

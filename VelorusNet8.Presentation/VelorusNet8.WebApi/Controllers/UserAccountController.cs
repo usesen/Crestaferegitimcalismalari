@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VelorusNet8.Domain.Entities.Aggregates.Users;
+using VelorusNet8.Domain.Repositories;
 using VelorusNet8.Infrastructure.Data;
 
 namespace VelorusNet8.WebApi.Controllers
@@ -11,10 +12,12 @@ namespace VelorusNet8.WebApi.Controllers
     public class UserAccountController : ControllerBase
     {
         private readonly AppDbContext _context;
-
-        public UserAccountController(AppDbContext context)
+        private readonly IUserAccountRepository _userAccountRepository;
+         
+        public UserAccountController(AppDbContext context, IUserAccountRepository userAccountRepository)
         {
             _context = context;
+            _userAccountRepository = userAccountRepository;
         }
         // GET: api/UserAccount/5
         [HttpGet("{id}")]
@@ -90,5 +93,18 @@ namespace VelorusNet8.WebApi.Controllers
         {
             return _context.UserAccounts.Any(e => e.UserId == id);
         }
+
+        //// GET api/useraccount/{id}
+        //[HttpGet("{id}")]
+        //public async Task<IActionResult> GetUserWithBranchesAsync(int id, CancellationToken cancellationToken)
+        //{
+        //    var userAccount = await _userAccountRepository.GetUsersWithBranchesAsync(id, cancellationToken);
+        //    if (userAccount == null)
+        //    {
+        //        return NotFound(); // 404 Not Found
+        //    }
+
+        //    return Ok(userAccount); // 200 OK
+        //}
     }
 }

@@ -111,4 +111,10 @@ public class UserAccountDomainService : IUserAccountDomainService
 
         await _userAccountRepository.UpdateAsync(entity, cancellationToken);
     }
+ 
+
+    public Task<UserAccount> GetUsersWithBranches(int id, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
 }

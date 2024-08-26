@@ -12,4 +12,5 @@ public interface IUserAccountDomainService
     Task DeleteAsync(UserAccount entity, CancellationToken cancellationToken);
     Task<UserAccount> GetByEmailAsync(string email, CancellationToken cancellationToken);
     Task<UserAccount> GetByUserNameAsync(string username, CancellationToken cancellationToken);
+    Task<UserAccount> GetUsersWithBranches(int id,CancellationToken cancellationToken);
 }

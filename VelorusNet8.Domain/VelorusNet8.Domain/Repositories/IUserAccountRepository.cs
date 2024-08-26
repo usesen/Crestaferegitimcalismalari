@@ -11,5 +11,6 @@ public interface IUserAccountRepository : IBaseRepository<UserAccount>
     Task DeleteAsync(UserAccount entity, CancellationToken cancellationToken);
     Task<UserAccount> GetByEmailAsync(string email, CancellationToken cancellationToken);
     Task<UserAccount> GetByUserNameAsync(string username, CancellationToken cancellationToken);
+    Task<UserAccount> GetUsersWithBranchesAsync(int id, CancellationToken cancellationToken);
 }
 

@@ -52,7 +52,9 @@ namespace VelorusNet8.WebApi.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBranch(int id, BranchEntity branch)
         {
-            if (id != branch.Id)
+            var branchQuery = await _context.Branches.FindAsync(id);
+
+            if (id != branchQuery.Id)
             {
                 return BadRequest();
             }

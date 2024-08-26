@@ -84,5 +84,6 @@ public class UserAccounService : IUserAccountApplicationService
         // Güncellenmiş kullanıcıyı kaydet
         await _userAccountDomainService.UpdateAsync(userAccount, cancellationToken);
     }
+
 }
 

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using VelorusNet8.Domain.Entities.Common;
 
 namespace VelorusNet8.Domain.Entities.Aggregates.Users;
@@ -11,6 +12,7 @@ public class UserAccount : EntityBase
     public string Email { get; private set; } // kullanıcı mail
     public string PasswordHash { get; private set; }  // Şifreyi hash olarak tutmak daha güvenli
     public bool IsActive { get; private set; } = true; // aktif pasif durumu akstif ise true pasif ise false
+  
     // UserBranches özelliği: Bir kullanıcı birden fazla şubeye atanabilir
     public List<UserBranch> UserBranches { get; private set; } = new List<UserBranch>();
 
