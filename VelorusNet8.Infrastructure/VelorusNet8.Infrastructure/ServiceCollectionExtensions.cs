@@ -30,6 +30,7 @@ public static class ServiceCollectionExtensions
         // Diğer servisler...
 
         services.AddTransient<IUserAccountRepository, UserAccountRepository>();
+        services.AddTransient<IBranchRepository, BranchRepository>();
         return services;
     }
     public static void UseInfrastructureMiddleware(this IApplicationBuilder app)
