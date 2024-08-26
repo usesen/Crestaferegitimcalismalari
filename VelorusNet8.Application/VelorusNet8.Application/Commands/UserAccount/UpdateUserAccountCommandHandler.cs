@@ -1,21 +1,22 @@
 ﻿using MediatR;
 using VelorusNet8.Application.Exception;
 using VelorusNet8.Domain.Repositories;
+using VelorusNet8.Domain.Services.UserAccountService;
 
 namespace VelorusNet8.Application.Commands.UserAccountDto;
 
 public class UpdateUserAccountCommandHandler : IRequestHandler<UpdateUserAccountCommand, Unit>
 {
-    private readonly IUserAccountRepository _userRepository;
+    private readonly IUserAccountDomainService _userAccountDomainService;
 
-    public UpdateUserAccountCommandHandler(IUserAccountRepository userRepository)
+    public UpdateUserAccountCommandHandler(IUserAccountDomainService userAccountDomainService)
     {
-        _userRepository = userRepository;
+        _userAccountDomainService = userAccountDomainService;
     }
 
     public async Task<Unit> Handle(UpdateUserAccountCommand request, CancellationToken cancellationToken)
     {
-        var userAccount = await _userRepository.GetByIdAsync(request.UserId,cancellationToken);
+        var userAccount = await _userAccountDomainService.GetByIdAsync(request.UserId,cancellationToken);
 
         if (userAccount == null)
         {
@@ -24,7 +25,7 @@ public class UpdateUserAccountCommandHandler : IRequestHandler<UpdateUserAccount
 
         userAccount.UpdateUserName(request.UserName);
         userAccount.UpdateEmail(request.Email);
-        await _userRepository.UpdateAsync(userAccount, cancellationToken);
+        await _userAccountDomainService.UpdateAsync(userAccount, cancellationToken);
 
         return Unit.Value;
     }

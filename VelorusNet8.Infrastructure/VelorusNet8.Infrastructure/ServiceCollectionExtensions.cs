@@ -7,8 +7,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VelorusNet8.Domain.Repositories;
 using VelorusNet8.Infrastructure.Data;
 using VelorusNet8.Infrastructure.Middleware;
+using VelorusNet8.Infrastructure.Repositories;
 
 
 namespace VelorusNet8.Infrastructure;
@@ -27,7 +29,7 @@ public static class ServiceCollectionExtensions
                                  options.UseSqlServer(connectionString));
         // Diğer servisler...
 
-
+        services.AddTransient<IUserAccountRepository, UserAccountRepository>();
         return services;
     }
     public static void UseInfrastructureMiddleware(this IApplicationBuilder app)

@@ -3,6 +3,7 @@ using MediatR;
 using VelorusNet8.Application.Dto.User;
 using VelorusNet8.Application.Exception;
 using VelorusNet8.Domain.Repositories;
+using VelorusNet8.Domain.Services.UserAccountService;
 
 namespace VelorusNet8.Application.Queries.UserAccount;
 

@@ -13,7 +13,6 @@
     <Folder Include="Mapping\" />
     <Folder Include="Services\" />
     <Folder Include="Utilities\" />
-    <Folder Include="Repositories\" />
   </ItemGroup>
 
   <ItemGroup>

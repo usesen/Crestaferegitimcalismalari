@@ -1,10 +1,11 @@
-﻿using VelorusNet8.Domain.Entities.Common;
+﻿using System.ComponentModel.DataAnnotations;
+using VelorusNet8.Domain.Entities.Common;
 
 namespace VelorusNet8.Domain.Entities.Aggregates.Users;
 
 public class UserAccount : EntityBase
 {
-
+    [Key] // Bu özelliği birincil anahtar olarak belirtir
     public int UserId { get; set; }
     public string UserName { get; private set; } // Kullanıcı ismi
     public string Email { get; private set; } // kullanıcı mail
@@ -12,6 +13,11 @@ public class UserAccount : EntityBase
     public bool IsActive { get; private set; } = true; // aktif pasif durumu akstif ise true pasif ise false
     // UserBranches özelliği: Bir kullanıcı birden fazla şubeye atanabilir
     public List<UserBranch> UserBranches { get; private set; } = new List<UserBranch>();
+
+
+    public UserAccount() : base(0) // Varsayılan yapıcı
+    {
+    }
 
     public UserAccount(int userId, string username, string email, string passwordHash , bool isActive) : base(userId)  // UserId'yi EntityBase constructor'ına geçiyoruz
     {

@@ -16,6 +16,7 @@ public static class DataSeeder
         modelBuilder.Entity<BranchEntity>().HasData(
             new BranchEntity
             {
+                Id = 1,
                 BranchCode = "B001",
                 BranchName = "Main Branch",
                 Address = "123 Main St",
