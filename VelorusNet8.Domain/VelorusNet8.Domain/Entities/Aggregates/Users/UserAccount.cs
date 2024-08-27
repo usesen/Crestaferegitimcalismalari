@@ -8,10 +8,10 @@ public class UserAccount : EntityBase
 {
     [Key] // Bu özelliği birincil anahtar olarak belirtir
     public int UserId { get; set; }
-    public string UserName { get; private set; } // Kullanıcı ismi
-    public string Email { get; private set; } // kullanıcı mail
-    public string PasswordHash { get; private set; }  // Şifreyi hash olarak tutmak daha güvenli
-    public bool IsActive { get; private set; } = true; // aktif pasif durumu akstif ise true pasif ise false
+    public string UserName { get;  set; } // Kullanıcı ismi
+    public string Email { get;  set; } // kullanıcı mail
+    public string PasswordHash { get;  set; }  // Şifreyi hash olarak tutmak daha güvenli
+    public bool IsActive { get; set; } = true; // aktif pasif durumu akstif ise true pasif ise false
   
     // UserBranches özelliği: Bir kullanıcı birden fazla şubeye atanabilir
     public List<UserBranch> UserBranches { get; private set; } = new List<UserBranch>();

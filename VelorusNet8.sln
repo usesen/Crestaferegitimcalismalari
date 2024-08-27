@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VelorusNet8.UnitTest", "Vel
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VelorusNet8.WebApi", "VelorusNet8.Presentation\VelorusNet8.WebApi\VelorusNet8.WebApi.csproj", "{F5D97C50-9461-458A-85B1-EFA8C33DF564}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserSubeEntegrasyonTest", "UserSubeEntegrasyonTest\UserSubeEntegrasyonTest.csproj", "{121A4AC0-3C5E-4868-86D0-01C7C3BC489F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserSubeEntegrasyonTest", "UserSubeEntegrasyonTest\UserSubeEntegrasyonTest.csproj", "{121A4AC0-3C5E-4868-86D0-01C7C3BC489F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

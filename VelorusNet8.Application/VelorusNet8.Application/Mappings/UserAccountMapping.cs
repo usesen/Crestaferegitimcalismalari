@@ -1,5 +1,6 @@
 ﻿
 using AutoMapper;
+using VelorusNet8.Application.Commands.UserAccount;
 using VelorusNet8.Application.Dto.User;
 using VelorusNet8.Domain.Entities.Aggregates.Users;
 
@@ -14,9 +15,10 @@ public class UserAccountMapping : Profile
             .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName))
             .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email));
 
-        // UserDto -> UserAccount Mapping
-        CreateMap<UserAccountDto, UserAccount>()
-            .ConstructUsing(dto => new UserAccount(0, dto.UserName, dto.Email, dto.PasswordHash, dto.IsActive)) // PasswordHash varsayılan olarak boş veriliyor
-            .ForMember(dest => dest.PasswordHash, opt => opt.Ignore()); // PasswordHash'i DTO'dan map etmiyoruz
+        CreateMap<CreateUserAccountCommand, UserAccount>();
+
+        CreateMap<CreateUserAccountDto, UserAccountDto>();
+        // Eğer iki yönlü dönüşüm istiyorsanız:
+        CreateMap<UserAccountDto, CreateUserAccountDto>();
     }
 }

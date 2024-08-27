@@ -1,6 +1,6 @@
 ﻿namespace VelorusNet8.Domain.Entities.Aggregates.Branchs;
 
-public class BranchEntity
+public class UpdateBranchDTO
 {
     public int Id { get; set; }
     public string BranchCode { get; set; }  // Şube Kodu
@@ -23,7 +23,7 @@ public class BranchEntity
         if (obj == null || GetType() != obj.GetType())
             return false;
 
-        var other = (BranchEntity)obj;
+        var other = (UpdateBranchDTO)obj;
         return BranchCode == other.BranchCode &&
                BranchName == other.BranchName &&
                Address == other.Address &&

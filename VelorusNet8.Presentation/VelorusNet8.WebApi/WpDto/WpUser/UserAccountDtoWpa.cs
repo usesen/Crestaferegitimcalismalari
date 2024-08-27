@@ -1,6 +1,6 @@
-﻿namespace VelorusNet8.Application.Dto.User;
+﻿namespace VelorusNet8.WepApi.Dto.User;
 
-public class UserAccountDto
+public class UserAccountDtoWpa
 {
     public int UserId { get; set; }
     public string UserName { get; set; }
@@ -8,7 +8,7 @@ public class UserAccountDto
     public string PasswordHash { get; set; }
     public bool IsActive { get; set; }
     // 4 parametreli bir yapıcı metot ekliyoruz
-    public UserAccountDto(int userid, string userName,string email,string passwordHash, bool isActive)
+    public UserAccountDtoWpa(int userid, string userName,string email,string passwordHash, bool isActive)
     {
         UserId = userid;
         UserName = userName;

@@ -1,6 +1,6 @@
-﻿namespace VelorusNet8.Application.Dto.User;
+﻿namespace VelorusNet8.WepApi.WpDto.WpUser;
 
-public class CreateUserDto
+public class CreateUserAcountDtoWpa
 {
     public string UserName { get; set; }
     public string Email { get; set; }

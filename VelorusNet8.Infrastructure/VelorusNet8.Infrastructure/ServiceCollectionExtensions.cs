@@ -2,12 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VelorusNet8.Domain.Repositories;
+using VelorusNet8.Application.Interface;
 using VelorusNet8.Infrastructure.Data;
 using VelorusNet8.Infrastructure.Middleware;
 using VelorusNet8.Infrastructure.Repositories;
@@ -30,7 +25,7 @@ public static class ServiceCollectionExtensions
         // Diğer servisler...
 
         services.AddTransient<IUserAccountRepository, UserAccountRepository>();
-        services.AddTransient<IBranchRepository, BranchRepository>();
+     
         return services;
     }
     public static void UseInfrastructureMiddleware(this IApplicationBuilder app)

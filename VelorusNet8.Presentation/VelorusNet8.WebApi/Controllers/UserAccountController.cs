@@ -1,110 +1,91 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using VelorusNet8.Application.Dto.User;
+using VelorusNet8.Application.Interface;
 using VelorusNet8.Domain.Entities.Aggregates.Users;
-using VelorusNet8.Domain.Repositories;
-using VelorusNet8.Infrastructure.Data;
+using VelorusNet8.WepApi.WpDto.WpUser;
 
-namespace VelorusNet8.WebApi.Controllers
+namespace VelorusNet8.WebApi.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class UserAccountController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class UserAccountController : ControllerBase
+    private readonly IUserAccountRepository _userAccountRepository;
+    private readonly IUserAccountService _userAccountService;
+    private readonly IMapper _mapper;
+    public UserAccountController(IUserAccountRepository userAccountRepository, IUserAccountService userAccountService, IMapper mapper)
     {
-        private readonly AppDbContext _context;
-        private readonly IUserAccountRepository _userAccountRepository;
-         
-        public UserAccountController(AppDbContext context, IUserAccountRepository userAccountRepository)
+        _userAccountRepository = userAccountRepository;
+        _userAccountService = userAccountService;
+        _mapper = mapper;
+    }
+    // Kullanıcı oluşturma işlemi
+    [HttpPost]
+    public async Task<IActionResult> CreateUser([FromBody] CreateUserAcountDtoWpa createUserAcountDtoWpa, CancellationToken cancellationToken)
+    {
+        if (createUserAcountDtoWpa == null)
         {
-            _context = context;
-            _userAccountRepository = userAccountRepository;
-        }
-        // GET: api/UserAccount/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<UserAccount>> GetUserAccount(int id)
-        {
-            var userAccount = await _context.UserAccounts.FindAsync(id);
-
-            if (userAccount == null)
-            {
-                return NotFound();
-            }
-
-            return userAccount;
+            return BadRequest("Kullanıcı bilgileri eksik.");
         }
 
-        // POST: api/UserAccount
-        [HttpPost]
-        public async Task<ActionResult<UserAccount>> PostUserAccount(UserAccount userAccount)
-        {
-            _context.UserAccounts.Add(userAccount);
-            await _context.SaveChangesAsync();
+        var userAccount = new UserAccount
+        {   
+            UserName = createUserAcountDtoWpa.UserName,
+            Email = createUserAcountDtoWpa.Email,
+            PasswordHash = createUserAcountDtoWpa.PasswordHash,
+            IsActive = createUserAcountDtoWpa.IsActive
+        };
 
-            return CreatedAtAction(nameof(GetUserAccount), new { id = userAccount.UserId }, userAccount);
+        var createUserAccount = _mapper.Map<CreateUserAccountDto>(userAccount);
+        await _userAccountService.CreateUserAsync(createUserAccount, cancellationToken);
+       // await _userAccountRepository.AddAsync(userAccount, cancellationToken);
+
+        return CreatedAtAction(nameof(GetUserById), new { id = userAccount.UserId }, userAccount);
+    }
+
+    // Kullanıcıyı ID'ye göre getir
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetUserById(int id, CancellationToken cancellationToken)
+    {
+        var user = await _userAccountRepository.GetByIdAsync(id, cancellationToken);
+        if (user == null)
+        {
+            return NotFound("Kullanıcı bulunamadı.");
         }
 
-        // PUT: api/UserAccount/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUserAccount(int id, UserAccount userAccount)
+        return Ok(user);
+    }
+
+    // Tüm kullanıcıları getir
+    [HttpGet]
+    public async Task<IActionResult> GetAllUsers(CancellationToken cancellationToken)
+    {
+        var users = await _userAccountRepository.GetAllAsync(cancellationToken);
+        return Ok(users);
+    }
+
+    // Kullanıcı güncelleme işlemi
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateUser(int id, [FromBody] UserAccount userAccount, CancellationToken cancellationToken)
+    {
+        if (userAccount == null || id != userAccount.UserId)
         {
-            if (id != userAccount.UserId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(userAccount).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserAccountExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return BadRequest("Kullanıcı bilgileri geçersiz.");
         }
 
-        // DELETE: api/UserAccount/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUserAccount(int id)
-        {
-            var userAccount = await _context.UserAccounts.FindAsync(id);
-            if (userAccount == null)
-            {
-                return NotFound();
-            }
+        await _userAccountRepository.UpdateAsync(userAccount, cancellationToken);
 
-            _context.UserAccounts.Remove(userAccount);
-            await _context.SaveChangesAsync();
+        return Ok(userAccount);
+    }
 
-            return NoContent();
-        }
-
-        private bool UserAccountExists(int id)
-        {
-            return _context.UserAccounts.Any(e => e.UserId == id);
-        }
-
-        //// GET api/useraccount/{id}
-        //[HttpGet("{id}")]
-        //public async Task<IActionResult> GetUserWithBranchesAsync(int id, CancellationToken cancellationToken)
-        //{
-        //    var userAccount = await _userAccountRepository.GetUsersWithBranchesAsync(id, cancellationToken);
-        //    if (userAccount == null)
-        //    {
-        //        return NotFound(); // 404 Not Found
-        //    }
-
-        //    return Ok(userAccount); // 200 OK
-        //}
+    // Kullanıcı silme işlemi
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteUser(int id, CancellationToken cancellationToken)
+    {
+        await _userAccountRepository.DeleteAsync(id, cancellationToken);
+        return NoContent();
     }
 }
+
+ 

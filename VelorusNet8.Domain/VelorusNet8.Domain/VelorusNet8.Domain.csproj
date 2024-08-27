@@ -6,13 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Repositories\Branch\**" />
-    <Compile Remove="Repositories\UserAccount\**" />
-    <EmbeddedResource Remove="Repositories\Branch\**" />
-    <EmbeddedResource Remove="Repositories\UserAccount\**" />
-    <None Remove="Repositories\Branch\**" />
-    <None Remove="Repositories\UserAccount\**" />
-  </ItemGroup>
-
 </Project>

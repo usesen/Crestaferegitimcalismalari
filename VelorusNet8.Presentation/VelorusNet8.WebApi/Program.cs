@@ -2,8 +2,6 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using VelorusNet8.Application;
-using VelorusNet8.Domain.Services.Branchs;
-using VelorusNet8.Domain.Services.UserAccountService;
 using VelorusNet8.Infrastructure;
 using VelorusNet8.Infrastructure.Data;
 using VelorusNet8.Infrastructure.Middleware;
@@ -43,15 +41,6 @@ builder.Services.AddInfrastructureServices(); // Burada `AddInfrastructureServic
 // DbContext'i ekleyin
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-
-// Örnek: IRepository ve IService kayýtlarý
-
-
-
-// Application servislerinizi ekleyin
-builder.Services.AddApplicationServices(); // Burada AddApplicationServices çaðrýlýr
-builder.Services.AddInfrastructureServices(); // Infrastructure katmaný için
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())

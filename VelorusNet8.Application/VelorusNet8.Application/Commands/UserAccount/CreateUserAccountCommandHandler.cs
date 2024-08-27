@@ -1,35 +1,38 @@
 ﻿using AutoMapper;
 using MediatR;
-using VelorusNet8.Domain.Entities.Aggregates.Users;
-using VelorusNet8.Domain.Services.UserAccountService;
+using VelorusNet8.Application.Commands.UserAccount;
+using VelorusNet8.Application.Dto.User;
+using VelorusNet8.Application.Interface;
 
-namespace VelorusNet8.Application.Commands.UserAccountDto;
+namespace VelorusNet8.Application.Commands.UserAccount;
 
-public class CreateUserAccountCommandHandler : IRequestHandler<CreateUserAccountCommand, int>
+public class CreateUserAccountCommandHandler : IRequest<int>
 {
-    private readonly IUserAccountDomainService _userAccountDomainService;
+    private readonly IUserAccountService _iuserAccountService;
     private readonly IMapper _mapper;
 
-    public CreateUserAccountCommandHandler(IUserAccountDomainService userAccountDomainService, IMapper mapper)
+    public CreateUserAccountCommandHandler(IUserAccountService iuserAccountService, IMapper mapper)
     {
-        _userAccountDomainService = userAccountDomainService;
+        _iuserAccountService = iuserAccountService;
         _mapper = mapper;
     }
 
     public async  Task<int> Handle(CreateUserAccountCommand request, CancellationToken cancellationToken)
     {
-        var userAccount = new UserAccount(0, request.UserName, request.Email, request.PasswordHash, request.IsActive);
+        // UserAccount nesnesini oluştur
+        var userAccount = new VelorusNet8.Domain.Entities.Aggregates.Users.UserAccount(0, request.UserName, request.Email, request.PasswordHash, request.IsActive);
 
-        // Use the IUserAccountDomainService to create the user account.
-        await _userAccountDomainService.CreateAsync(userAccount, cancellationToken);
-        var createdUser = await _userAccountDomainService.GetByEmailAsync(request.Email, cancellationToken);
+        var createUserDto = _mapper.Map<CreateUserAccountDto>(userAccount);
+        await _iuserAccountService.CreateUserAsync(createUserDto, cancellationToken);
+ 
+        var createdUser = await _iuserAccountService.GetByEmailAsync(request.Email, cancellationToken);
         if (createdUser == null)
         {
-            // Handle the case where the user creation failed or the user was not found.
+            // Kullanıcı oluşturulmadıysa veya bulunmadıysa hata durumu
             return -1;
         }
 
-        // Return the ID of the created user account.
+        // Oluşturulan kullanıcı kimliğini döndür
         return createdUser.UserId;
     }
 
