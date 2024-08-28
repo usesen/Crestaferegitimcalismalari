@@ -34,7 +34,15 @@ public class CreateUserAccountCommandHandler : IRequestHandler<CreateUserAccount
         );
 
         // UserAccount nesnesini veritabanına kaydet
-        await _userAccountRepository.AddAsync(userAccount, cancellationToken);
+        try
+        {
+            await _userAccountRepository.AddAsync(userAccount, cancellationToken);
+        }
+        catch (System.Exception ex)
+        {
+            string exstr = ex.ToString();
+         }
+  
 
         // Yeni oluşturulan kullanıcı ID'sini geri döndür
         return userAccount.UserId;

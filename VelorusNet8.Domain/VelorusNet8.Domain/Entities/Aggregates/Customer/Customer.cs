@@ -11,7 +11,7 @@ public class Customer : EntityBase
     public Address Address { get; private set; }
     
 
-    public Customer(int id, string firstName, string lastName, EmailAddress email, Address address, int userId ) : base(userId)    
+    public Customer(int id, string firstName, string lastName, EmailAddress email, Address address, int userId ) : base()    
     {
         Id = id;
         FirstName = firstName ?? throw new ArgumentNullException(nameof(firstName));

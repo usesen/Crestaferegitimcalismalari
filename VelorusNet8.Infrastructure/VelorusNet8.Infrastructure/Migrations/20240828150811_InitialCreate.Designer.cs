@@ -12,7 +12,7 @@ using VelorusNet8.Infrastructure.Data;
 namespace VelorusNet8.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240828111840_InitialCreate")]
+    [Migration("20240828150811_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace VelorusNet8.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("VelorusNet8.Domain.Entities.Aggregates.Branchs.CompanyBranches", b =>
+            modelBuilder.Entity("VelorusNet8.Domain.Entities.Aggregates.Branchs.CompanyBranch", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -51,6 +51,12 @@ namespace VelorusNet8.Infrastructure.Migrations
                     b.Property<decimal>("CommissionRate")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<decimal>("DefaultShrinkageRate")
                         .HasColumnType("decimal(18,2)");
 
@@ -74,13 +80,19 @@ namespace VelorusNet8.Infrastructure.Migrations
                     b.Property<bool>("IsSalesEnabled")
                         .HasColumnType("bit");
 
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModifiedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Phone")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Branches");
+                    b.ToTable("CompanyBranches");
 
                     b.HasData(
                         new
@@ -91,6 +103,7 @@ namespace VelorusNet8.Infrastructure.Migrations
                             BranchName = "Main Branch",
                             CommissionAmount = 1000m,
                             CommissionRate = 0.05m,
+                            CreatedDate = new DateTime(2024, 8, 28, 15, 8, 10, 144, DateTimeKind.Utc).AddTicks(3053),
                             DefaultShrinkageRate = 0.02m,
                             Email = "mainbranch@example.com",
                             Fax = "555-5678",
@@ -111,24 +124,19 @@ namespace VelorusNet8.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastModifiedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("LastModifiedDate")
@@ -151,12 +159,11 @@ namespace VelorusNet8.Infrastructure.Migrations
                         {
                             UserId = 1,
                             CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 8, 28, 11, 18, 39, 101, DateTimeKind.Utc).AddTicks(2724),
+                            CreatedDate = new DateTime(2024, 8, 28, 15, 8, 10, 144, DateTimeKind.Utc).AddTicks(3200),
                             Email = "admin@example.com",
-                            Id = 0,
                             IsActive = true,
                             LastModifiedBy = "system",
-                            LastModifiedDate = new DateTime(2024, 8, 28, 11, 18, 39, 101, DateTimeKind.Utc).AddTicks(2725),
+                            LastModifiedDate = new DateTime(2024, 8, 28, 18, 8, 10, 144, DateTimeKind.Local).AddTicks(3209),
                             PasswordHash = "hashed_password",
                             UserName = "admin"
                         });
@@ -170,9 +177,14 @@ namespace VelorusNet8.Infrastructure.Migrations
                     b.Property<int>("BranchId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("CompanyBranchId")
+                        .HasColumnType("int");
+
                     b.HasKey("UserId", "BranchId");
 
                     b.HasIndex("BranchId");
+
+                    b.HasIndex("CompanyBranchId");
 
                     b.ToTable("UserBranches");
                 });
@@ -207,11 +219,15 @@ namespace VelorusNet8.Infrastructure.Migrations
 
             modelBuilder.Entity("VelorusNet8.Domain.Entities.Aggregates.Users.UserBranch", b =>
                 {
-                    b.HasOne("VelorusNet8.Domain.Entities.Aggregates.Branchs.CompanyBranches", "Branch")
+                    b.HasOne("VelorusNet8.Domain.Entities.Aggregates.Branchs.CompanyBranch", "CompanyBranch")
                         .WithMany()
                         .HasForeignKey("BranchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("VelorusNet8.Domain.Entities.Aggregates.Branchs.CompanyBranch", null)
+                        .WithMany("UserBranches")
+                        .HasForeignKey("CompanyBranchId");
 
                     b.HasOne("VelorusNet8.Domain.Entities.Aggregates.Users.UserAccount", "UserAccount")
                         .WithMany("UserBranches")
@@ -219,9 +235,14 @@ namespace VelorusNet8.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Branch");
+                    b.Navigation("CompanyBranch");
 
                     b.Navigation("UserAccount");
+                });
+
+            modelBuilder.Entity("VelorusNet8.Domain.Entities.Aggregates.Branchs.CompanyBranch", b =>
+                {
+                    b.Navigation("UserBranches");
                 });
 
             modelBuilder.Entity("VelorusNet8.Domain.Entities.Aggregates.Users.UserAccount", b =>

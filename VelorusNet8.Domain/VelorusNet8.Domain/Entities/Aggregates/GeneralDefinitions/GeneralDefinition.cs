@@ -29,7 +29,7 @@ public  class GeneralDefinition : EntityBase
                              int automaticDocumentNumber, int excludePreviousYearCarryOverAmounts, UserAccount userAccount,
                              Bilanco bilanco, CreditCardCommissionCalculationMethod creditCardCommissionCalculationMethod,
                              CurrentAccount currentAccount, Email email, Invoice invoices, Personnel personnel,
-                             ProfitandLossCostCalculation profitandLossCostCalculation, Stock stock,int userId) : base(userId)
+                             ProfitandLossCostCalculation profitandLossCostCalculation, Stock stock,int userId) : base()
     {
         Id = this.Id;
         PaginationRecordsPerPage = paginationRecordsPerPage;

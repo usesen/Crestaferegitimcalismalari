@@ -43,7 +43,7 @@ public class PersonnelInformation : EntityBase // personel bilgileri
         string nationalId,
         string vendorCode,
         string terminationReason,
-        int userId)  : base(userId)
+        int userId)  : base()
     {
         PersonnelCode = personnelCode;
         FullName = fullName;

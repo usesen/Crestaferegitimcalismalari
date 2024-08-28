@@ -32,7 +32,7 @@ public class Bank : EntityBase
                    string branchName, string accountIbanNo, string accountNo, 
                    string address, string phone, string fax, string currency, 
                    string accountingCode, bool useDbs, int checkBankType, 
-                   AccountBalanceDetails accountBalance, int id, UserAccount userAccount, int userId) : base(userId)  // UserId'yi EntityBase constructor'ına geçiyoruz
+                   AccountBalanceDetails accountBalance, int id, UserAccount userAccount, int userId) : base()  // UserId'yi EntityBase constructor'ına geçiyoruz
     {
             AccountCode = accountCode;
             AccountName = accountName;

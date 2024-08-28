@@ -15,19 +15,19 @@ public static  class DataSeeder
  
     public static  void SeedData(this ModelBuilder modelBuilder)
     {   //Branch data
-        modelBuilder.Entity<CompanyBranches>().HasData(
-            new CompanyBranches
+        modelBuilder.Entity<CompanyBranch>().HasData(
+            new CompanyBranch
             {
                 Id = 1,
-                BranchCode = "B001",
-                BranchName = "Main Branch",
-                Address = "123 Main St",
+                BranchCode = "S001",
+                BranchName = "Ana Şube (Patron)",
+                Address = "Merkez",
                 Phone = "555-1234",
                 Fax = "555-5678",
-                Email = "mainbranch@example.com",
-                CommissionRate = 0.05m,
-                CommissionAmount = 1000m,
-                DefaultShrinkageRate = 0.02m,
+                Email = "info@Velorus.com",
+                CommissionRate = 0.00m,
+                CommissionAmount = 0m,
+                DefaultShrinkageRate = 0.0m,
                 IsHeadOffice = true,
                 IsSalesEnabled = true,
                 IsAutomationIntegrationEnabled = true
@@ -48,5 +48,7 @@ public static  class DataSeeder
              LastModifiedBy = "system",       // Zorunlu alan
              LastModifiedDate = DateTime.Now // Zorunlu alan (eğer varsa)
          });
+         modelBuilder.Entity<UserBranch>().HasData(
+            new UserBranch(1, 1));
     }
 }

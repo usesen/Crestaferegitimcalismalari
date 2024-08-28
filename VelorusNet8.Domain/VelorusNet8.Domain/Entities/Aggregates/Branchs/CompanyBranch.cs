@@ -1,6 +1,9 @@
-﻿namespace VelorusNet8.Domain.Entities.Aggregates.Branchs;
+﻿using VelorusNet8.Domain.Entities.Aggregates.Users;
+using VelorusNet8.Domain.Entities.Common;
 
-public class CompanyBranches
+namespace VelorusNet8.Domain.Entities.Aggregates.Branchs;
+
+public class CompanyBranch : EntityBase
 {
     public int Id { get; set; }
     public string BranchCode { get; set; }  // Şube Kodu
@@ -16,14 +19,14 @@ public class CompanyBranches
     public bool IsSalesEnabled { get; set; }  // Satış
     public bool IsAutomationIntegrationEnabled { get; set; }  // Otomasyon Entegrasyon
     public bool IsActive { get; set; } = true; // aktif pasif olayları
-
+    public List<UserBranch> UserBranches { get; private set; } = new List<UserBranch>();
 
     public override bool Equals(object obj)
     {
         if (obj == null || GetType() != obj.GetType())
             return false;
 
-        var other = (CompanyBranches)obj;
+        var other = (CompanyBranch)obj;
         return BranchCode == other.BranchCode &&
                BranchName == other.BranchName &&
                Address == other.Address &&

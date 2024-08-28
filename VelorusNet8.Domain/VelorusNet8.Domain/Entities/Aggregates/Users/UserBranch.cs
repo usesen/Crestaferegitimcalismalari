@@ -1,14 +1,18 @@
-﻿using VelorusNet8.Domain.Entities.Aggregates.Branchs;
+﻿using System.ComponentModel.DataAnnotations;
+using VelorusNet8.Domain.Entities.Aggregates.Branchs;
 
 namespace VelorusNet8.Domain.Entities.Aggregates.Users;
 
 public class UserBranch
 {
+    [Key]
+    public int Id { get; private set; }
     public int UserId { get; private set; }
+    public int BranchId { get; private set; }
     public UserAccount UserAccount { get; private set; }
 
-    public int BranchId { get; private set; }
-    public CompanyBranches Branch { get; private set; }
+  
+    public CompanyBranch CompanyBranch { get; private set; }
 
     // Constructor'da sadece mapped (veritabanında doğrudan eşlenen) özellikleri kullanıyoruz
     public UserBranch(int userId, int branchId)
@@ -23,8 +27,8 @@ public class UserBranch
         UserAccount = userAccount ?? throw new ArgumentNullException(nameof(userAccount));
     }
 
-    public void SetBranch(CompanyBranches branch)
+    public void SetBranch(CompanyBranch branch)
     {
-        Branch = branch ?? throw new ArgumentNullException(nameof(branch));
+        CompanyBranch = branch ?? throw new ArgumentNullException(nameof(branch));
     }
 }

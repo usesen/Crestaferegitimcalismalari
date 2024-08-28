@@ -2,7 +2,6 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using VelorusNet8.Application;
-using VelorusNet8.Domain.Utilities;
 using VelorusNet8.Infrastructure;
 using VelorusNet8.Infrastructure.Data;
 using VelorusNet8.Infrastructure.Middleware;
@@ -37,7 +36,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
 //DateTime Ýstanbul UTC Service ayaða kaldýrma
-builder.Services.AddScoped<IDateTimeService, DateTimeService>();
+//builder.Services.AddScoped<IDateTimeService, DateTimeService>();
 
 
 builder.Services.AddAutoMapper(typeof(Program)); // AutoMapper profil sýnýfýnýzý içerebilir
@@ -52,13 +51,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddHttpContextAccessor();
 var app = builder.Build();
 
-
-
 // RequestResponseLoggingMiddleware'i ekleniyor
 app.UseMiddleware<RequestResponseLoggingMiddleware>();
 
 // RequestTimeMiddleWare ekleniyor
-app.UseMiddleware<RequestTimeMiddleware>();
+//app.UseMiddleware<RequestTimeMiddleware>();
 // Custom exception handling middleware
 app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 if (app.Environment.IsDevelopment())

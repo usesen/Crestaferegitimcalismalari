@@ -35,14 +35,21 @@ public class UserAccountRepository : IUserAccountRepository
 
     public async Task DeleteAsync(int userId, CancellationToken cancellationToken)
     {
-        var userAccount = await GetByIdAsync(userId, cancellationToken);
+        // Veritabanından userId ile eşleşen ilk kullanıcıyı getiriyoruz
+        var userAccount = await _context.UserAccounts
+            .FirstOrDefaultAsync(u => u.UserId == userId, cancellationToken);
+
+
+        // Kullanıcı bulunduysa, IsActive özelliğini false olarak ayarlıyoruz
         if (userAccount != null)
         {
-            _context.UserAccounts.Remove(userAccount);
+            userAccount.IsActive = false;
+
+            // Güncellemeyi veritabanına kaydediyoruz
+            _context.UserAccounts.Update(userAccount);
             await _context.SaveChangesAsync(cancellationToken);
         }
     }
-
     public async Task<UserAccount> GetByEmailAsync(string email, CancellationToken cancellationToken)
     {
         return await _context.UserAccounts.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);

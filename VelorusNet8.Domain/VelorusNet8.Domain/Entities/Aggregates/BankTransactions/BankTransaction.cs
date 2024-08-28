@@ -16,7 +16,7 @@ public class BankTransaction : EntityBase
     public UserAccount userAccount { get; set; }
     public Bank Bank { get; set; } // İlgili Banka
     // Constructor
-    public BankTransaction(int id, DateTime transactionDate, decimal amount, string description, TransactionType transactionType, int bankId, int userId) : base(userId)
+    public BankTransaction(int id, DateTime transactionDate, decimal amount, string description, TransactionType transactionType, int bankId, int userId) : base()
       
     {
         Id = id;

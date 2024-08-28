@@ -36,7 +36,7 @@ public class BusinessEntity : EntityBase
                              string customerRepresentativeCode, string identityNumber,
                              IList<BankAccount> bankAccounts, FinanceGeneralSettings financeGeneralSettings,
                              FinancialSummary financialSummary, UserAccount userAccount, TaxInformation taxInformation,
-                             AccountBalanceDetails accountBalanceDetails, Branch branch, ContactInformation contactInformation, int userId , bool isActive = true) : base(userId)
+                             AccountBalanceDetails accountBalanceDetails, Branch branch, ContactInformation contactInformation, int userId , bool isActive = true) : base()
     {
         CompanyName = companyName;
         Address = address;

@@ -14,7 +14,7 @@ public class AppDbContext : DbContext
 
     public DbSet<UserAccount> UserAccounts { get; set; }
     public DbSet<UserBranch> UserBranches { get; set; }
-    public DbSet<CompanyBranches> Branches { get; set; }
+    public DbSet<CompanyBranch> CompanyBranches { get; set; }
     public DbSet<Log> Logs { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options, IHttpContextAccessor httpContextAccessor)
@@ -28,7 +28,7 @@ public class AppDbContext : DbContext
         // Composite key tanımlıyoruz
         modelBuilder.Entity<UserBranch>()
             .HasKey(ub => new { ub.UserId, ub.BranchId });
-
+            
         // UserAccount ile UserBranch ilişkisini tanımlıyoruz
         modelBuilder.Entity<UserBranch>()
             .HasOne(ub => ub.UserAccount)
@@ -37,8 +37,8 @@ public class AppDbContext : DbContext
 
         // Branch ile UserBranch ilişkisini tanımlıyoruz
         modelBuilder.Entity<UserBranch>()
-            .HasOne(ub => ub.Branch)
-            .WithMany()
+            .HasOne(ub => ub.CompanyBranch)
+            .WithMany(cb => cb.UserBranches)
             .HasForeignKey(ub => ub.BranchId);
 
         // Seed verilerini ekliyoruz
@@ -54,18 +54,22 @@ public class AppDbContext : DbContext
     }
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
+    
         var userName = _httpContextAccessor.HttpContext?.User?.Identity?.Name;
-        userName = "TestUser";
+        userName = userName ?? "TestUser"; // Eğer null ise, "TestUser" olarak ayarlayın
+
         foreach (var entry in ChangeTracker.Entries<EntityBase>())
         {
             if (entry.State == EntityState.Added)
             {
-                entry.Entity.CreatedDate = DateTime.UtcNow;
+                entry.Entity.CreatedDate = DateTime.Now;
                 entry.Entity.CreatedBy = userName; // Mevcut kullanıcı adı
+                //entry.Entity.LastModifiedDate = DateTime.UtcNow;
+                //entry.Entity.LastModifiedBy = userName; // Mevcut kullanıcı adı
             }
             else if (entry.State == EntityState.Modified)
             {
-                entry.Entity.LastModifiedDate = DateTime.UtcNow;
+                entry.Entity.LastModifiedDate = DateTime.Now;
                 entry.Entity.LastModifiedBy = userName; // Mevcut kullanıcı adı
             }
         }

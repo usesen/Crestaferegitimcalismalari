@@ -4,7 +4,6 @@ using VelorusNet8.Application.Commands.UserAccount;
 using VelorusNet8.Application.Dto.User;
 using VelorusNet8.Application.Interface;
 using VelorusNet8.Domain.Entities.Aggregates.Users;
-using VelorusNet8.Domain.Utilities;
 
 namespace VelorusNet8.Application.Service;
 

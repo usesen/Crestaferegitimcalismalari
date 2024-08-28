@@ -1,8 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
-using VelorusNet8.Domain.Entities.Aggregates.Business.ValueOnject;
 using VelorusNet8.Domain.Entities.Common;
-using VelorusNet8.Domain.Utilities;
 
 namespace VelorusNet8.Domain.Entities.Aggregates.Users;
 
@@ -19,11 +16,11 @@ public class UserAccount : EntityBase
     public List<UserBranch> UserBranches { get; private set; } = new List<UserBranch>();
 
 
-    public UserAccount() : base(0) // Varsayılan yapıcı
+    public UserAccount() : base() // Varsayılan yapıcı
     {
     }
 
-    public UserAccount(int userId, string username, string email, string passwordHash , bool isActive ) : base(userId)  // UserId'yi EntityBase constructor'ına geçiyoruz
+    public UserAccount(int userId, string username, string email, string passwordHash , bool isActive ) : base()  // UserId'yi EntityBase constructor'ına geçiyoruz
     {
         UserId = userId;
         UserName = username ?? throw new ArgumentNullException(nameof(username));

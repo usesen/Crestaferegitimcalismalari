@@ -12,7 +12,7 @@ namespace VelorusNet8.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Branches",
+                name: "CompanyBranches",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -29,11 +29,15 @@ namespace VelorusNet8.Infrastructure.Migrations
                     IsHeadOffice = table.Column<bool>(type: "bit", nullable: false),
                     IsSalesEnabled = table.Column<bool>(type: "bit", nullable: false),
                     IsAutomationIntegrationEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Branches", x => x.Id);
+                    table.PrimaryKey("PK_CompanyBranches", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -62,11 +66,10 @@ namespace VelorusNet8.Infrastructure.Migrations
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -78,17 +81,23 @@ namespace VelorusNet8.Infrastructure.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    BranchId = table.Column<int>(type: "int", nullable: false)
+                    BranchId = table.Column<int>(type: "int", nullable: false),
+                    CompanyBranchId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserBranches", x => new { x.UserId, x.BranchId });
                     table.ForeignKey(
-                        name: "FK_UserBranches_Branches_BranchId",
+                        name: "FK_UserBranches_CompanyBranches_BranchId",
                         column: x => x.BranchId,
-                        principalTable: "Branches",
+                        principalTable: "CompanyBranches",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserBranches_CompanyBranches_CompanyBranchId",
+                        column: x => x.CompanyBranchId,
+                        principalTable: "CompanyBranches",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_UserBranches_UserAccounts_UserId",
                         column: x => x.UserId,
@@ -98,19 +107,24 @@ namespace VelorusNet8.Infrastructure.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Branches",
-                columns: new[] { "Id", "Address", "BranchCode", "BranchName", "CommissionAmount", "CommissionRate", "DefaultShrinkageRate", "Email", "Fax", "IsActive", "IsAutomationIntegrationEnabled", "IsHeadOffice", "IsSalesEnabled", "Phone" },
-                values: new object[] { 1, "123 Main St", "B001", "Main Branch", 1000m, 0.05m, 0.02m, "mainbranch@example.com", "555-5678", true, true, true, true, "555-1234" });
+                table: "CompanyBranches",
+                columns: new[] { "Id", "Address", "BranchCode", "BranchName", "CommissionAmount", "CommissionRate", "CreatedBy", "CreatedDate", "DefaultShrinkageRate", "Email", "Fax", "IsActive", "IsAutomationIntegrationEnabled", "IsHeadOffice", "IsSalesEnabled", "LastModifiedBy", "LastModifiedDate", "Phone" },
+                values: new object[] { 1, "123 Main St", "B001", "Main Branch", 1000m, 0.05m, null, new DateTime(2024, 8, 28, 15, 8, 10, 144, DateTimeKind.Utc).AddTicks(3053), 0.02m, "mainbranch@example.com", "555-5678", true, true, true, true, null, null, "555-1234" });
 
             migrationBuilder.InsertData(
                 table: "UserAccounts",
-                columns: new[] { "UserId", "CreatedBy", "CreatedDate", "Email", "Id", "IsActive", "LastModifiedBy", "LastModifiedDate", "PasswordHash", "UserName" },
-                values: new object[] { 1, "system", new DateTime(2024, 8, 28, 11, 18, 39, 101, DateTimeKind.Utc).AddTicks(2724), "admin@example.com", 0, true, "system", new DateTime(2024, 8, 28, 11, 18, 39, 101, DateTimeKind.Utc).AddTicks(2725), "hashed_password", "admin" });
+                columns: new[] { "UserId", "CreatedBy", "CreatedDate", "Email", "IsActive", "LastModifiedBy", "LastModifiedDate", "PasswordHash", "UserName" },
+                values: new object[] { 1, "system", new DateTime(2024, 8, 28, 15, 8, 10, 144, DateTimeKind.Utc).AddTicks(3200), "admin@example.com", true, "system", new DateTime(2024, 8, 28, 18, 8, 10, 144, DateTimeKind.Local).AddTicks(3209), "hashed_password", "admin" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserBranches_BranchId",
                 table: "UserBranches",
                 column: "BranchId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserBranches_CompanyBranchId",
+                table: "UserBranches",
+                column: "CompanyBranchId");
         }
 
         /// <inheritdoc />
@@ -123,7 +137,7 @@ namespace VelorusNet8.Infrastructure.Migrations
                 name: "UserBranches");
 
             migrationBuilder.DropTable(
-                name: "Branches");
+                name: "CompanyBranches");
 
             migrationBuilder.DropTable(
                 name: "UserAccounts");
