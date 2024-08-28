@@ -6,7 +6,7 @@ namespace VelorusNet8.Application.Interface;
 
 public interface IUserAccountService
 {
-    Task<UserAccountDto> CreateUserAsync(CreateUserAccountDto createUserDto, CancellationToken cancellationToken);
+    Task<int> CreateUserAsync(CreateUserAccountDto createUserDto, CancellationToken cancellationToken);
     Task<UserAccount> GetByIdAsync(int id, CancellationToken cancellationToken);
     Task<IEnumerable<UserAccount>> GetAllAsync(CancellationToken cancellationToken);
     Task<UserAccount> UpdateAsync(UserAccount entity, CancellationToken cancellationToken);

@@ -2,9 +2,11 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using VelorusNet8.Application;
+using VelorusNet8.Application.Commands.UserAccount;
 using VelorusNet8.Infrastructure;
 using VelorusNet8.Infrastructure.Data;
 using VelorusNet8.Infrastructure.Middleware;
+using VelorusNet8.WebApi.Middlewares;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,6 +35,8 @@ builder.Services.AddSwaggerGen();
 
 // MediatR'ý ekleyin
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+ 
+ 
 builder.Services.AddAutoMapper(typeof(Program)); // AutoMapper profil sýnýfýnýzý içerebilir
 // Application ve Infrastructure servislerinizi ekleyin
 builder.Services.AddApplicationServices();
@@ -43,6 +47,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
+// RequestResponseLoggingMiddleware'i ekleyin
+app.UseMiddleware<RequestResponseLoggingMiddleware>();
+// Custom exception handling middleware
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();

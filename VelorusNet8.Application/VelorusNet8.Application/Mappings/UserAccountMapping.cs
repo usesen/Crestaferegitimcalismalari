@@ -13,12 +13,14 @@ public class UserAccountMapping : Profile
         // UserAccount -> UserDto Mapping
         CreateMap<UserAccount, UserAccountDto>()
             .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName))
-            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email));
+            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+            .ForMember(dest => dest.PasswordHash, opt => opt.MapFrom(src => src.PasswordHash))
+            .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => src.IsActive));
 
-        CreateMap<CreateUserAccountCommand, UserAccount>();
+        // CreateUserAccountDto'dan CreateUserAccountCommand'a mapleme
+        CreateMap<CreateUserAccountDto, CreateUserAccountCommand>();
+        // CreateUserAccountCommand'dan CreateUserAccountDto'ya mapleme
+        CreateMap<CreateUserAccountCommand, CreateUserAccountDto>();
 
-        CreateMap<CreateUserAccountDto, UserAccountDto>();
-        // Eğer iki yönlü dönüşüm istiyorsanız:
-        CreateMap<UserAccountDto, CreateUserAccountDto>();
     }
 }

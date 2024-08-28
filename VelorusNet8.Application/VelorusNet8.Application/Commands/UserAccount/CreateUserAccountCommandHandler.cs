@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using VelorusNet8.Application.Commands.UserAccount;
 using VelorusNet8.Application.Dto.User;
@@ -6,34 +7,41 @@ using VelorusNet8.Application.Interface;
 
 namespace VelorusNet8.Application.Commands.UserAccount;
 
-public class CreateUserAccountCommandHandler : IRequest<int>
+public class CreateUserAccountCommandHandler : IRequestHandler<CreateUserAccountCommand, int>
 {
-    private readonly IUserAccountService _iuserAccountService;
-    private readonly IMapper _mapper;
-
-    public CreateUserAccountCommandHandler(IUserAccountService iuserAccountService, IMapper mapper)
+    private readonly IUserAccountRepository _userAccountRepository;
+    private readonly IValidator<CreateUserAccountCommand> _validator;
+    public CreateUserAccountCommandHandler(IUserAccountRepository userAccountRepository, IValidator<CreateUserAccountCommand> validator)
     {
-        _iuserAccountService = iuserAccountService;
-        _mapper = mapper;
+        _userAccountRepository = userAccountRepository;
+        _validator = validator;
     }
 
-    public async  Task<int> Handle(CreateUserAccountCommand request, CancellationToken cancellationToken)
+    public async Task<int> Handle(CreateUserAccountCommand request, CancellationToken cancellationToken)
     {
-        // UserAccount nesnesini oluştur
-        var userAccount = new VelorusNet8.Domain.Entities.Aggregates.Users.UserAccount(0, request.UserName, request.Email, request.PasswordHash, request.IsActive);
-
-        var createUserDto = _mapper.Map<CreateUserAccountDto>(userAccount);
-        await _iuserAccountService.CreateUserAsync(createUserDto, cancellationToken);
- 
-        var createdUser = await _iuserAccountService.GetByEmailAsync(request.Email, cancellationToken);
-        if (createdUser == null)
+        // Doğrulama işlemi
+        var validationResult = _validator.Validate(request);
+        if (!validationResult.IsValid)
         {
-            // Kullanıcı oluşturulmadıysa veya bulunmadıysa hata durumu
-            return -1;
-        }
+            // Hataları topluyoruz
+            var errors = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
 
-        // Oluşturulan kullanıcı kimliğini döndür
-        return createdUser.UserId;
+            // Hataları bir exception veya response nesnesi olarak döndürebilirsiniz
+            throw new ValidationException(validationResult.Errors);
+        }
+        var userAccount = new VelorusNet8.Domain.Entities.Aggregates.Users.UserAccount(0,
+            request.UserName,
+            request.Email,
+            request.PasswordHash,
+            request.IsActive
+        );
+
+        // UserAccount nesnesini veritabanına kaydet
+        await _userAccountRepository.AddAsync(userAccount, cancellationToken);
+
+        // Yeni oluşturulan kullanıcı ID'sini geri döndür
+        return userAccount.UserId;
+
     }
 
     private string HashPassword(string password)

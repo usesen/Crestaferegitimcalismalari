@@ -21,11 +21,10 @@ public class UserAccountService : IUserAccountService
         _mapper = mapper;
     }
 
-    public async Task<UserAccountDto> CreateUserAsync(CreateUserAccountDto createUserDto, CancellationToken cancellationToken)
+    public async Task<int> CreateUserAsync(CreateUserAccountDto createUserDto, CancellationToken cancellationToken)
     {
-        // CreateUserAccountCommand ile bir komut oluştur
+        // DTO'yu Command'e dönüştürün
         var command = new CreateUserAccountCommand(
-            createUserDto.UserId,
             createUserDto.UserName,
             createUserDto.Email,
             createUserDto.PasswordHash,
@@ -33,10 +32,9 @@ public class UserAccountService : IUserAccountService
         );
         // MediatR kullanarak komutu işleyin
         var createdUserId = await _mediator.Send(command, cancellationToken);
-
-        var userAccountDto = _mapper.Map<UserAccountDto>(createUserDto);
-
-        return userAccountDto;
+         
+        
+        return createdUserId;
     }
      
 

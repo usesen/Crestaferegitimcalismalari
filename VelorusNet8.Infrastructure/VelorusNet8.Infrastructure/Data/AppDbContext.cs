@@ -10,7 +10,7 @@ public class AppDbContext : DbContext
 {
     public DbSet<UserAccount> UserAccounts { get; set; }
     public DbSet<UserBranch> UserBranches { get; set; }
-    public DbSet<UpdateBranchDTO> Branches { get; set; }
+    public DbSet<CompanyBranches> Branches { get; set; }
     public DbSet<Log> Logs { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options)

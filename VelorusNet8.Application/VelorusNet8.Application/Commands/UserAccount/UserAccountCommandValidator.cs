@@ -2,7 +2,7 @@
 
 namespace VelorusNet8.Application.Commands.UserAccount;
 
-public  class UserAccountCommandValidator : AbstractValidator<VelorusNet8.Application.Dto.User.UserAccountDto>
+public  class UserAccountCommandValidator : AbstractValidator<CreateUserAccountCommand>
 {
     public UserAccountCommandValidator()
     {

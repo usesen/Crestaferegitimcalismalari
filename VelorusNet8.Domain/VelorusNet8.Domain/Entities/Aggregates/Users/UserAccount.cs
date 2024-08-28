@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using VelorusNet8.Domain.Entities.Aggregates.Business.ValueOnject;
 using VelorusNet8.Domain.Entities.Common;
 
 namespace VelorusNet8.Domain.Entities.Aggregates.Users;
@@ -30,8 +31,7 @@ public class UserAccount : EntityBase
         IsActive = isActive;
     }
 
-
-
+ 
     public void UpdatePassword(string newPasswordHash)
     {
         PasswordHash = newPasswordHash ?? throw new ArgumentNullException(nameof(newPasswordHash));
@@ -72,6 +72,6 @@ public class UserAccount : EntityBase
     
     public override int GetHashCode()
     {
-        return HashCode.Combine(UserName, Email, PasswordHash );
+        return HashCode.Combine(UserId,UserName, Email, PasswordHash,IsActive );
     }
 }

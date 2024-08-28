@@ -4,6 +4,10 @@ using VelorusNet8.Application.Dto.User;
 using VelorusNet8.Application.Interface;
 using VelorusNet8.Domain.Entities.Aggregates.Users;
 using VelorusNet8.WepApi.WpDto.WpUser;
+using FluentValidation;
+using VelorusNet8.Application.Commands.UserAccount;
+using MediatR;
+
 
 namespace VelorusNet8.WebApi.Controllers;
 
@@ -14,11 +18,14 @@ public class UserAccountController : ControllerBase
     private readonly IUserAccountRepository _userAccountRepository;
     private readonly IUserAccountService _userAccountService;
     private readonly IMapper _mapper;
-    public UserAccountController(IUserAccountRepository userAccountRepository, IUserAccountService userAccountService, IMapper mapper)
+    private readonly IMediator _mediatR;
+
+    public UserAccountController(IUserAccountRepository userAccountRepository, IUserAccountService userAccountService, IMapper mapper, IMediator mediatR)
     {
         _userAccountRepository = userAccountRepository;
         _userAccountService = userAccountService;
         _mapper = mapper;
+        _mediatR = mediatR;
     }
     // Kullanıcı oluşturma işlemi
     [HttpPost]
@@ -28,20 +35,34 @@ public class UserAccountController : ControllerBase
         {
             return BadRequest("Kullanıcı bilgileri eksik.");
         }
+        try
+        {
 
-        var userAccount = new UserAccount
-        {   
-            UserName = createUserAcountDtoWpa.UserName,
-            Email = createUserAcountDtoWpa.Email,
-            PasswordHash = createUserAcountDtoWpa.PasswordHash,
-            IsActive = createUserAcountDtoWpa.IsActive
-        };
+            var createUserAccountDto = _mapper.Map<CreateUserAccountDto>(createUserAcountDtoWpa);
+            // Servis kullanarak kullanıcıyı oluşturun
+            int GetUserById = await _userAccountService.CreateUserAsync(createUserAccountDto, cancellationToken);
 
-        var createUserAccount = _mapper.Map<CreateUserAccountDto>(userAccount);
-        await _userAccountService.CreateUserAsync(createUserAccount, cancellationToken);
-       // await _userAccountRepository.AddAsync(userAccount, cancellationToken);
+            return CreatedAtAction(nameof(GetUserById), new { id = createUserAcountDtoWpa.UserId }, createUserAcountDtoWpa);
+        }
+        catch (ValidationException ex)
+        {
+            // Doğrulama hatalarını yakalayıp, kullanıcıya geri döndürüyoruz
+            var errors = ex.Errors.Select(e => new { e.PropertyName, e.ErrorMessage }).ToList();
+            return BadRequest(new { Message = "Validation failed", Errors = errors });
+        }
+    }
+    // Kullanıcı güncelleme işlemi
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateUser(int id, [FromBody] UpdateUserAccountCommand command, CancellationToken cancellationToken)
+    {
+        if (command == null || id != command.UserId)
+        {
+            return BadRequest("Kullanıcı bilgileri geçersiz.");
+        }
 
-        return CreatedAtAction(nameof(GetUserById), new { id = userAccount.UserId }, userAccount);
+        var updatedUserId = await _mediatR.Send(command, cancellationToken);
+
+        return Ok(updatedUserId);
     }
 
     // Kullanıcıyı ID'ye göre getir
@@ -65,19 +86,6 @@ public class UserAccountController : ControllerBase
         return Ok(users);
     }
 
-    // Kullanıcı güncelleme işlemi
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateUser(int id, [FromBody] UserAccount userAccount, CancellationToken cancellationToken)
-    {
-        if (userAccount == null || id != userAccount.UserId)
-        {
-            return BadRequest("Kullanıcı bilgileri geçersiz.");
-        }
-
-        await _userAccountRepository.UpdateAsync(userAccount, cancellationToken);
-
-        return Ok(userAccount);
-    }
 
     // Kullanıcı silme işlemi
     [HttpDelete("{id}")]

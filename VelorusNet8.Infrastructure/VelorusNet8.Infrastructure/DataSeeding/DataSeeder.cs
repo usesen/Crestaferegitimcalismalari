@@ -13,8 +13,8 @@ public static class DataSeeder
 {
     public static void SeedData(this ModelBuilder modelBuilder)
     {   //Branch data
-        modelBuilder.Entity<UpdateBranchDTO>().HasData(
-            new UpdateBranchDTO
+        modelBuilder.Entity<CompanyBranches>().HasData(
+            new CompanyBranches
             {
                 Id = 1,
                 BranchCode = "B001",
