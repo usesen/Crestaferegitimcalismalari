@@ -21,6 +21,7 @@ public class UserAccountMapping : Profile
         CreateMap<CreateUserAccountDto, CreateUserAccountCommand>();
         // CreateUserAccountCommand'dan CreateUserAccountDto'ya mapleme
         CreateMap<CreateUserAccountCommand, CreateUserAccountDto>();
+        CreateMap<UpdateUserAccountDto, UpdateUserAccountCommand>();
 
     }
 }

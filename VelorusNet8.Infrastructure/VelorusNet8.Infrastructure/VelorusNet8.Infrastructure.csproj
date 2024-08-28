@@ -10,7 +10,9 @@
     <Folder Include="CrossCutting\" />
     <Folder Include="Configurations\" />
     <Folder Include="Extensions\" />
+    <Folder Include="Interface\" />
     <Folder Include="Mapping\" />
+    <Folder Include="Migrations\" />
     <Folder Include="Services\" />
     <Folder Include="Utilities\" />
   </ItemGroup>

@@ -7,11 +7,13 @@ using System.Threading.Tasks;
 using VelorusNet8.Domain.Entities.Aggregates.Branchs;
 using VelorusNet8.Domain.Entities.Aggregates.Users;
 
+
 namespace VelorusNet8.Infrastructure.DataSeeding;
 
-public static class DataSeeder
+public static  class DataSeeder
 {
-    public static void SeedData(this ModelBuilder modelBuilder)
+ 
+    public static  void SeedData(this ModelBuilder modelBuilder)
     {   //Branch data
         modelBuilder.Entity<CompanyBranches>().HasData(
             new CompanyBranches
@@ -33,6 +35,18 @@ public static class DataSeeder
         );
 
         // UserAccount Data
-        modelBuilder.Entity<UserAccount>().HasData(new UserAccount(1, "admin", "admin@example.com", "hashedpassword", true));
+        modelBuilder.Entity<UserAccount>().HasData(
+         new UserAccount
+         {
+             UserId = 1,
+             UserName = "admin",
+             Email = "admin@example.com",
+             PasswordHash = "hashed_password",
+             IsActive = true,
+             CreatedBy = "system",            // Zorunlu alan
+             CreatedDate = DateTime.UtcNow,   // Zorunlu alan
+             LastModifiedBy = "system",       // Zorunlu alan
+             LastModifiedDate = DateTime.Now // Zorunlu alan (eğer varsa)
+         });
     }
 }

@@ -1,21 +1,39 @@
 ﻿using VelorusNet8.Domain.Entities.Aggregates.Users;
+using VelorusNet8.Domain.Utilities;
 
 namespace VelorusNet8.Domain.Entities.Common;
 
 public abstract class EntityBase
 {
-    public int UserId { get; private set; } // Aktif Kullanıcı Id
-    public DateTime CreatedDate { get; private set; }  // Oluşturulma Tarihi
-    public DateTime? UpdatedDate { get; private set; }  // Son Güncellenme Tarihi
-
-    protected EntityBase(int userId)
+    private readonly IDateTimeService _dateTimeService;
+    private DateTime? _lastModifiedDate;
+    private DateTime? _createdDate;
+    protected EntityBase(IDateTimeService dateTimeService)
     {
-        CreatedDate = DateTime.Now;
-        UserId = userId;
+        _dateTimeService = dateTimeService;
+        CreatedDate = _dateTimeService.GetCurrentTime();
+        LastModifiedDate = _dateTimeService.GetCurrentTime();
     }
 
-    public void UpdateEntity()
+    public int Id { get; set; }
+    public DateTime? CreatedDate
     {
-        UpdatedDate = DateTime.Now;
+        get => _createdDate;
+        set => _createdDate = value ?? _dateTimeService.GetCurrentTime();
+    }  
+    public string CreatedBy { get; set; }
+    public DateTime? LastModifiedDate
+    {
+        get => _lastModifiedDate;
+        set => _lastModifiedDate = value ?? _dateTimeService.GetCurrentTime();
     }
+    public string LastModifiedBy { get; set; }
+
+    protected EntityBase() { }
+
+    protected EntityBase(int id)
+    {
+        Id = id;
+    }
+
 }

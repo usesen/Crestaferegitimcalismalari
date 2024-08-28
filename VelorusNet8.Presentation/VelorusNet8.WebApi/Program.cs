@@ -2,7 +2,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using VelorusNet8.Application;
-using VelorusNet8.Application.Commands.UserAccount;
+using VelorusNet8.Domain.Utilities;
 using VelorusNet8.Infrastructure;
 using VelorusNet8.Infrastructure.Data;
 using VelorusNet8.Infrastructure.Middleware;
@@ -35,8 +35,11 @@ builder.Services.AddSwaggerGen();
 
 // MediatR'ý ekleyin
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
- 
- 
+
+//DateTime Ýstanbul UTC Service ayaða kaldýrma
+builder.Services.AddScoped<IDateTimeService, DateTimeService>();
+
+
 builder.Services.AddAutoMapper(typeof(Program)); // AutoMapper profil sýnýfýnýzý içerebilir
 // Application ve Infrastructure servislerinizi ekleyin
 builder.Services.AddApplicationServices();
@@ -45,15 +48,28 @@ builder.Services.AddInfrastructureServices(); // Burada `AddInfrastructureServic
 // DbContext'i ekleyin
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+// Add services to the container.
+builder.Services.AddHttpContextAccessor();
 var app = builder.Build();
-// RequestResponseLoggingMiddleware'i ekleyin
+
+
+
+// RequestResponseLoggingMiddleware'i ekleniyor
 app.UseMiddleware<RequestResponseLoggingMiddleware>();
+
+// RequestTimeMiddleWare ekleniyor
+app.UseMiddleware<RequestTimeMiddleware>();
 // Custom exception handling middleware
 app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
+    // Migration'ý otomatik olarak uygulamak için
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        dbContext.Database.Migrate();
+    }
 }
 app.UseMiddleware<LogMiddleware>();
 app.UseHttpsRedirection();

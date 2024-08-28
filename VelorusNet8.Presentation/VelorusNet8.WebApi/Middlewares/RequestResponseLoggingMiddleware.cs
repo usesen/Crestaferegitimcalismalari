@@ -1,4 +1,5 @@
-﻿using VelorusNet8.Infrastructure.Data;
+﻿using VelorusNet8.Domain.Utilities;
+using VelorusNet8.Infrastructure.Data;
 using VelorusNet8.Infrastructure.Models;
 
 namespace VelorusNet8.WebApi.Middlewares;
@@ -7,9 +8,11 @@ namespace VelorusNet8.WebApi.Middlewares;
 public class RequestResponseLoggingMiddleware
 {
     private readonly RequestDelegate _next;
-    public RequestResponseLoggingMiddleware(RequestDelegate next)
+    private readonly IDateTimeService _dateTimeService;
+    public RequestResponseLoggingMiddleware(RequestDelegate next, IDateTimeService dateTimeService)
     {
         _next = next;
+        _dateTimeService = dateTimeService;
     }
 
 
@@ -17,6 +20,7 @@ public class RequestResponseLoggingMiddleware
     {
         // HttpContext'ten scoped hizmetleri çözümleyin
         var dbContext = context.RequestServices.GetRequiredService<AppDbContext>();
+      
 
         // Request'i yakala
         var request = await FormatRequest(context.Request);
@@ -37,7 +41,7 @@ public class RequestResponseLoggingMiddleware
             // Log kaydını oluştur
             var log = new Log
             {
-                Timestamp = DateTime.UtcNow,
+                Timestamp = _dateTimeService.GetCurrentTime(),//DateTime.UtcNow,
                 Request = request,
                 Response = response,
                 Status = status

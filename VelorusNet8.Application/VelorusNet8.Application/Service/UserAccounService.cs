@@ -3,8 +3,8 @@ using MediatR;
 using VelorusNet8.Application.Commands.UserAccount;
 using VelorusNet8.Application.Dto.User;
 using VelorusNet8.Application.Interface;
-using VelorusNet8.Application.Queries.UserAccount;
 using VelorusNet8.Domain.Entities.Aggregates.Users;
+using VelorusNet8.Domain.Utilities;
 
 namespace VelorusNet8.Application.Service;
 
@@ -13,12 +13,13 @@ public class UserAccountService : IUserAccountService
     private readonly IUserAccountRepository _userAccountRepository;
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
-
+ 
     public UserAccountService(IUserAccountRepository userAccountRepository, IMediator mediator, IMapper mapper)
     {
         _userAccountRepository = userAccountRepository;
         _mediator = mediator;
         _mapper = mapper;
+ 
     }
 
     public async Task<int> CreateUserAsync(CreateUserAccountDto createUserDto, CancellationToken cancellationToken)
@@ -36,7 +37,22 @@ public class UserAccountService : IUserAccountService
         
         return createdUserId;
     }
-     
+
+    public async Task<int> UpdateUserAsync(UpdateUserAccountDto updateUserDto, CancellationToken cancellationToken)
+    {
+        // DTO'yu Command'e dönüştürün
+        var command = new UpdateUserAccountCommand(
+           updateUserDto.Id,            // Burada DTO yerine Command kullanıyoruz
+           updateUserDto.UserName,
+           updateUserDto.Email,
+           updateUserDto.PasswordHash,
+           updateUserDto.IsActive
+        );
+        // MediatR kullanarak komutu işleyin
+        var updateUserId = await _mediator.Send(command, cancellationToken);
+
+        return updateUserId;
+    }
 
     public async Task<UserAccount> GetByIdAsync(int id, CancellationToken cancellationToken)
     {
@@ -48,11 +64,6 @@ public class UserAccountService : IUserAccountService
         return await _userAccountRepository.GetAllAsync(cancellationToken);
     }
 
-    public async Task<UserAccount> UpdateAsync(UserAccount entity, CancellationToken cancellationToken)
-    {
-        await _userAccountRepository.UpdateAsync(entity, cancellationToken);
-        return entity;
-    }
 
     public async Task DeleteAsync(int userId, CancellationToken cancellationToken)
     {
@@ -74,5 +85,5 @@ public class UserAccountService : IUserAccountService
         return await _userAccountRepository.GetUsersWithBranchesAsync(id, cancellationToken);
     }
 
-
+   
 }

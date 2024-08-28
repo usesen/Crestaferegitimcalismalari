@@ -62,8 +62,11 @@ namespace VelorusNet8.Infrastructure.Migrations
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -101,8 +104,8 @@ namespace VelorusNet8.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "UserAccounts",
-                columns: new[] { "UserId", "CreatedDate", "Email", "IsActive", "PasswordHash", "UpdatedDate", "UserName" },
-                values: new object[] { 1, new DateTime(2024, 8, 26, 7, 36, 28, 386, DateTimeKind.Local).AddTicks(194), "admin@example.com", true, "hashedpassword", null, "admin" });
+                columns: new[] { "UserId", "CreatedBy", "CreatedDate", "Email", "Id", "IsActive", "LastModifiedBy", "LastModifiedDate", "PasswordHash", "UserName" },
+                values: new object[] { 1, "system", new DateTime(2024, 8, 28, 11, 18, 39, 101, DateTimeKind.Utc).AddTicks(2724), "admin@example.com", 0, true, "system", new DateTime(2024, 8, 28, 11, 18, 39, 101, DateTimeKind.Utc).AddTicks(2725), "hashed_password", "admin" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserBranches_BranchId",

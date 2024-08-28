@@ -62,21 +62,7 @@ public class PersonnelInformation : EntityBase // personel bilgileri
         VendorCode = vendorCode;
         TerminationReason = terminationReason;
     }
-
-
-
-    public void Deactivate()
-    {
-        IsActive = false;
-        UpdateEntity();
-    }
-
-    public void Activate()
-    {
-        IsActive = true;
-        UpdateEntity();
-    }
-
+ 
     public override int GetHashCode()
     {
         int hash1 = HashCode.Combine(PersonnelCode, FullName, AutomationCode, Group, Address, Email, Phone, Mobile);

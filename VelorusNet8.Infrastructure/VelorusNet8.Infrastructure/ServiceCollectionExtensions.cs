@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VelorusNet8.Application.Interface;
+using VelorusNet8.Domain.Utilities;
 using VelorusNet8.Infrastructure.Data;
 using VelorusNet8.Infrastructure.Middleware;
 using VelorusNet8.Infrastructure.Repositories;
@@ -23,7 +24,6 @@ public static class ServiceCollectionExtensions
         services.AddDbContext<AppDbContext>(options =>
                                  options.UseSqlServer(connectionString));
         // Diğer servisler...
-
         services.AddTransient<IUserAccountRepository, UserAccountRepository>();
      
         return services;

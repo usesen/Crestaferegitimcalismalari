@@ -1,8 +1,5 @@
-﻿using AutoMapper;
-using FluentValidation;
+﻿using FluentValidation;
 using MediatR;
-using VelorusNet8.Application.Commands.UserAccount;
-using VelorusNet8.Application.Dto.User;
 using VelorusNet8.Application.Interface;
 
 namespace VelorusNet8.Application.Commands.UserAccount;

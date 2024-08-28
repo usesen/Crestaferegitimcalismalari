@@ -9,7 +9,7 @@ public interface IUserAccountService
     Task<int> CreateUserAsync(CreateUserAccountDto createUserDto, CancellationToken cancellationToken);
     Task<UserAccount> GetByIdAsync(int id, CancellationToken cancellationToken);
     Task<IEnumerable<UserAccount>> GetAllAsync(CancellationToken cancellationToken);
-    Task<UserAccount> UpdateAsync(UserAccount entity, CancellationToken cancellationToken);
+    Task<int> UpdateUserAsync(UpdateUserAccountDto createUserDto, CancellationToken cancellationToken);
     Task DeleteAsync(int userId, CancellationToken cancellationToken);
     Task<UserAccount> GetByEmailAsync(string email, CancellationToken cancellationToken);
     Task<UserAccount> GetByUserNameAsync(string username, CancellationToken cancellationToken);

@@ -12,8 +12,8 @@ using VelorusNet8.Infrastructure.Data;
 namespace VelorusNet8.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240826083526_InitialCreate1")]
-    partial class InitialCreate1
+    [Migration("20240828111840_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace VelorusNet8.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("VelorusNet8.Domain.Entities.Aggregates.Branchs.BranchEntity", b =>
+            modelBuilder.Entity("VelorusNet8.Domain.Entities.Aggregates.Branchs.CompanyBranches", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -110,6 +110,10 @@ namespace VelorusNet8.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -117,15 +121,22 @@ namespace VelorusNet8.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModifiedDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("UserName")
                         .IsRequired()
@@ -139,10 +150,14 @@ namespace VelorusNet8.Infrastructure.Migrations
                         new
                         {
                             UserId = 1,
-                            CreatedDate = new DateTime(2024, 8, 26, 11, 35, 24, 910, DateTimeKind.Local).AddTicks(2193),
+                            CreatedBy = "system",
+                            CreatedDate = new DateTime(2024, 8, 28, 11, 18, 39, 101, DateTimeKind.Utc).AddTicks(2724),
                             Email = "admin@example.com",
+                            Id = 0,
                             IsActive = true,
-                            PasswordHash = "hashedpassword",
+                            LastModifiedBy = "system",
+                            LastModifiedDate = new DateTime(2024, 8, 28, 11, 18, 39, 101, DateTimeKind.Utc).AddTicks(2725),
+                            PasswordHash = "hashed_password",
                             UserName = "admin"
                         });
                 });
@@ -192,7 +207,7 @@ namespace VelorusNet8.Infrastructure.Migrations
 
             modelBuilder.Entity("VelorusNet8.Domain.Entities.Aggregates.Users.UserBranch", b =>
                 {
-                    b.HasOne("VelorusNet8.Domain.Entities.Aggregates.Branchs.BranchEntity", "Branch")
+                    b.HasOne("VelorusNet8.Domain.Entities.Aggregates.Branchs.CompanyBranches", "Branch")
                         .WithMany()
                         .HasForeignKey("BranchId")
                         .OnDelete(DeleteBehavior.Cascade)
