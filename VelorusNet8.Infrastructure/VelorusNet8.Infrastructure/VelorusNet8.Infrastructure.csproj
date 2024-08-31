@@ -10,6 +10,7 @@
     <Folder Include="CrossCutting\" />
     <Folder Include="Extensions\" />
     <Folder Include="Mapping\" />
+    <Folder Include="Repositories\Idendity\" />
     <Folder Include="Services\" />
     <Folder Include="Utilities\" />
   </ItemGroup>

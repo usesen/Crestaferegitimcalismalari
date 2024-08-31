@@ -8,7 +8,7 @@ using VelorusNet8.Application.Interface.User;
 using VelorusNet8.Infrastructure.Data;
 using VelorusNet8.Infrastructure.Middleware;
 using VelorusNet8.Infrastructure.Repositories;
-using VelorusNet8.Infrastructure.Repositories.Idendity;
+
 
 
 namespace VelorusNet8.Infrastructure;
@@ -28,9 +28,8 @@ public static class ServiceCollectionExtensions
         // Diğer servisler...
         services.AddTransient<IUserAccountRepository, UserAccountRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
-        services.AddScoped<IRoleRepository, RoleRepository>();
-        services.AddScoped<IPermissionRepository, PermissionRepository>();
-
+        
+        
         return services;
     }
     public static void UseInfrastructureMiddleware(this IApplicationBuilder app)

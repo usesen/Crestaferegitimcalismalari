@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using VelorusNet8.Domain.Entities.Aggregates.Users;
+using VelorusNet8.Domain.Entities.Common;
 
 namespace VelorusNet8.Domain.Entities.Aggregates.Identity;
 
 
-public class UserRole
+public class UserRole : EntityBase
 {
     public int Id { get; set; }
 

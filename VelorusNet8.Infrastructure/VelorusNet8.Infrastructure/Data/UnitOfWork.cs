@@ -6,23 +6,16 @@ namespace VelorusNet8.Infrastructure.Data;
 public class UnitOfWork : IUnitOfWork
 {
     private readonly AppDbContext _context;
-    public IRoleRepository Roles { get; private set; }
-    public IPermissionRepository Permissions { get; private set; }
 
-    public UnitOfWork(AppDbContext context, IRoleRepository roleRepository, IPermissionRepository permissionRepository)
-    {
-        _context = context;
-        Roles = roleRepository;
-        Permissions = permissionRepository;
-    }
+    public IRoleRepository Roles => throw new NotImplementedException();
 
-    public async Task<int> CompleteAsync()
+    public Task<int> CompleteAsync(CancellationToken cancellationToken)
     {
-        return await _context.SaveChangesAsync();
+        throw new NotImplementedException();
     }
 
     public void Dispose()
     {
-        _context.Dispose();
+        throw new NotImplementedException();
     }
 }

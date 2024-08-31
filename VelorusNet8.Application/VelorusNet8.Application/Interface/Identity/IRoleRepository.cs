@@ -1,11 +1,16 @@
-﻿using VelorusNet8.Domain.Entities.Aggregates.Identity;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using VelorusNet8.Domain.Entities.Aggregates.Identity;
 
 namespace VelorusNet8.Application.Interface.Identity;
 
-public interface IRoleRepository
+public interface IPermissionRepository
 {
-    Task<Role> GetRoleByIdAsync(int id);
-    Task<IEnumerable<Role>> GetAllRolesAsync();
-    void AddRole(Role role);
-    void RemoveRole(Role role);
+    Task<Permission> GetPermissionByIdAsync(int id, CancellationToken cancellationToken);
+    Task<IEnumerable<Permission>> GetAllPermissionsAsync(CancellationToken cancellationToken);
+    void Add(Permission permission);
+    void Remove(Permission permission);
 }

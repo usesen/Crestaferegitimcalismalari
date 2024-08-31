@@ -5,6 +5,5 @@ namespace VelorusNet8.Application.Interface;
 public interface IUnitOfWork : IDisposable
 {
     IRoleRepository Roles { get; }
-    IPermissionRepository Permissions { get; }
-    Task<int> CompleteAsync();
+    Task<int> CompleteAsync(CancellationToken cancellationToken);
 }
