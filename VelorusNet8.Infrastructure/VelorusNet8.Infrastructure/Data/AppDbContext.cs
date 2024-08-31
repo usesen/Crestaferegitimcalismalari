@@ -51,6 +51,7 @@ public class AppDbContext : DbContext
             .HasForeignKey(ub => ub.BranchId);
 
         // Ayrı sınıfları kullanarak yapılandırmaları uygulama
+        // Identity olayları burada kalabalığa yol açmasın diye ayırdım Configurations dizininde detaylar
         modelBuilder.ApplyConfiguration(new RoleConfiguration());
         modelBuilder.ApplyConfiguration(new UserConfiguration());
         modelBuilder.ApplyConfiguration(new PermissionConfiguration());

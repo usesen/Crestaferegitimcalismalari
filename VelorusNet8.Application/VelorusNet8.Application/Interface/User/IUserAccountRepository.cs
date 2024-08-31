@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VelorusNet8.Domain.Entities.Aggregates.Users;
+﻿using VelorusNet8.Domain.Entities.Aggregates.Users;
 
-namespace VelorusNet8.Application.Interface;
+namespace VelorusNet8.Application.Interface.User;
 public interface IUserAccountRepository
 {
     Task<UserAccount> GetByIdAsync(int userId, CancellationToken cancellationToken);

@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
-using VelorusNet8.Application.Interface;
+using VelorusNet8.Application.Interface.User;
 
 namespace VelorusNet8.Application.Commands.UserAccount;
 

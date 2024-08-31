@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using VelorusNet8.Application.Behaviors;
 using VelorusNet8.Application.Commands.UserAccount;
-using VelorusNet8.Application.Interface;
+using VelorusNet8.Application.Interface.User;
 using VelorusNet8.Application.Service;
 
 namespace VelorusNet8.Application;

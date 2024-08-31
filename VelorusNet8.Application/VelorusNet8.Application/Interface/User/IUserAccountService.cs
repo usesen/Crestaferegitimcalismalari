@@ -2,7 +2,7 @@
 using VelorusNet8.Application.Dto.User;
 using VelorusNet8.Domain.Entities.Aggregates.Users;
 
-namespace VelorusNet8.Application.Interface;
+namespace VelorusNet8.Application.Interface.User;
 
 public interface IUserAccountService
 {

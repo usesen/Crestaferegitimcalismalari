@@ -1,8 +1,8 @@
 ﻿using VelorusNet8.Domain.Entities.Aggregates.Users;
 using VelorusNet8.Application.Service;
-using VelorusNet8.Application.Interface;
 using VelorusNet8.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using VelorusNet8.Application.Interface.User;
 
 namespace VelorusNet8.Infrastructure.Repositories;
 

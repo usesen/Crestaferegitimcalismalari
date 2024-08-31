@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using VelorusNet8.Application.Dto.User;
-using VelorusNet8.Application.Interface;
 using VelorusNet8.Domain.Entities.Aggregates.Users;
 using VelorusNet8.WepApi.WpDto.WpUser;
 using FluentValidation;
 using VelorusNet8.Application.Commands.UserAccount;
 using MediatR;
+using VelorusNet8.Application.Interface.User;
 
 
 namespace VelorusNet8.WebApi.Controllers;

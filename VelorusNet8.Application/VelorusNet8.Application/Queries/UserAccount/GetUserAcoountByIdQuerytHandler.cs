@@ -2,7 +2,7 @@
 using MediatR;
 using VelorusNet8.Application.Dto.User;
 using VelorusNet8.Application.Exception;
-using VelorusNet8.Application.Interface;
+using VelorusNet8.Application.Interface.User;
 
 
 namespace VelorusNet8.Application.Queries.UserAccount;
