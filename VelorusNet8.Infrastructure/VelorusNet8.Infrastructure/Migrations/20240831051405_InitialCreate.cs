@@ -81,8 +81,7 @@ namespace VelorusNet8.Infrastructure.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    BranchId = table.Column<int>(type: "int", nullable: false),
-                    CompanyBranchId = table.Column<int>(type: "int", nullable: true)
+                    BranchId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -94,11 +93,6 @@ namespace VelorusNet8.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserBranches_CompanyBranches_CompanyBranchId",
-                        column: x => x.CompanyBranchId,
-                        principalTable: "CompanyBranches",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_UserBranches_UserAccounts_UserId",
                         column: x => x.UserId,
                         principalTable: "UserAccounts",
@@ -109,22 +103,22 @@ namespace VelorusNet8.Infrastructure.Migrations
             migrationBuilder.InsertData(
                 table: "CompanyBranches",
                 columns: new[] { "Id", "Address", "BranchCode", "BranchName", "CommissionAmount", "CommissionRate", "CreatedBy", "CreatedDate", "DefaultShrinkageRate", "Email", "Fax", "IsActive", "IsAutomationIntegrationEnabled", "IsHeadOffice", "IsSalesEnabled", "LastModifiedBy", "LastModifiedDate", "Phone" },
-                values: new object[] { 1, "123 Main St", "B001", "Main Branch", 1000m, 0.05m, null, new DateTime(2024, 8, 28, 15, 8, 10, 144, DateTimeKind.Utc).AddTicks(3053), 0.02m, "mainbranch@example.com", "555-5678", true, true, true, true, null, null, "555-1234" });
+                values: new object[] { 1, "Merkez", "S001", "Ana Şube (Patron)", 0m, 0.00m, null, new DateTime(2024, 8, 31, 5, 14, 3, 416, DateTimeKind.Utc).AddTicks(107), 0.0m, "info@Velorus.com", "555-5678", true, true, true, true, null, null, "555-1234" });
 
             migrationBuilder.InsertData(
                 table: "UserAccounts",
                 columns: new[] { "UserId", "CreatedBy", "CreatedDate", "Email", "IsActive", "LastModifiedBy", "LastModifiedDate", "PasswordHash", "UserName" },
-                values: new object[] { 1, "system", new DateTime(2024, 8, 28, 15, 8, 10, 144, DateTimeKind.Utc).AddTicks(3200), "admin@example.com", true, "system", new DateTime(2024, 8, 28, 18, 8, 10, 144, DateTimeKind.Local).AddTicks(3209), "hashed_password", "admin" });
+                values: new object[] { 1, "system", new DateTime(2024, 8, 31, 8, 14, 3, 416, DateTimeKind.Local).AddTicks(279), "admin@example.com", true, "system", new DateTime(2024, 8, 31, 8, 14, 3, 416, DateTimeKind.Local).AddTicks(290), "hashed_password", "admin" });
+
+            migrationBuilder.InsertData(
+                table: "UserBranches",
+                columns: new[] { "BranchId", "UserId" },
+                values: new object[] { 1, 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserBranches_BranchId",
                 table: "UserBranches",
                 column: "BranchId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserBranches_CompanyBranchId",
-                table: "UserBranches",
-                column: "CompanyBranchId");
         }
 
         /// <inheritdoc />

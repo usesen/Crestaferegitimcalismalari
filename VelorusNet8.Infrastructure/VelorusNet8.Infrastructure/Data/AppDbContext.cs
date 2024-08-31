@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using VelorusNet8.Domain.Entities.Aggregates.Branchs;
+using VelorusNet8.Domain.Entities.Aggregates.Identity;
 using VelorusNet8.Domain.Entities.Aggregates.Users;
 using VelorusNet8.Domain.Entities.Common;
+using VelorusNet8.Infrastructure.Configurations;
 using VelorusNet8.Infrastructure.DataSeeding;
 using VelorusNet8.Infrastructure.Models;
 
@@ -16,6 +18,10 @@ public class AppDbContext : DbContext
     public DbSet<UserBranch> UserBranches { get; set; }
     public DbSet<CompanyBranch> CompanyBranches { get; set; }
     public DbSet<Log> Logs { get; set; }
+    public DbSet<Role> Roles { get; set; }
+    public DbSet<RolePermission> RolePermissions { get; set; }
+    public DbSet<UserRole> UserRoles { get; set; }
+    public DbSet<Permission> Permissions { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options, IHttpContextAccessor httpContextAccessor)
            : base(options)
@@ -25,6 +31,9 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+       
+
         // Composite key tanımlıyoruz
         modelBuilder.Entity<UserBranch>()
             .HasKey(ub => new { ub.UserId, ub.BranchId });
@@ -41,10 +50,17 @@ public class AppDbContext : DbContext
             .WithMany(cb => cb.UserBranches)
             .HasForeignKey(ub => ub.BranchId);
 
+        // Ayrı sınıfları kullanarak yapılandırmaları uygulama
+        modelBuilder.ApplyConfiguration(new RoleConfiguration());
+        modelBuilder.ApplyConfiguration(new UserConfiguration());
+        modelBuilder.ApplyConfiguration(new PermissionConfiguration());
+        modelBuilder.ApplyConfiguration(new UserRoleConfiguration());
+        modelBuilder.ApplyConfiguration(new RolePermissionConfiguration());
+
         // Seed verilerini ekliyoruz
         modelBuilder.SeedData();
 
-
+      
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

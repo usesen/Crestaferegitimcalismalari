@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VelorusNet8.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using VelorusNet8.Infrastructure.Data;
 namespace VelorusNet8.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240831051405_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -100,7 +103,7 @@ namespace VelorusNet8.Infrastructure.Migrations
                             BranchName = "Ana Şube (Patron)",
                             CommissionAmount = 0m,
                             CommissionRate = 0.00m,
-                            CreatedDate = new DateTime(2024, 8, 31, 6, 17, 45, 951, DateTimeKind.Utc).AddTicks(2074),
+                            CreatedDate = new DateTime(2024, 8, 31, 5, 14, 3, 416, DateTimeKind.Utc).AddTicks(107),
                             DefaultShrinkageRate = 0.0m,
                             Email = "info@Velorus.com",
                             Fax = "555-5678",
@@ -110,88 +113,6 @@ namespace VelorusNet8.Infrastructure.Migrations
                             IsSalesEnabled = true,
                             Phone = "555-1234"
                         });
-                });
-
-            modelBuilder.Entity("VelorusNet8.Domain.Entities.Aggregates.Identity.Permission", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Permissions", (string)null);
-                });
-
-            modelBuilder.Entity("VelorusNet8.Domain.Entities.Aggregates.Identity.Role", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Roles", (string)null);
-                });
-
-            modelBuilder.Entity("VelorusNet8.Domain.Entities.Aggregates.Identity.RolePermission", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("PermissionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PermissionId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("RolePermissions", (string)null);
-                });
-
-            modelBuilder.Entity("VelorusNet8.Domain.Entities.Aggregates.Identity.UserRole", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserRoles", (string)null);
                 });
 
             modelBuilder.Entity("VelorusNet8.Domain.Entities.Aggregates.Users.UserAccount", b =>
@@ -227,23 +148,22 @@ namespace VelorusNet8.Infrastructure.Migrations
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("UserAccounts");
 
                     b.HasData(
                         new
                         {
                             UserId = 1,
                             CreatedBy = "system",
-                            CreatedDate = new DateTime(2024, 8, 31, 9, 17, 45, 951, DateTimeKind.Local).AddTicks(2264),
+                            CreatedDate = new DateTime(2024, 8, 31, 8, 14, 3, 416, DateTimeKind.Local).AddTicks(279),
                             Email = "admin@example.com",
                             IsActive = true,
                             LastModifiedBy = "system",
-                            LastModifiedDate = new DateTime(2024, 8, 31, 9, 17, 45, 951, DateTimeKind.Local).AddTicks(2275),
+                            LastModifiedDate = new DateTime(2024, 8, 31, 8, 14, 3, 416, DateTimeKind.Local).AddTicks(290),
                             PasswordHash = "hashed_password",
                             UserName = "admin"
                         });
@@ -299,44 +219,6 @@ namespace VelorusNet8.Infrastructure.Migrations
                     b.ToTable("Logs");
                 });
 
-            modelBuilder.Entity("VelorusNet8.Domain.Entities.Aggregates.Identity.RolePermission", b =>
-                {
-                    b.HasOne("VelorusNet8.Domain.Entities.Aggregates.Identity.Permission", "Permission")
-                        .WithMany("RolePermissions")
-                        .HasForeignKey("PermissionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("VelorusNet8.Domain.Entities.Aggregates.Identity.Role", "Role")
-                        .WithMany("RolePermissions")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Permission");
-
-                    b.Navigation("Role");
-                });
-
-            modelBuilder.Entity("VelorusNet8.Domain.Entities.Aggregates.Identity.UserRole", b =>
-                {
-                    b.HasOne("VelorusNet8.Domain.Entities.Aggregates.Identity.Role", "Role")
-                        .WithMany("UserRoles")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("VelorusNet8.Domain.Entities.Aggregates.Users.UserAccount", "User")
-                        .WithMany("UserRoles")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Role");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("VelorusNet8.Domain.Entities.Aggregates.Users.UserBranch", b =>
                 {
                     b.HasOne("VelorusNet8.Domain.Entities.Aggregates.Branchs.CompanyBranch", "CompanyBranch")
@@ -361,23 +243,9 @@ namespace VelorusNet8.Infrastructure.Migrations
                     b.Navigation("UserBranches");
                 });
 
-            modelBuilder.Entity("VelorusNet8.Domain.Entities.Aggregates.Identity.Permission", b =>
-                {
-                    b.Navigation("RolePermissions");
-                });
-
-            modelBuilder.Entity("VelorusNet8.Domain.Entities.Aggregates.Identity.Role", b =>
-                {
-                    b.Navigation("RolePermissions");
-
-                    b.Navigation("UserRoles");
-                });
-
             modelBuilder.Entity("VelorusNet8.Domain.Entities.Aggregates.Users.UserAccount", b =>
                 {
                     b.Navigation("UserBranches");
-
-                    b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618
         }

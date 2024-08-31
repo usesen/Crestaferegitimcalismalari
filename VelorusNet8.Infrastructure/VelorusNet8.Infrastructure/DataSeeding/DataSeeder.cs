@@ -44,7 +44,7 @@ public static  class DataSeeder
              PasswordHash = "hashed_password",
              IsActive = true,
              CreatedBy = "system",            // Zorunlu alan
-             CreatedDate = DateTime.UtcNow,   // Zorunlu alan
+             CreatedDate = DateTime.Now,   // Zorunlu alan
              LastModifiedBy = "system",       // Zorunlu alan
              LastModifiedDate = DateTime.Now // Zorunlu alan (eğer varsa)
          });

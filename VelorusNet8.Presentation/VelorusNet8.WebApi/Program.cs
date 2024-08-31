@@ -61,12 +61,12 @@ app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    // Migration'ý otomatik olarak uygulamak için
-    using (var scope = app.Services.CreateScope())
-    {
-        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        dbContext.Database.Migrate();
-    }
+    // Migration'ý otomatik olarak uygulamak için, çalýþmýyor faydasýný göremedim
+    //using (var scope = app.Services.CreateScope())
+    //{
+    //    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    //    dbContext.Database.Migrate();
+    //}
 }
 app.UseMiddleware<LogMiddleware>();
 app.UseHttpsRedirection();

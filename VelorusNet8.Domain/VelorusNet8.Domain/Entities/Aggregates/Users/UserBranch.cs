@@ -5,8 +5,6 @@ namespace VelorusNet8.Domain.Entities.Aggregates.Users;
 
 public class UserBranch
 {
-    [Key]
-    public int Id { get; private set; }
     public int UserId { get; private set; }
     public int BranchId { get; private set; }
     public UserAccount UserAccount { get; private set; }
