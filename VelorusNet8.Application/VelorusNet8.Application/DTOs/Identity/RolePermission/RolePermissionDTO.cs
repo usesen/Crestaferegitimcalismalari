@@ -1,0 +1,13 @@
+﻿using VelorusNet8.Application.Dto.Identity.Role;
+
+namespace VelorusNet8.Application.DTOs.Identity;
+
+public class RolePermissionDTO
+{
+    public int Id { get; set; }
+    public int RoleId { get; set; }
+    public int PermissionId { get; set; }
+
+    public string Name { get; set; } // Permission adını tutmak için
+    public List<RoleDTO> Roles { get; set; } // Role'ların basit bir listesi
+}

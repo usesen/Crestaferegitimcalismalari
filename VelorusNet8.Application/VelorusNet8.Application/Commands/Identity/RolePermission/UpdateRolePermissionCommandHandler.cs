@@ -4,33 +4,36 @@ using VelorusNet8.Application.Exception;
 using VelorusNet8.Domain.Entities.Aggregates.Identity;
 using VelorusNet8.Infrastructure.Interface;
 
-namespace VelorusNet8.Application.Commands.Identity.RolePermission;
+namespace VelorusNet8.Application.Commands.Identity.RoleRepository;
 
-public class CreateRolePermissionCommandHandler : IRequestHandler<CreateRolePermissionCommand, int>
+public class UpdateRolePermissionCommandHandler : IRequestHandler<UpdateRolePermissionCommand, int>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IValidator<CreateRolePermissionCommand> _validator;
+    private readonly IValidator<UpdateRolePermissionCommand> _validator;
 
-    public CreateRolePermissionCommandHandler(IValidator<CreateRolePermissionCommand> validator, IUnitOfWork unitOfWork)
+    public UpdateRolePermissionCommandHandler(IUnitOfWork unitOfWork, IValidator<UpdateRolePermissionCommand> validator)
     {
-        _validator = validator;
         _unitOfWork = unitOfWork;
+        _validator = validator;
     }
 
-    public async Task<int> Handle(CreateRolePermissionCommand request, CancellationToken cancellationToken)
+    public async Task<int> Handle(UpdateRolePermissionCommand request, CancellationToken cancellationToken)
     {
         // Doğrulama işlemi
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
+
         if (!validationResult.IsValid)
         {
             throw new System.ComponentModel.DataAnnotations.ValidationException(validationResult.Errors.ToString());
         }
+
         // Ekstra kontrol: Role ve Permission'un var olup olmadığını kontrol et
         var role = await _unitOfWork.Roles.GetRoleByIdAsync(request.RoleId, cancellationToken);
         if (role == null)
         {
             throw new NotFoundException($"Role with Id {request.RoleId} not found.");
         }
+
         var permission = await _unitOfWork.Permissions.GetPermissionByIdAsync(request.PermissionId, cancellationToken);
         if (permission == null)
         {
@@ -38,7 +41,7 @@ public class CreateRolePermissionCommandHandler : IRequestHandler<CreateRolePerm
         }
 
         // Yeni RolePermission nesnesi oluştur
-        var rolePermission = new VelorusNet8.Domain.Entities.Aggregates.Identity.RolePermission 
+        var rolePermission = new VelorusNet8.Domain.Entities.Aggregates.Identity.RolePermission
         {
             RoleId = request.RoleId,
             PermissionId = request.PermissionId
@@ -53,4 +56,6 @@ public class CreateRolePermissionCommandHandler : IRequestHandler<CreateRolePerm
         // Yeni RolePermission'un Id'sini geri döndür
         return rolePermission.Id;
     }
+
+ 
 }

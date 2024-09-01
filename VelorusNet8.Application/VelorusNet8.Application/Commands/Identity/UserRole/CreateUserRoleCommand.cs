@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MediatR;
 
-namespace VelorusNet8.Application.Commands.Identity.UserRoleRepository
+namespace VelorusNet8.Application.Commands.Identity.UserRoleRepository;
+
+public class CreateUserRoleCommand : IRequest<int>
 {
-    internal class CreateUserRoleCommand
-    {
-    }
+    public int UserId { get; set; }
+    public int RoleId { get; set; }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VelorusNet8.Application.Commands.Identity.RoleRepository
 {
-    internal class RolePermissionCommandValidator
+    internal class CreateRolePermissionCommandValidator
     {
     }
 }

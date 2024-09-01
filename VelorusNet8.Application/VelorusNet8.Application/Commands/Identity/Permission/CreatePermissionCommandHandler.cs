@@ -1,7 +1,9 @@
 ﻿using MediatR;
 using VelorusNet8.Infrastructure.Interface;
-using VelorusNet8.Domain.Entities.Aggregates.Identity;
 using FluentValidation;
+using VelorusNet8.Application.Interface.Service;
+using VelorusNet8.Application.DTOs.Identity.Permission;
+
 
 namespace VelorusNet8.Application.Commands.Identity.Permission;
 
@@ -9,10 +11,13 @@ public class CreatePermissionCommandHandler : IRequestHandler<CreatePermissionCo
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IValidator<CreatePermissionCommand> _validator;
-    public CreatePermissionCommandHandler(IUnitOfWork unitOfWork, IValidator<CreatePermissionCommand> validator)
+    private readonly IPermissionService _permissionService;
+
+    public CreatePermissionCommandHandler(IUnitOfWork unitOfWork, IValidator<CreatePermissionCommand> validator, IPermissionService permissionService)
     {
         _unitOfWork = unitOfWork;
         _validator = validator;
+        _permissionService = permissionService;
     }
 
     public async Task<int> Handle(CreatePermissionCommand request, CancellationToken cancellationToken)
@@ -30,8 +35,14 @@ public class CreatePermissionCommandHandler : IRequestHandler<CreatePermissionCo
         {
             Name = request.Name,
         };
+        var createPermissionDto = new CreatePermissionDTO
+        {
+            Name = request.Name
+        };
 
-         
+        // PermissionService kullanarak yeni bir Permission oluştur
+        var permissionId = await _permissionService.CreatePermissionAsync(createPermissionDto, cancellationToken);
+
         // Permission'ı ekle
         _unitOfWork.Permissions.Add(permission);
 

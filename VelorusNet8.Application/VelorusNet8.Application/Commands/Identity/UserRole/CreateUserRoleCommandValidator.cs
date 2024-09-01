@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VelorusNet8.Application.Commands.Identity.UserRole
+namespace VelorusNet8.Application.Commands.Identity.UserRoleRepository
 {
-    internal class UserRoleCommandHandler
+    internal class CreateUserRoleCommandValidator
     {
     }
 }

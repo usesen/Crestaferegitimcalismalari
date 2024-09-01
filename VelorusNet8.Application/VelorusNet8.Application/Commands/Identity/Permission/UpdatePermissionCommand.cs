@@ -2,8 +2,9 @@
 
 namespace VelorusNet8.Application.Commands.Identity.PermissionRepository;
 
-public  class UpdatePermissionCommand :  IRequest<int>
+public  class UpdatePermissionCommand :  IRequest<bool>
 {
-    public string Name { get; set; }
-    public string Description { get; set; }
+    public int Id { get; set; }  // Güncellenecek Permission'ın Id'si
+    public string Name { get; set; }  // Güncellenecek Name özelliği
+    public string Description { get; set; } // Güncellenecek Name özelliği
 }

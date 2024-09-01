@@ -4,25 +4,25 @@ using VelorusNet8.Application.Dtos.Identity.UserRole;
 using VelorusNet8.Application.Interface.Service;
 using VelorusNet8.Infrastructure.Interface;
 
-namespace VelorusNet8.Application.Commands.Identity.UserRoleRepository;
+namespace VelorusNet8.Application.Commands.Identity.UserRole;
 
-public class CreateUserRoleCommandHandler : IRequestHandler<CreateUserRoleCommand, int>
+public class UpdateUserRoleCommandHandler : IRequestHandler<UpdateUserRoleCommand, bool>
 {
     private readonly IUserRoleService _userRoleService;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IValidator<CreateUserRoleCommand> _validator;
+    private readonly IValidator<UpdateUserRoleCommand> _validator;
 
-    public CreateUserRoleCommandHandler(
+    public UpdateUserRoleCommandHandler(
         IUserRoleService userRoleService,
         IUnitOfWork unitOfWork,
-        IValidator<CreateUserRoleCommand> validator)
+        IValidator<UpdateUserRoleCommand> validator)
     {
         _userRoleService = userRoleService;
         _unitOfWork = unitOfWork;
         _validator = validator;
     }
 
-    public async Task<int> Handle(CreateUserRoleCommand request, CancellationToken cancellationToken)
+    public async Task<bool> Handle(UpdateUserRoleCommand request, CancellationToken cancellationToken)
     {
         // Validation işlemi
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
@@ -31,18 +31,17 @@ public class CreateUserRoleCommandHandler : IRequestHandler<CreateUserRoleComman
             throw new ValidationException(validationResult.Errors);
         }
 
-        var createUserRoleDto = new CreateUserRoleDTO
+        var updateUserRoleDto = new UpdateUserRoleDTO
         {
             UserId = request.UserId,
             RoleId = request.RoleId
         };
 
-        // UserRoleService kullanarak yeni bir UserRole oluştur
-        var userRoleId = await _userRoleService.CreateUserRoleAsync(createUserRoleDto, cancellationToken);
+        var result = await _userRoleService.UpdateUserRoleAsync(request.Id, updateUserRoleDto, cancellationToken);
 
         // UnitOfWork ile transaction işlemi
         await _unitOfWork.CompleteAsync(cancellationToken);
 
-        return userRoleId;
+        return result;
     }
 }

@@ -3,12 +3,9 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using VelorusNet8.Application.Behaviors;
-using VelorusNet8.Application.Commands.Identity.Permission;
 using VelorusNet8.Application.Commands.UserAccount;
-using VelorusNet8.Application.Interface.Identity;
 using VelorusNet8.Application.Interface.User;
 using VelorusNet8.Application.Service;
-using VelorusNet8.Infrastructure.Interface;
 
 namespace VelorusNet8.Application;
 
