@@ -8,14 +8,49 @@ public class UserConfiguration : IEntityTypeConfiguration<UserAccount>
 {
     public void Configure(EntityTypeBuilder<UserAccount> builder)
     {
-        builder.ToTable("Users");
-        builder.HasKey(u => u.UserId);
-        builder.Property(u => u.UserName).IsRequired().HasMaxLength(100);
+          // Tablo ismi
+            builder.ToTable("UserAccounts");
 
-        // User ile UserRole arasındaki ilişki
-        builder.HasMany(u => u.UserRoles)
-               .WithOne(ur => ur.User)
-               .HasForeignKey(ur => ur.UserId)
-               .OnDelete(DeleteBehavior.Cascade);
+            // Birincil anahtar
+            builder.HasKey(ua => ua.UserId);
+
+            // Kullanıcı ismi zorunlu ve maksimum uzunluk 100 karakter
+            builder.Property(ua => ua.UserName)
+                   .IsRequired()
+                   .HasMaxLength(100);
+
+            // Email zorunlu ve maksimum uzunluk 100 karakter
+            builder.Property(ua => ua.Email)
+                   .IsRequired()
+                   .HasMaxLength(100);
+
+            // PasswordHash zorunlu ve maksimum uzunluk 255 karakter
+            builder.Property(ua => ua.PasswordHash)
+                   .IsRequired()
+                   .HasMaxLength(255);
+
+            // Aktif/Pasif durumu zorunlu
+            builder.Property(ua => ua.IsActive)
+                   .IsRequired();
+
+            // UserAccount ile UserAccountGroup arasındaki ilişki
+            builder.HasMany(ua => ua.UserAccountGroups)
+                   .WithOne(uag => uag.UserAccount)
+                   .HasForeignKey(uag => uag.UserAccountId)
+                   .OnDelete(DeleteBehavior.Cascade);
+
+            // UserAccount ile MenuPermission arasındaki ilişki
+            builder.HasMany(ua => ua.MenuPermissions)
+                   .WithOne(mp => mp.UserAccount)
+                   .HasForeignKey(mp => mp.UserAccountId)
+                   .OnDelete(DeleteBehavior.Cascade);
+
+        
+        // UserAccount ile UserBranch arasındaki ilişki (birden fazla şubeye sahip olabilir)
+        builder.HasMany(ua => ua.UserBranches)
+            .WithOne(ub => ub.UserAccount)
+            .HasForeignKey(ub => ub.UserId)
+            .OnDelete(DeleteBehavior.Restrict); // Cascade Delete yerine Restrict kullanıyoruz
+
     }
 }

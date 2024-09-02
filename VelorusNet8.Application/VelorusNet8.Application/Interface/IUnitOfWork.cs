@@ -7,5 +7,6 @@ public interface IUnitOfWork : IDisposable
     IRoleRepository Roles { get; }
     IPermissionRepository Permissions { get; }
     IRolePermissionRepository RolePermissions { get; }
+    IUserRoleRepository UserRolePermissions { get; }
     Task<int> CompleteAsync(CancellationToken cancellationToken);
 }

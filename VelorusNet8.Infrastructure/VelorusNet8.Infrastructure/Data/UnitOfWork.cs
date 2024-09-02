@@ -1,21 +1,26 @@
 ﻿using VelorusNet8.Application.Interface;
-using VelorusNet8.Application.Interface.Identity;
+using VelorusNet8.Domain.Entities.Aggregates.Identity.Interfaces;
+
 
 namespace VelorusNet8.Infrastructure.Data;
 
 public class UnitOfWork : IUnitOfWork
 {
     private readonly AppDbContext _context;
+ 
 
-    public IRoleRepository Roles => throw new NotImplementedException();
-
-    public Task<int> CompleteAsync(CancellationToken cancellationToken)
+    public UnitOfWork(AppDbContext context)
     {
-        throw new NotImplementedException();
+        _context = context;
+    }
+
+    public async Task<int> CompleteAsync(CancellationToken cancellationToken)
+    {
+        return await _context.SaveChangesAsync(cancellationToken);
     }
 
     public void Dispose()
     {
-        throw new NotImplementedException();
+        _context.Dispose();
     }
 }

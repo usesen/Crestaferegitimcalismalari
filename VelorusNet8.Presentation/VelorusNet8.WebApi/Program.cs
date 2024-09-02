@@ -41,8 +41,9 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Progr
 
 builder.Services.AddAutoMapper(typeof(Program)); // AutoMapper profil sýnýfýnýzý içerebilir
 // Application ve Infrastructure servislerinizi ekleyin
+builder.Services.AddInfrastructureServices();
 builder.Services.AddApplicationServices();
-builder.Services.AddInfrastructureServices(); // Burada `AddInfrastructureServices`'i ekleyin
+
 
 // DbContext'i ekleyin
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -50,6 +51,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Add services to the container.
 builder.Services.AddHttpContextAccessor();
 var app = builder.Build();
+
 
 // RequestResponseLoggingMiddleware'i ekleniyor
 app.UseMiddleware<RequestResponseLoggingMiddleware>();

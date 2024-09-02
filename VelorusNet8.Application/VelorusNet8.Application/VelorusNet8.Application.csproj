@@ -22,8 +22,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Commands\Identity\" />
     <Folder Include="Interface\Identity\" />
     <Folder Include="Repository\" />
+    <Folder Include="Service\Identity\" />
   </ItemGroup>
 
 </Project>

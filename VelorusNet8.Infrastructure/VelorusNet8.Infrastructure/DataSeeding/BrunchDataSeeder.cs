@@ -1,16 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VelorusNet8.Domain.Entities.Aggregates.Branchs;
-using VelorusNet8.Domain.Entities.Aggregates.Users;
+
 
 
 namespace VelorusNet8.Infrastructure.DataSeeding;
 
-public static  class DataSeeder
+public static  class BrunchDataSeeder
 {
  
     public static  void SeedData(this ModelBuilder modelBuilder)
@@ -33,22 +28,6 @@ public static  class DataSeeder
                 IsAutomationIntegrationEnabled = true
             }
         );
-
-        // UserAccount Data
-        modelBuilder.Entity<UserAccount>().HasData(
-         new UserAccount
-         {
-             UserId = 1,
-             UserName = "admin",
-             Email = "admin@example.com",
-             PasswordHash = "hashed_password",
-             IsActive = true,
-             CreatedBy = "system",            // Zorunlu alan
-             CreatedDate = DateTime.Now,   // Zorunlu alan
-             LastModifiedBy = "system",       // Zorunlu alan
-             LastModifiedDate = DateTime.Now // Zorunlu alan (eğer varsa)
-         });
-         modelBuilder.Entity<UserBranch>().HasData(
-            new UserBranch(1, 1));
+ 
     }
 }

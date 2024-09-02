@@ -3,11 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VelorusNet8.Application.Interface;
-using VelorusNet8.Application.Interface.Identity;
 using VelorusNet8.Application.Interface.User;
+using VelorusNet8.Domain.Entities.Aggregates.Identity.Interfaces;
 using VelorusNet8.Infrastructure.Data;
 using VelorusNet8.Infrastructure.Middleware;
 using VelorusNet8.Infrastructure.Repositories;
+
 
 
 
@@ -27,9 +28,9 @@ public static class ServiceCollectionExtensions
                                  options.UseSqlServer(connectionString));
         // Diğer servisler...
         services.AddTransient<IUserAccountRepository, UserAccountRepository>();
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
-        
-        
+        //services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+   
         return services;
     }
     public static void UseInfrastructureMiddleware(this IApplicationBuilder app)

@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using VelorusNet8.Domain.Entities.Aggregates.Groups;
 using VelorusNet8.Domain.Entities.Aggregates.Identity;
+using VelorusNet8.Domain.Entities.Aggregates.Menus;
 using VelorusNet8.Domain.Entities.Common;
 
 namespace VelorusNet8.Domain.Entities.Aggregates.Users;
@@ -15,9 +17,12 @@ public class UserAccount : EntityBase
   
     // UserBranches özelliği: Bir kullanıcı birden fazla şubeye atanabilir
     public List<UserBranch> UserBranches { get; private set; } = new List<UserBranch>();
-    // User ile UserRole arasındaki ilişki (Bir kullanıcı birçok UserRole'e sahip olabilir)
-    public ICollection<UserRole> UserRoles { get; set; }
+    // User ile UserGroup arasındaki ilişki (Bir kullanıcı birçok UserGroup'a sahip olabilir)
+    public ICollection<UserAccountGroup> UserAccountGroups { get; set; }
 
+    // User ile MenuPermissions arasındaki ilişki (Bir kullanıcı birçok MenuPermission'a sahip olabilir)
+    public ICollection<MenuPermission> MenuPermissions { get; set; }
+   
 
     public UserAccount() : base() // Varsayılan yapıcı
     {

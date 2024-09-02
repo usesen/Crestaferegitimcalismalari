@@ -1,4 +1,4 @@
-﻿using VelorusNet8.Application.Dto.Identity.Role;
+﻿using VelorusNet8.Application.DTOs.Identity.Role;
 
 namespace VelorusNet8.Application.DTOs.Identity;
 

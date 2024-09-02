@@ -4,7 +4,7 @@ public interface IUserRoleRepository
 {
     Task<UserRole> GetRoleByIdAsync(int id, CancellationToken cancellationToken);
     Task<IEnumerable<UserRole>> GetAllRolesAsync(CancellationToken cancellationToken);
-    void Add(UserRole rolepermission);
-    void Remove(UserRole rolepermission);
-    void Update(UserRole rolepermission);
+    void Add(UserRole userRole);
+    void Remove(UserRole userRole);
+    void Update(UserRole userRole);
 }
