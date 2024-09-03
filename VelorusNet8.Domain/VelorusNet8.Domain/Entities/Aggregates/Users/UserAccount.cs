@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using VelorusNet8.Domain.Entities.Aggregates.Groups;
-using VelorusNet8.Domain.Entities.Aggregates.Identity;
 using VelorusNet8.Domain.Entities.Aggregates.Menus;
 using VelorusNet8.Domain.Entities.Common;
 

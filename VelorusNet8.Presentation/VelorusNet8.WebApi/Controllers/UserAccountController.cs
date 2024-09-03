@@ -69,7 +69,8 @@ public class UserAccountController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetUserById(int id, CancellationToken cancellationToken)
     {
-        var user = await _userAccountRepository.GetByIdAsync(id, cancellationToken);
+        //var user = await _userAccountRepository.GetByIdAsync(id, cancellationToken);
+        var user = await _userAccountService.GetByIdAsync(id, cancellationToken);
         if (user == null)
         {
             return NotFound("Kullanıcı bulunamadı.");
@@ -82,7 +83,8 @@ public class UserAccountController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllUsers(CancellationToken cancellationToken)
     {
-        var users = await _userAccountRepository.GetAllAsync(cancellationToken);
+        //var users = await _userAccountRepository.GetAllAsync(cancellationToken);
+        var users = await _userAccountService.GetAllAsync(cancellationToken);
         return Ok(users);
     }
 
@@ -91,7 +93,8 @@ public class UserAccountController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteUser(int id, CancellationToken cancellationToken)
     {
-        await _userAccountRepository.DeleteAsync(id, cancellationToken);
+        //await _userAccountRepository.DeleteAsync(id, cancellationToken);
+        await _userAccountService.DeleteAsync(id, cancellationToken);
         return NoContent();
     }
 }

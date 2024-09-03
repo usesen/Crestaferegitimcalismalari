@@ -4,7 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using VelorusNet8.Application.Behaviors;
 using VelorusNet8.Application.Commands.UserAccount;
-using VelorusNet8.Application.Interface.Service;
+using VelorusNet8.Application.Interface.Group;
+using VelorusNet8.Application.Interface.Menus;
 using VelorusNet8.Application.Interface.User;
 using VelorusNet8.Application.Service;
 
@@ -27,11 +28,11 @@ public static class DependencyInjection
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
         // Servisleri DI konteynerine ekle
-        
-        //services.AddScoped<IUserRoleService, UserRoleService>();
-        //services.AddScoped<IPermissionService, PermissionService>();
-        //services.AddScoped<IRolePermissionService, RolePermissionService>();
+
         services.AddTransient<IUserAccountService, UserAccountService>();
+        services.AddTransient<IUserGroupService, UserGroupService>();
+        services.AddTransient<IMenuService, MenuService>();
+        services.AddTransient<IMenuPermissionService, MenuPermissionService>();
         // services.AddScoped<IOtherService, OtherService>();
     
          

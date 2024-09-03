@@ -26,7 +26,7 @@ public class AppDbContext : DbContext
     public DbSet<CompanyBranch> CompanyBranches { get; set; }
     public DbSet<Log> Logs { get; set; }
 
-    public DbSet<UserGroup> Groups { get; set; }
+    public DbSet<UserGroup> UserGroups { get; set; }
     public DbSet<Menu> Menus { get; set; }
     public DbSet<MenuPermission> MenuPermissions { get; set; }
     public DbSet<UserAccountGroup> UserAccountGroups { get; set; }

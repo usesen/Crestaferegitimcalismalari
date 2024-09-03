@@ -28,10 +28,6 @@ builder.Services.AddSwaggerGen(c =>
  
  
 // Diðer servisleri ekleyin
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
 // MediatR'ý ekleyin
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
