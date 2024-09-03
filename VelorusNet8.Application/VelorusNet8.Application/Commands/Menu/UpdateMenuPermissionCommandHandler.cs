@@ -1,23 +1,21 @@
-﻿using AutoMapper;
-using FluentValidation;
+﻿using FluentValidation;
 using MediatR;
 using VelorusNet8.Application.Interface.Menus;
-using VelorusNet8.Domain.Entities.Aggregates.Menus;
 
 namespace VelorusNet8.Application.Commands.Menu;
 
-public class CreateMenuPermissionCommandHandler : IRequestHandler<CreateMenuPermissionCommand, Unit>
+public class UpdateMenuPermissionCommandHandler : IRequestHandler<UpdateMenuPermissionCommand, Unit>
 {
     private readonly IMenuPermissionRepository _menuPermissionRepository;
-    private readonly IValidator<CreateMenuPermissionCommand> _validator;
+    private readonly IValidator<UpdateMenuPermissionCommand> _validator;
 
-    public CreateMenuPermissionCommandHandler(IMenuPermissionRepository menuPermissionRepository, IValidator<CreateMenuPermissionCommand> validator)
+    public UpdateMenuPermissionCommandHandler(IMenuPermissionRepository menuPermissionRepository, IValidator<UpdateMenuPermissionCommand> validator)
     {
         _menuPermissionRepository = menuPermissionRepository;
         _validator = validator;
     }
 
-    public async Task<Unit> Handle(CreateMenuPermissionCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(UpdateMenuPermissionCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
@@ -26,7 +24,7 @@ public class CreateMenuPermissionCommandHandler : IRequestHandler<CreateMenuPerm
             throw new ValidationException(validationResult.Errors);
         }
 
-        var menuPermission = await _menuPermissionRepository.GetByIdAsync(request.MenuId, cancellationToken);
+        var menuPermission = await _menuPermissionRepository.GetByIdAsync(request.MenuPermissionId, cancellationToken);
 
         if (menuPermission == null)
         {

@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using VelorusNet8.Application.DTOs.Menu;
 
-namespace VelorusNet8.Application.Commands.Menu.Validator;
+namespace VelorusNet8.Application.Commands.Menu;
 
 public class MenuPermissionValidator : AbstractValidator<MenuPermissionDto>
 {

@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace VelorusNet8.Application.Commands.Group;
+namespace VelorusNet8.Application.Commands.Group.Validator;
 
 public class CreateUserGroupCommandValidator : AbstractValidator<CreateUserGroupCommand>
 {
@@ -13,7 +13,7 @@ public class CreateUserGroupCommandValidator : AbstractValidator<CreateUserGroup
         RuleFor(x => x.Description)
             .MaximumLength(250).WithMessage("Description cannot exceed 250 characters.");
 
-        RuleFor(x => x.PermissionIds)
+        RuleFor(x => x.Permissions)
             .NotNull().WithMessage("Permission IDs cannot be null.")
             .Must(x => x.Count > 0).WithMessage("At least one permission must be assigned.");
     }

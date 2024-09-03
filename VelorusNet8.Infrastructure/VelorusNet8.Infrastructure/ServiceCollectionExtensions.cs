@@ -28,11 +28,16 @@ public static class ServiceCollectionExtensions
         services.AddDbContext<AppDbContext>(options =>
                                  options.UseSqlServer(connectionString));
         // Diğer servisler...
-        services.AddTransient<IUserAccountRepository, UserAccountRepository>();
+        services.AddScoped<IUserAccountRepository, UserAccountRepository>();
         services.AddScoped<IUserGroupRepository, UserGroupRepository>();
         services.AddScoped<IUserGroupService, UserGroupService>();
         services.AddScoped<IMenuPermissionRepository, MenuPermissionRepository>();
         services.AddScoped<IMenuRepository, MenuRepository>();
+      
+        services.AddScoped<IUserAccountGroupRepository, UserAccountGroupRepository>();
+        services.AddScoped<IMenuService, MenuService>();
+        services.AddScoped<IMenuPermissionService, MenuPermissionService>();
+        services.AddScoped<IMenuPermissionRepository, MenuPermissionRepository>();
         //services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 

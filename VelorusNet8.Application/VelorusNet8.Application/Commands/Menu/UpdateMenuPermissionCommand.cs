@@ -2,8 +2,10 @@
 
 namespace VelorusNet8.Application.Commands.Menu;
 
-public class CreateMenuPermissionCommand : IRequest<Unit>
+
+public class UpdateMenuPermissionCommand : IRequest<Unit>
 {
+    public int MenuPermissionId { get; set; }  // Benzersiz kimlik
     public int MenuId { get; set; }  // İlişkili menü kimliği
     public int? UserAccountId { get; set; }  // Kullanıcıya özgü izinler için
     public int? GroupId { get; set; }  // Gruba özgü izinler için
