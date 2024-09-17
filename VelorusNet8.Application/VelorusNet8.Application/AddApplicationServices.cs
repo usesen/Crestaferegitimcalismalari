@@ -3,15 +3,18 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using VelorusNet8.Application.Behaviors;
+using VelorusNet8.Application.Commands.AngularDersleri.AngularCustomer;
 using VelorusNet8.Application.Commands.Group;
 using VelorusNet8.Application.Commands.Group.Validator;
 using VelorusNet8.Application.Commands.Menu;
 using VelorusNet8.Application.Commands.Menu.Validator;
 using VelorusNet8.Application.Commands.UserAccount;
+using VelorusNet8.Application.Interface.AngularDersleri;
 using VelorusNet8.Application.Interface.Group;
 using VelorusNet8.Application.Interface.Menus;
 using VelorusNet8.Application.Interface.User;
 using VelorusNet8.Application.Service;
+using VelorusNet8.Application.Service.AngularCustomer;
 
 
 namespace VelorusNet8.Application;
@@ -33,7 +36,14 @@ public static class DependencyInjection
 
         // Servisleri DI konteynerine ekle
 
+        // AuthorizationService'i kaydet
+        services.AddScoped<AuthorizationService>();
 
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy("CanViewReports", policy =>
+                policy.RequireClaim("Permission", "CanViewReports"));
+        });
 
         services.AddScoped<IUserGroupService, UserGroupService>();
         // Command Validator'lar
@@ -69,11 +79,12 @@ public static class DependencyInjection
         services.AddScoped<IRequestHandler<UpdateMenuPermissionCommand, Unit>, UpdateMenuPermissionCommandHandler>();
         services.AddScoped<IRequestHandler<DeleteMenuPermissionCommand, Unit>, DeleteMenuPermissionCommandHandler>();
 
+        services.AddScoped<IAngularCustomerService, AngularCustomerService>();
+        services.AddScoped<IRequestHandler<CreateAngularCustomerCommand,int>,CreateAngularCustomerCommandHandler>();
+        services.AddScoped<IRequestHandler<UpdateAngularCustomerCommand,int>,UpdateAngularCustomerCommandHandler>();
 
-
-
-
-
+        services.AddScoped<IValidator<CreateAngularCustomerCommand>, CreateAngularCustomerCommandValidator>();
+      
         // services.AddScoped<IOtherService, OtherService>();
 
 

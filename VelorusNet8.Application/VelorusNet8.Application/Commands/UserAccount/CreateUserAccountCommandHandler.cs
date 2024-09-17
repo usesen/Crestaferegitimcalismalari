@@ -41,7 +41,7 @@ public class CreateUserAccountCommandHandler : IRequestHandler<CreateUserAccount
         catch (System.Exception ex)
         {
             string exstr = ex.ToString();
-         }
+        }
   
 
         // Yeni oluşturulan kullanıcı ID'sini geri döndür

@@ -29,8 +29,6 @@ public sealed class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<
         {
             throw new ValidationException(failures);
         }
-
-
         return await next();
     }
 }

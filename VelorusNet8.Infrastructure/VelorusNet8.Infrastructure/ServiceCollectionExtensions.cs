@@ -9,6 +9,9 @@ using VelorusNet8.Application.Service;
 using VelorusNet8.Infrastructure.Data;
 using VelorusNet8.Infrastructure.Middleware;
 using VelorusNet8.Infrastructure.Repositories;
+using VelorusNet8.Application.Interface.AngularDersleri;
+using VelorusNet8.Infrastructure.Repositories.AngularDersleri;
+using VelorusNet8.Application.Service.AngularCustomer;
 
 
 
@@ -38,8 +41,16 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IMenuService, MenuService>();
         services.AddScoped<IMenuPermissionService, MenuPermissionService>();
         services.AddScoped<IMenuPermissionRepository, MenuPermissionRepository>();
-        //services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+        services.AddScoped<IAngularCustomerRepository,AngularCustomerRepository>();
+        services.AddScoped<IAngularCustomerService,AngularCustomerService>();
+
+        //services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy("CanViewReportsPolicy", policy =>
+                policy.RequireClaim("Permission", "CanViewReports"));
+        });
 
         return services;
     }

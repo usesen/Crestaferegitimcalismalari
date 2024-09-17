@@ -1,17 +1,22 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using VelorusNet8.Domain.Entities.Aggregates.AngularDersleri;
 using VelorusNet8.Domain.Entities.Aggregates.Branchs;
 using VelorusNet8.Domain.Entities.Aggregates.Groups;
+using VelorusNet8.Domain.Entities.Aggregates.Identity;
 using VelorusNet8.Domain.Entities.Aggregates.Menus;
 using VelorusNet8.Domain.Entities.Aggregates.Users;
 using VelorusNet8.Domain.Entities.Common;
 using VelorusNet8.Infrastructure.Configurations;
+using VelorusNet8.Infrastructure.Configurations.AngularDersleri;
 using VelorusNet8.Infrastructure.DataSeeding;
+using VelorusNet8.Infrastructure.DataSeeding.AngularDersleri;
 using VelorusNet8.Infrastructure.Models;
 
 namespace VelorusNet8.Infrastructure.Data;
 
-public class AppDbContext : DbContext
+public class AppDbContext : IdentityDbContext<AppUser>
 {
     public AppDbContext(DbContextOptions<AppDbContext> options, IHttpContextAccessor httpContextAccessor)
        : base(options)
@@ -30,7 +35,7 @@ public class AppDbContext : DbContext
     public DbSet<Menu> Menus { get; set; }
     public DbSet<MenuPermission> MenuPermissions { get; set; }
     public DbSet<UserAccountGroup> UserAccountGroups { get; set; }
-
+    public DbSet<AngularCustomer> AngularCustomers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -59,6 +64,7 @@ public class AppDbContext : DbContext
         modelBuilder.ApplyConfiguration(new MenuConfiguration());
         modelBuilder.ApplyConfiguration(new MenuPermissionConfiguration());
         modelBuilder.ApplyConfiguration(new UserAccountGroupConfiguration());
+        modelBuilder.ApplyConfiguration(new AngularCustomerConfiguration());
 
         // Seed verilerini ekliyoruz
         BrunchDataSeeder.SeedData(modelBuilder);
@@ -67,7 +73,7 @@ public class AppDbContext : DbContext
         MenuSeeder.SeedData(modelBuilder);
         MenuPermissionSeeder.SeedData(modelBuilder);
         UserAccountGroupSeeder.SeedData(modelBuilder);
-        
+        AngularCustomerSeeder.SeedData(modelBuilder);
         base.OnModelCreating(modelBuilder); // Base sınıfın OnModelCreating metodunu çağırmak önemli
     }
 

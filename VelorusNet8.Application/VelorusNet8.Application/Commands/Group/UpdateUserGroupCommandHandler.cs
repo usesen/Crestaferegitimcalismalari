@@ -47,7 +47,6 @@ public class UpdateUserGroupCommandHandler : IRequestHandler<UpdateUserGroupComm
             await _menuPermissionRepository.DeleteAsync(permission.MenuId, cancellationToken);
         }
         // Yeni izinleri ekliyoruz
-        // Yeni izinleri ekliyoruz
         var newPermissions = request.MenuIds.Select(menuId => new MenuPermission
         {
             GroupId = userGroup.Id,

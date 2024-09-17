@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using VelorusNet8.Application.Dto.User;
-using VelorusNet8.Domain.Entities.Aggregates.Users;
 using VelorusNet8.WepApi.WpDto.WpUser;
 using FluentValidation;
 using VelorusNet8.Application.Commands.UserAccount;
@@ -15,14 +14,17 @@ namespace VelorusNet8.WebApi.Controllers;
 [ApiController]
 public class UserAccountController : ControllerBase
 {
-    private readonly IUserAccountRepository _userAccountRepository;
+    //private readonly IUserAccountRepository _userAccountRepository;
     private readonly IUserAccountService _userAccountService;
     private readonly IMapper _mapper;
     private readonly IMediator _mediatR;
 
-    public UserAccountController(IUserAccountRepository userAccountRepository, IUserAccountService userAccountService, IMapper mapper, IMediator mediatR)
+    public UserAccountController(
+        //IUserAccountRepository userAccountRepository, 
+        IUserAccountService userAccountService, 
+        IMapper mapper, IMediator mediatR)
     {
-        _userAccountRepository = userAccountRepository;
+        //_userAccountRepository = userAccountRepository;
         _userAccountService = userAccountService;
         _mapper = mapper;
         _mediatR = mediatR;
