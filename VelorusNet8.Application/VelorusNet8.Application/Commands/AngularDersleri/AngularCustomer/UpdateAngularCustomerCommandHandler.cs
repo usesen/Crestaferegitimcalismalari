@@ -42,10 +42,6 @@ public class UpdateAngularCustomerCommandHandler : IRequestHandler<UpdateAngular
         // Customer bilgilerini güncelle
         angularCustomer = _mapper.Map<VelorusNet8.Domain.Entities.Aggregates.AngularDersleri.AngularCustomer>(request);
 
-
-        angularCustomer.LastModifiedBy = "Uğur Şeşen";
-        angularCustomer.LastModifiedDate= DateTime.UtcNow;
-        angularCustomer.CreatedBy = "Uğur Şeşen";
         // Veritabanında güncelle
         await _angularCustomerRepository.UpdateAsync(angularCustomer, cancellationToken);
 

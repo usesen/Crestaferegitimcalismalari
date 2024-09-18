@@ -17,6 +17,10 @@ public class UpdateAngularCustomerCommand : IRequest<int>
     public string? position { get; set; }
     public string? notes { get; set; }
     public bool IsActive { get; set; }
+    public decimal Debt { get; set; } = decimal.Zero; //Borç
+    public decimal Credit { get; set; } = decimal.Zero; // Alacak
+    public decimal BalanceDebt { get; private set; } = decimal.Zero; //borç bakiye
+    public decimal BalanceCredit { get; private set; } = decimal.Zero; // alacak bakiye
 
     public UpdateAngularCustomerCommand(
          int id,
@@ -31,7 +35,11 @@ public class UpdateAngularCustomerCommand : IRequest<int>
          string? company,
          string? position,
          string? notes,
-         bool isActive)
+         bool isActive,
+         decimal debt,
+         decimal credit,
+         decimal balanceDebt,
+         decimal balanceCredit)
     {
         this.id = id;
         this.firstName = firstName;
@@ -46,6 +54,10 @@ public class UpdateAngularCustomerCommand : IRequest<int>
         this.position = position;
         this.notes = notes;
         IsActive = isActive;
+        Debt = debt;
+        Credit = credit;
+        BalanceDebt = balanceDebt;
+        BalanceCredit = balanceCredit;
     }
     // Parametresiz constructor ekleyin
     public UpdateAngularCustomerCommand() { }

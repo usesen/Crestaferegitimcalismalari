@@ -97,7 +97,7 @@ public class AngularCustomerController : ControllerBase
             // Servis kullanarak kullanıcıyı güncelleyin (void dönüş varsa var ile atama yapmayın)
             await _angularcustomerService.UpdateAngularCustomerAsync(updateCommand, cancellationToken);
 
-            return Ok("Customer updated successfully.");
+            return Ok(new { message = "Customer updated successfully." });
         }
         catch (Exception ex)
         {

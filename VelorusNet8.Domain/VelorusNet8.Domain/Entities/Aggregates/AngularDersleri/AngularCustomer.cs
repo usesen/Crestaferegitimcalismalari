@@ -16,21 +16,30 @@ public  class AngularCustomer: EntityBase
     public string? company { get; set; }
     public string? position { get; set; }
     public string? notes { get; set; }
+    public decimal Debt { get; set; } = decimal.Zero; //Borç
+    public decimal Credit { get; set; } = decimal.Zero; // Alacak
+    public decimal BalanceDebt { get; set; } = decimal.Zero; //borç bakiye
+    public decimal BalanceCredit { get; set; } = decimal.Zero; // alacak bakiye
+
     public bool IsActive { get; set; } = true;
     public AngularCustomer(
-         int id, 
-         string? firstName, 
-         string? lastName, 
-         string? email, 
-         string? phone, 
-         string? address, 
-         string? city, 
-         string? country, 
-         string? postalCode, 
-         string? company, 
-         string? position, 
+         int id,
+         string? firstName,
+         string? lastName,
+         string? email,
+         string? phone,
+         string? address,
+         string? city,
+         string? country,
+         string? postalCode,
+         string? company,
+         string? position,
          string? notes,
-         bool isActive)
+         bool isActive,
+         decimal debt,
+         decimal credit,
+         decimal balanceDebt,
+         decimal balanceCredit)
     {
         this.id = id;
         this.firstName = firstName;
@@ -45,10 +54,20 @@ public  class AngularCustomer: EntityBase
         this.position = position;
         this.notes = notes;
         this.IsActive = isActive;
+        this.Debt = debt;
+        this.Credit = credit;
+        this.BalanceDebt = balanceDebt;
+        this.BalanceCredit = balanceCredit;
     }
-    
+
     // Parametresiz constructor
     public AngularCustomer()
     {
+    }
+    // Borç ve Alacak güncellenirken otomatik bakiye hesaplaması
+    public void UpdateBalances()
+    {
+        BalanceDebt = Debt - Credit;
+        BalanceCredit = Credit - Debt;
     }
 }

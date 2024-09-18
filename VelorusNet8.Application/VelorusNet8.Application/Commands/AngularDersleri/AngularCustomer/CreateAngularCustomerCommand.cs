@@ -17,6 +17,11 @@ public class CreateAngularCustomerCommand : IRequest<int>
     public string? position { get; set; }
     public string? notes { get; set; }
     public bool IsActive { get; set; } = true;
+    public decimal Debt { get; set; } = decimal.Zero; //Borç
+    public decimal Credit { get; set; } = decimal.Zero; // Alacak
+    public decimal BalanceDebt { get; private set; } = decimal.Zero; //borç bakiye
+    public decimal BalanceCredit { get; private set; } = decimal.Zero; // alacak bakiye
+
 
     public CreateAngularCustomerCommand(
          int _id,
@@ -31,7 +36,11 @@ public class CreateAngularCustomerCommand : IRequest<int>
          string _company,
          string _position,
          string _notes,
-         bool _isActive)
+         bool _isActive,
+         decimal debt,
+         decimal credit,
+         decimal balanceDebt,
+         decimal balanceCredit)
     {
         this.id = _id;
         this.firstName = _firstName;
@@ -46,7 +55,11 @@ public class CreateAngularCustomerCommand : IRequest<int>
         this.position = _position;
         this.notes = _notes;
         IsActive = _isActive;
+        Debt = debt;
+        Credit = credit;
+        BalanceDebt = balanceDebt;
+        BalanceCredit = balanceCredit;
     }
     // Parametresiz constructor ekleyin
-    public CreateAngularCustomerCommand() { }
+    public CreateAngularCustomerCommand () { }
 }

@@ -15,6 +15,10 @@ public  class AngularCustomerDto
     public string? position { get; set; }
     public string? notes { get; set; }
     public bool IsActive { get; set; }
+    public decimal Debt { get; set; } = decimal.Zero; //Borç
+    public decimal Credit { get; set; } = decimal.Zero; // Alacak
+    public decimal BalanceDebt { get; private set; } = decimal.Zero; //borç bakiye
+    public decimal BalanceCredit { get; private set; } = decimal.Zero; // alacak bakiye
     public AngularCustomerDto(
          int id,
          string? firstName,
@@ -28,7 +32,11 @@ public  class AngularCustomerDto
          string? company,
          string? position,
          string? notes,
-         bool isActive)
+         bool isActive,
+         decimal debt,
+         decimal credit,
+         decimal balanceDebt,
+         decimal balanceCredit)
     {
         this.id = id;
         this.firstName = firstName;
@@ -43,6 +51,10 @@ public  class AngularCustomerDto
         this.position = position;
         this.notes = notes;
         this.IsActive = isActive;
+        Debt = debt;
+        Credit = credit;
+        BalanceDebt = balanceDebt;
+        BalanceCredit = balanceCredit;
     }
     public AngularCustomerDto() { }
 }

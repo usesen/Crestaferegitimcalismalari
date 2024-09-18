@@ -43,6 +43,11 @@ public class CreateAngularCustomerCommandHandler : IRequestHandler<CreateAngular
         angularCustomer.position = request.position;
         angularCustomer.notes = request.notes;
         angularCustomer.IsActive = request.IsActive;
+        angularCustomer.Debt = request.Debt;
+        angularCustomer.Credit = request.Credit;
+        angularCustomer.BalanceDebt = request.BalanceDebt;  
+        angularCustomer.BalanceCredit = request.BalanceCredit;
+
 
         // AngularCustomerService kullanarak entity'yi güncelle
         await _angularCustomerRepository.UpdateAsync(angularCustomer, cancellationToken);
