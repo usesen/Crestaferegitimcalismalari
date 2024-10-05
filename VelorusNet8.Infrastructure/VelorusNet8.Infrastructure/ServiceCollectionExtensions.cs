@@ -48,6 +48,12 @@ public static class ServiceCollectionExtensions
             return new RedisCacheService(redisConnection);
         });
 
+        services.AddScoped<IMessageBusService, RabbitMQService>(provider =>
+        {
+            var config = provider.GetRequiredService<IConfiguration>();
+            return new RabbitMQService(config);
+        });
+
         // ElasticSearch Service'i ekleyin
         services.AddElasticSearch(configuration["ElasticSearch:Uri"]);
 

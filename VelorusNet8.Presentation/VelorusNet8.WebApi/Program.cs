@@ -8,15 +8,13 @@ using VelorusNet8.WebApi.Middlewares;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using VelorusNet8.Application.DTOs.User;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using VelorusNet8.Infrastructure.Initialization;
 using VelorusNet8.Domain.Entities.Aggregates.Identity;
-using VelorusNet8.Application.Interface;
 using VelorusNet8.Infrastructure.Services;
-
+using VelorusNet8.Application.Interface;
 
 // JWT ClaimType ayarý
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap["unique_name"] = ClaimTypes.Name;
@@ -158,6 +156,15 @@ app.UseExceptionHandler(errorApp =>
     });
 });
 
+// RabbitMQService'i al ve StartConsuming'i çaðýr
+using (var scope = app.Services.CreateScope())
+{
+    var messageBusService = scope.ServiceProvider.GetRequiredService<IMessageBusService>();
+    if (messageBusService is RabbitMQService rabbitMQService)
+    {
+        rabbitMQService.StartConsuming(); // Tüketimi baþlat
+    }
+}
 
 ////Rolleri ve admin kullanýcýyý uygulama baþlangýcýnda ekleyin
 //using (var scope = app.Services.CreateScope())

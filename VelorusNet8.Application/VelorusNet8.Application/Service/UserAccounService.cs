@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.Extensions.Configuration;
 using VelorusNet8.Application.Commands.UserAccount;
 using VelorusNet8.Application.Dto.User;
 using VelorusNet8.Application.Interface;
 using VelorusNet8.Application.Interface.User;
 using VelorusNet8.Domain.Entities.Aggregates.Users;
-using VelorusNet8.Infrastructure.Interface;
 
 
 namespace VelorusNet8.Application.Service;
@@ -16,13 +16,17 @@ public class UserAccountService : IUserAccountService
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
     private readonly ICacheService _cacheService; // Redis Cache Entegrasyonu
+    private readonly IConfiguration _configuration;
+    private readonly IMessageBusService _messageBusService;
 
-    public UserAccountService(IUserAccountRepository userAccountRepository, IMediator mediator, IMapper mapper, ICacheService cacheService)
+    public UserAccountService(IUserAccountRepository userAccountRepository, IMediator mediator, IMapper mapper, ICacheService cacheService, IConfiguration configuration, IMessageBusService messageBusService)
     {
         _userAccountRepository = userAccountRepository;
         _mediator = mediator;
         _mapper = mapper;
         _cacheService = cacheService;
+        _configuration = configuration;
+        _messageBusService = messageBusService;
     }
 
     public async Task<int> CreateUserAsync(CreateUserAccountDto createUserDto, CancellationToken cancellationToken)
@@ -36,8 +40,11 @@ public class UserAccountService : IUserAccountService
         );
         // MediatR kullanarak komutu işleyin
         var createdUserId = await _mediator.Send(command, cancellationToken);
-         
-        
+
+        var response = await _messageBusService.PublishMessageAsync("Yeni kullanıcı kaydedildi.");
+        Console.WriteLine($"RabbitMQ'dan gelen cevap: {response}");
+
+
         return createdUserId;
     }
 
