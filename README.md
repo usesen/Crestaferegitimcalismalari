@@ -1,4 +1,5 @@
-﻿YourProjectName/
+```bash
+ YourProjectName/
 ├── YourProjectName.Domain/          # Domain katmanı (Entity'ler, Arayüzler, Temel kurallar)
 │   ├── Entities/
 │   │   └── User.cs                 # User entity
@@ -28,7 +29,7 @@
     ├── Controllers/
     │   └── UsersController.cs       # API Controller
     └── ...
-
+```
 
 Proje Yapısı ve Katman Açıklamaları
 1. YourProjectName.Domain
