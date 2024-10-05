@@ -8,19 +8,23 @@ public class AngularCustomerService : IAngularCustomerService
 {
     private readonly IAngularCustomerRepository _angularCustomerRepository;
     private readonly IMapper _mapper;
+    private readonly IMediator _mediator;
 
-    public AngularCustomerService(IAngularCustomerRepository angularCustomerRepository, IMapper mapper)
+    public AngularCustomerService(IAngularCustomerRepository angularCustomerRepository, IMapper mapper, IMediator mediator)
     {
         _angularCustomerRepository = angularCustomerRepository;
         _mapper = mapper;
+        _mediator = mediator;
     }
 
     // Create AngularCustomer
     public async Task<int> CreateAngularCustomerAsync(CreateAngularCustomerCommand command,CancellationToken cancellationToken)
     {
         var angularCustomer = _mapper.Map<VelorusNet8.Domain.Entities.Aggregates.AngularDersleri.AngularCustomer>(command);
-        await _angularCustomerRepository.AddAsync(angularCustomer, cancellationToken);
-        return angularCustomer.id;
+        //await _angularCustomerRepository.AddAsync(angularCustomer, cancellationToken);
+        var customerId =  await _mediator.Send(command, cancellationToken);
+        
+        return customerId;
     }
  
     // Delete AngularCustomer

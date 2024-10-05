@@ -6,6 +6,8 @@ using FluentValidation;
 using VelorusNet8.Application.Commands.UserAccount;
 using MediatR;
 using VelorusNet8.Application.Interface.User;
+using VelorusNet8.Application.Interface;
+using VelorusNet8.Domain.Entities.Aggregates.Users;
 
 
 namespace VelorusNet8.WebApi.Controllers;
@@ -18,16 +20,19 @@ public class UserAccountController : ControllerBase
     private readonly IUserAccountService _userAccountService;
     private readonly IMapper _mapper;
     private readonly IMediator _mediatR;
+    private readonly ICacheService _cacheService; // Redis cache servisi
+
 
     public UserAccountController(
         //IUserAccountRepository userAccountRepository, 
-        IUserAccountService userAccountService, 
-        IMapper mapper, IMediator mediatR)
+        IUserAccountService userAccountService,
+        IMapper mapper, IMediator mediatR, ICacheService cacheService)
     {
         //_userAccountRepository = userAccountRepository;
         _userAccountService = userAccountService;
         _mapper = mapper;
         _mediatR = mediatR;
+        _cacheService = cacheService;
     }
     // Kullanıcı oluşturma işlemi
     [HttpPost]
@@ -71,13 +76,22 @@ public class UserAccountController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetUserById(int id, CancellationToken cancellationToken)
     {
+        // Önce Redis cache'te kontrol et
+        var cachedUser = await _cacheService.GetCacheValueAsync<UserAccount>(id.ToString());
+        if (cachedUser != null)
+        {
+            return Ok(new { Source = "Redis", User = cachedUser });
+        }
+       
+
         //var user = await _userAccountRepository.GetByIdAsync(id, cancellationToken);
         var user = await _userAccountService.GetByIdAsync(id, cancellationToken);
         if (user == null)
         {
             return NotFound("Kullanıcı bulunamadı.");
         }
-
+        // Redis cache'e kaydet (1 saatlik TTL ile)
+        await _cacheService.SetCacheValueAsync(id.ToString(), user, TimeSpan.FromHours(1));
         return Ok(user);
     }
 

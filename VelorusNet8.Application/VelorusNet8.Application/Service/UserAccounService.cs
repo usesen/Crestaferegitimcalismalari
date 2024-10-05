@@ -2,8 +2,11 @@
 using MediatR;
 using VelorusNet8.Application.Commands.UserAccount;
 using VelorusNet8.Application.Dto.User;
+using VelorusNet8.Application.Interface;
 using VelorusNet8.Application.Interface.User;
 using VelorusNet8.Domain.Entities.Aggregates.Users;
+using VelorusNet8.Infrastructure.Interface;
+
 
 namespace VelorusNet8.Application.Service;
 
@@ -12,13 +15,14 @@ public class UserAccountService : IUserAccountService
     private readonly IUserAccountRepository _userAccountRepository;
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
- 
-    public UserAccountService(IUserAccountRepository userAccountRepository, IMediator mediator, IMapper mapper)
+    private readonly ICacheService _cacheService; // Redis Cache Entegrasyonu
+
+    public UserAccountService(IUserAccountRepository userAccountRepository, IMediator mediator, IMapper mapper, ICacheService cacheService)
     {
         _userAccountRepository = userAccountRepository;
         _mediator = mediator;
         _mapper = mapper;
- 
+        _cacheService = cacheService;
     }
 
     public async Task<int> CreateUserAsync(CreateUserAccountDto createUserDto, CancellationToken cancellationToken)

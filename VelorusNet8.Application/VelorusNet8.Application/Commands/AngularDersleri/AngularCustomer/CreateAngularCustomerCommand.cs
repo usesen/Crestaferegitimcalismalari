@@ -19,8 +19,8 @@ public class CreateAngularCustomerCommand : IRequest<int>
     public bool IsActive { get; set; } = true;
     public decimal Debt { get; set; } = decimal.Zero; //Borç
     public decimal Credit { get; set; } = decimal.Zero; // Alacak
-    public decimal BalanceDebt { get; private set; } = decimal.Zero; //borç bakiye
-    public decimal BalanceCredit { get; private set; } = decimal.Zero; // alacak bakiye
+    public decimal BalanceDebt { get;  set; } = decimal.Zero; //borç bakiye
+    public decimal BalanceCredit { get;  set; } = decimal.Zero; // alacak bakiye
 
 
     public CreateAngularCustomerCommand(

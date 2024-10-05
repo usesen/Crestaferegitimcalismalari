@@ -45,6 +45,7 @@ public static class DependencyInjection
                 policy.RequireClaim("Permission", "CanViewReports"));
         });
 
+
         services.AddScoped<IUserGroupService, UserGroupService>();
         // Command Validator'lar
         services.AddScoped<IValidator<CreateUserAccountGroupCommand>, CreateUserAccountGroupCommandValidator>();

@@ -14,6 +14,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using VelorusNet8.Infrastructure.Initialization;
 using VelorusNet8.Domain.Entities.Aggregates.Identity;
+using VelorusNet8.Application.Interface;
+using VelorusNet8.Infrastructure.Services;
 
 
 // JWT ClaimType ayarý
@@ -22,6 +24,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // AuthService'i Dependency Injection konteynerine ekleyin
 builder.Services.AddScoped<AuthService>();
+ 
 
 // Swagger Servis Tanýmlamasý (Bir kez olmalý)
 builder.Services.AddSwaggerGen(c =>
