@@ -1,29 +1,25 @@
-﻿
+﻿using VelorusNet8.Domain.Entities.Logs;
 using VelorusNet8.Infrastructure.Data;
 using VelorusNet8.Infrastructure.Models;
-
-namespace VelorusNet8.WebApi.Middlewares;
-
+using VelorusNet8.Infrastructure.Services;
 
 public class RequestResponseLoggingMiddleware
 {
     private readonly RequestDelegate _next;
-    public RequestResponseLoggingMiddleware(RequestDelegate next)
+    private readonly ElasticSearchService _elasticSearchService;
+
+    public RequestResponseLoggingMiddleware(RequestDelegate next, ElasticSearchService elasticSearchService)
     {
         _next = next;
+        _elasticSearchService = elasticSearchService; // Elasticsearch servisini ekliyoruz
     }
-
 
     public async Task Invoke(HttpContext context)
     {
-        // HttpContext'ten scoped hizmetleri çözümleyin
         var dbContext = context.RequestServices.GetRequiredService<AppDbContext>();
-      
 
-        // Request'i yakala
         var request = await FormatRequest(context.Request);
 
-        // Response'u yakalamak için response stream'ini tut
         var originalBodyStream = context.Response.Body;
 
         using (var responseBody = new MemoryStream())
@@ -32,11 +28,9 @@ public class RequestResponseLoggingMiddleware
 
             await _next(context);
 
-            // Response'u yakala
             var response = await FormatResponse(context.Response);
             var status = context.Response.StatusCode.ToString();
 
-            // Log kaydını oluştur
             var log = new Log
             {
                 Timestamp = DateTime.Now,
@@ -45,13 +39,32 @@ public class RequestResponseLoggingMiddleware
                 Status = status
             };
 
-            // Log kaydını veritabanına ekle
+            // Veritabanına kaydet
             dbContext.Logs.Add(log);
             await dbContext.SaveChangesAsync();
+
+            // Elasticsearch'e log gönder
+            try
+            {
+                var logEntry = new LogEntry
+                {
+                    Message = $"Request: {request}, Response: {response}, Status: {status}",
+                    Timestamp = DateTime.UtcNow,
+                    LogLevel = "Information",
+                    Source = "RequestResponseLoggingMiddleware"
+                };
+                await _elasticSearchService.IndexLogAsync(logEntry);  // Elasticsearch'e gönderiyoruz
+            }
+            catch (Exception ex)
+            {
+                // Elasticsearch'e log gönderim hatalarını yakalayıp loglayın
+                Console.WriteLine($"Elasticsearch'e log gönderimi başarısız: {ex.Message}");
+            }
 
             await responseBody.CopyToAsync(originalBodyStream);
         }
     }
+
     private async Task<string> FormatRequest(HttpRequest request)
     {
         request.EnableBuffering();

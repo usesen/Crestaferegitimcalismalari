@@ -22,7 +22,7 @@ namespace VelorusNet8.Infrastructure;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
+    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
         // DbContext ve diğer servisleri ekleyin
         // ConnectionString'i configuration'dan alın
@@ -35,27 +35,21 @@ public static class ServiceCollectionExtensions
 
         // Diğer servisler...
 
-
-        // Redis Cache Service'i ekleyin (ICacheService uygulaması olarak)
+        // Redis Cache Service'i ekleyin
         services.AddSingleton<ICacheService, RedisCacheService>(provider =>
         {
-            var redisConnection = services.BuildServiceProvider()
-                   .GetRequiredService<IConfiguration>()
-                   .GetConnectionString("RedisConnection");
+            var redisConnection = configuration.GetConnectionString("RedisConnection");
 
-            return new RedisCacheService(redisConnection); // Redis bağlantı bilgisi
+            if (string.IsNullOrEmpty(redisConnection))
+            {
+                throw new ArgumentNullException(nameof(redisConnection), "Redis connection string cannot be null or empty.");
+            }
+
+            return new RedisCacheService(redisConnection);
         });
 
-        services.AddSingleton<ICacheService, RedisCacheService>(provider =>
-        {
-            var elasticSearchUri = services.BuildServiceProvider()
-                   .GetRequiredService<IConfiguration>()
-                   .GetConnectionString("ElasticSearch:Uri\"");
-
-            return new RedisCacheService(elasticSearchUri); // Redis bağlantı bilgisi
-        });
-
-        services.AddElasticSearch("http://localhost:9200");
+        // ElasticSearch Service'i ekleyin
+        services.AddElasticSearch(configuration["ElasticSearch:Uri"]);
 
         services.AddScoped<IUserAccountRepository, UserAccountRepository>();
         services.AddScoped<IUserGroupRepository, UserGroupRepository>();
