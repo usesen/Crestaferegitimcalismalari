@@ -39,13 +39,15 @@ public class RabbitMQService : IMessageBusService
         Console.WriteLine("Mesaj gönderiliyor: " + message);  // Mesaj gönderileceğini logla
 
         var body = System.Text.Encoding.UTF8.GetBytes(message);
-
+        var properties = _channel.CreateBasicProperties();
+        properties.Persistent = true; // Mesaj kalıcı olacak
+      
         try
         {
             _channel.BasicPublish(
                 exchange: "",
                 routingKey: "UserCreatedQueue",
-                basicProperties: null,
+                basicProperties: properties,
                 body: body);
 
             Console.WriteLine($" [x] Sent {message}");  // Başarıyla gönderildiğini logla

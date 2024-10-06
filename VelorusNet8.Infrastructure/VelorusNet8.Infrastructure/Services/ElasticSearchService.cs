@@ -10,7 +10,7 @@ public class ElasticSearchService
     public ElasticSearchService(string uri)
     {
         var settings = new ConnectionSettings(new Uri(uri))
-            .DefaultIndex("logs_v2"); // Varsayılan index adı
+            .DefaultIndex("logs_v2_v2"); // Varsayılan index adı
         _elasticClient = new ElasticClient(settings);
     }
 
