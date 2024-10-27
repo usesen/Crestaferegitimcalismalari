@@ -1,0 +1,79 @@
+﻿@page
+@model WebRazorApp.Pages.IndexModel
+
+<div class="container mt-5">
+    <h2>Kayıt Arama</h2>
+    <form class="form-inline mb-3">
+        <div class="form-group mx-sm-3 mb-2">
+            <label for="firstName" class="sr-only">First Name + Last Name</label>
+            <input type="text" id="firstName" class="form-control" placeholder="First Name + Last Name" />
+        </div>
+        <div class="form-group mx-sm-3 mb-2">
+            <label for="company" class="sr-only">Company</label>
+            <input type="text" id="company" class="form-control" placeholder="Company" />
+        </div>
+        <div class="form-group mx-sm-3 mb-2">
+            <label for="country" class="sr-only">Country</label>
+            <input type="text" id="country" class="form-control" placeholder="Country" />
+        </div>
+        <button type="submit" class="btn btn-primary mb-2" style="margin-right: 20px;">
+            <i class="fas fa-search"></i> Ara
+        </button>
+        <button type="button" class="btn btn-success m-lg-2">
+            <i class="fas fa-plus"></i> Yeni Kayıt
+        </button>
+    </form>
+
+  
+    <div class="table-responsive">
+        <table class="table table-bordered mt-3">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Company</th>
+                    <th>City</th>
+                    <th>Country</th>
+                    <th>İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>John</td>
+                    <td>Doe</td>
+                    <td>john.doe@example.com</td>
+                    <td>Acme Corp</td>
+                    <td>New York</td>
+                    <td>USA</td>
+                    <td>
+                        <button class="btn btn-info btn-sm">
+                            <i class="fas fa-eye"></i> Göster
+                        </button>
+                        <button class="btn btn-warning btn-sm">
+                            <i class="fas fa-edit"></i> Değiştir
+                        </button>
+                        <button class="btn btn-danger btn-sm">
+                            <i class="fas fa-times"></i> İptal
+                        </button>
+                    </td>
+
+                </tr>
+                <!-- Diğer satırlar buraya eklenebilir -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Sayfalama için basit bir örnek -->
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#">Önceki</a></li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">Sonraki</a></li>
+        </ul>
+    </nav>
+</div>

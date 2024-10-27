@@ -22,6 +22,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		ReadMe.md = ReadMe.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebRazorApp", "WebRazorApp\WebRazorApp.csproj", "{15D3B3B9-2D23-4684-B03A-D51349780B94}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +58,10 @@ Global
 		{121A4AC0-3C5E-4868-86D0-01C7C3BC489F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{121A4AC0-3C5E-4868-86D0-01C7C3BC489F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{121A4AC0-3C5E-4868-86D0-01C7C3BC489F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15D3B3B9-2D23-4684-B03A-D51349780B94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15D3B3B9-2D23-4684-B03A-D51349780B94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15D3B3B9-2D23-4684-B03A-D51349780B94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15D3B3B9-2D23-4684-B03A-D51349780B94}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

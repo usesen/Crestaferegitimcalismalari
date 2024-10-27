@@ -1,0 +1,127 @@
+﻿/* Temel gövde ve ana sayfa stili */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Navbar stili */
+.navbar {
+    background-color: #333;
+    color: #fff;
+    padding: 1rem;
+}
+
+    .navbar .container {
+        display: flex;
+        justify-content: left;
+        align-items: center;
+    }
+
+.navbar-brand {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.navbar-menu {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-item {
+    margin-left: 1rem;
+}
+
+    .navbar-item a {
+        color: #fff;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        transition: background-color 0.3s;
+    }
+
+        .navbar-item a:hover {
+            background-color: #555 !important; /* Arka plan rengini sabitle */
+            color: #fff !important; /* Metin rengini sabitle */
+            border-radius: 5px;
+        }
+
+/* Altbilgi (footer) stili */
+footer {
+    background-color: #f1f1f1;
+    text-align: center;
+    padding: 1rem;
+    margin-top: 2rem;
+}
+/* Mobil cihazlar için menü stilini ayarlama */
+@media (max-width: 768px) {
+    .navbar .container {
+        flex-direction: column;
+    }
+
+    .navbar-menu {
+        flex-direction: column;
+        align-items: flex-start;
+        display: none; /* Varsayılan olarak gizli */
+    }
+
+        .navbar-menu.active {
+            display: flex; /* Aktif olduğunda görünür yap */
+        }
+
+    .navbar-item {
+        margin: 0.5rem 0;
+    }
+}
+/* Form düzenlemesi */
+.form-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.form-group {
+    flex: 1 1 200px;
+    min-width: 200px;
+}
+
+/* Table responsive ayarlama */
+.table-responsive {
+    overflow-x: auto;
+}
+
+/* Butonlar için ekstra margin */
+.btn-sm {
+    margin-right: 0.3rem;
+}
+/* Form kontrolü için ek stil */
+.form-inline .form-group {
+    flex: 1;
+    min-width: 150px;
+}
+
+/* Daha küçük ekranlarda formun düzenlenmesi */
+@media (max-width: 576px) {
+    .form-inline {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+        .form-inline .form-group {
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .form-inline .btn {
+            width: 100%;
+        }
+}
+
+/* Form butonları için ekstra stil */
+.btn-primary {
+    
+    margin-right: 20px;
+}
