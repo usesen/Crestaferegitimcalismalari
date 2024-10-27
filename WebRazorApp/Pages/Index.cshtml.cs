@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using WebRazorApp.BasePage;
 
-namespace WebRazorApp.Pages
+namespace WebRazorApp.Pages;
+
+public class IndexModel : BasePageModel
 {
-    public class IndexModel : PageModel
+    public void OnGet()
     {
-        public void OnGet()
-        {
-        }
     }
 }

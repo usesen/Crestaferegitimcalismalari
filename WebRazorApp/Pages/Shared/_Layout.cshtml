@@ -1,29 +1,56 @@
 ﻿<!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - CustomRazorApp</title>
-    <link rel="stylesheet" href="~/css/site.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <link href="~/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <script src="~/lib/jquery/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>@ViewData["Title"] - CustomRazorApp</title>
 
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="~/css/site.css" />
 
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </head>
 </head>
 <body>
     <header>
-        <nav class="navbar">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container">
                 <a class="navbar-brand" href="/">CustomRazorApp</a>
-                <ul class="navbar-menu">
-                    <li class="navbar-item"><a href="/">Ana Sayfa</a></li>
-                    <li class="navbar-item"><a href="/About">Hakkımızda</a></li>
-                    <li class="navbar-item"><a href="/Services">Hizmetler</a></li>
-                    <li class="navbar-item"><a href="/Contact">İletişim</a></li>
-                    <li class="navbar-item"><a href="/Blog">Blog</a></li>
-                </ul>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item"><a class="nav-link" href="/">Ana Sayfa</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/About">Hakkımızda</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/Services">Hizmetler</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/Contact">İletişim</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/Blog">Blog</a></li>
+                    </ul>
+
+                    <div class="d-flex align-items-center">
+                        <span class="me-3">
+                            <i class="fas fa-user"></i>
+                            <span id="login-name" class="ms-2"></span>
+                        </span>
+                        <a href="javascript:void(0)"
+                           id="logout-link"
+                           onclick="return logout()"
+                           class="btn btn-outline-danger btn-sm"
+                           style="display: none;">
+                            <i class="fas fa-sign-out-alt"></i> Çıkış
+                        </a>
+                    </div>
+                </div>
             </div>
         </nav>
     </header>
@@ -46,6 +73,78 @@
             });
         });
     </script>
+   <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            if (window.location.pathname.toLowerCase() === '/account/login') {
+                return;
+            }
 
+            function getCookie(name) {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) return parts.pop().split(';').shift();
+                return null;
+            }
+
+            function parseJwt(token) {
+                try {
+                    const base64Url = token.split('.')[1];
+                    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+                        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                    }).join(''));
+                    return JSON.parse(jsonPayload);
+                } catch (e) {
+                    console.error('Token parse hatası:', e);
+                    return null;
+                }
+            }
+
+            const token = getCookie("authTokenRazor");
+            const loginNameElement = document.getElementById("login-name");
+            const logoutLink = document.getElementById("logout-link");
+
+            if (token) {
+                const tokenData = parseJwt(token);
+                if (tokenData) {
+                    // Token'dan email adresini al
+                    const userEmail = tokenData.unique_name;
+                    // Role bilgisini al
+                    const userRole = tokenData.role;
+
+                    if (loginNameElement) {
+                        // Email ve rolü birlikte göster
+                        loginNameElement.textContent = `${userEmail} (${userRole})`;
+                        // veya sadece email
+                        // loginNameElement.textContent = userEmail;
+                    }
+                    if (logoutLink) {
+                        logoutLink.style.display = "inline";
+                    }
+
+                    // Debug için
+                    console.log('Kullanıcı:', userEmail);
+                    console.log('Rol:', userRole);
+                    console.log('İzinler:', tokenData.Permission);
+                }
+            }
+        });
+        function logout() {
+            // Cookie'yi tüm olası path'ler için sil
+            document.cookie = "authTokenRazor=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+            document.cookie = "authTokenRazor=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            document.cookie = "authTokenRazor=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + window.location.hostname;
+
+            // Debug için
+            console.log('Çıkış yapıldı, cookie silindi');
+
+            // Sayfayı yenile veya login'e yönlendir
+            window.location.href = '/Account/Login';
+
+            // İşlemin tamamlandığından emin olmak için
+            return false;
+        }
+</script>
+ 
 </body>
 </html>

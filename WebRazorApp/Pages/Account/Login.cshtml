@@ -1,0 +1,144 @@
+﻿@page
+@model WebRazorApp.Pages.Account.LoginModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Your App Name</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        body {
+            background-color: #f8f9fa;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-box {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .login-title {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #333;
+            font-size: 1.5rem;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: start; /* Sola dayalı */
+            height: 100%;
+            margin: 0;
+            padding-left: 0px; /* Sol taraftan biraz boşluk */
+        }
+
+        .form-control {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .btn-login {
+            padding: 0.5rem 2rem;
+        }
+
+        .error-message {
+            color: #dc3545;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="login-box">
+                    <h3 class="login-title">Giriş Yap</h3>
+
+                    <form method="post" id="loginForm">
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-group">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="form-label" for="Username">E-posta Adresi:</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="email"
+                                           asp-for="username"
+                                           class="form-control"
+                                           id="Username"
+                                           required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <label class="form-label" for="Password">Şifre:</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="password"
+                                           asp-for="password"
+                                           class="form-control"
+                                           id="Password"
+                                           required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary btn-login">
+                                Giriş Yap
+                            </button>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                        {
+                            <div class="error-message text-center">
+                                @Model.ErrorMessage
+                            </div>
+                        }
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <!-- Formu kontrol etmek için JavaScript ekleyelim -->
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            console.log('Form submitting...');
+            // Form verilerini kontrol edelim
+            const formData = new FormData(this);
+            for (let pair of formData.entries()) {
+                console.log(pair[0] + ': ' + pair[1]);
+            }
+        });
+    </script>
+</body>
+</html>
