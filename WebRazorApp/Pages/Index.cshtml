@@ -110,6 +110,29 @@
         </div>
     </div>
 </div>
+<!-- Modal partial'ı çağır
+<partial name="_CustomerDetailModal" /> -->
+<!-- Modal direkt sayfada -->
+<div class="modal fade" id="showCustomerModal"  data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-user me-2"></i>Müşteri Detayları
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Burası dinamik olarak doldurulacak -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Kapat
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- JavaScript kodunu ekleyelim -->
 <script>
 // Global değişkenler
@@ -248,18 +271,7 @@ function displayCustomers(data) {
         tableBody.appendChild(row);
     });
 }
-    // İşlem fonksiyonları (daha sonra implement edilebilir)
-    function showCustomer(id) {
-        console.log('Show customer:', id);
-    }
-
-    function editCustomer(id) {
-        console.log('Edit customer:', id);
-    }
-
-    function deleteCustomer(id) {
-        console.log('Delete customer:', id);
-    }
+ 
 
   function updatePagination(data) {
         const pagination = document.querySelector('.pagination');
@@ -343,3 +355,134 @@ function search() {
     loadCustomers(1);
 }
 </script>
+@section Scripts {
+    <script>
+        // Global değişkenler
+        const API_URL = 'https://localhost:7254/api/AngularCustomer';
+        let customerModal = null;
+
+        // Sayfa yüklendiğinde
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM loaded');
+            customerModal = new bootstrap.Modal(document.getElementById('showCustomerModal'));
+        });
+
+        // Müşteri detaylarını göster
+        async function showCustomer(id) {
+            try {
+                console.log('Showing customer:', id);
+                
+                const modalElement = document.getElementById('showCustomerModal');
+                const modalBody = modalElement.querySelector('.modal-body');
+                
+                // Loading göster
+                modalBody.innerHTML = `
+                    <div class="d-flex justify-content-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Yükleniyor...</span>
+                        </div>
+                    </div>`;
+
+                customerModal.show();
+
+                // API'den veri al
+                const response = await fetch(`${API_URL}/${id}`);
+                if (!response.ok) throw new Error('Müşteri bilgileri alınamadı');
+                
+                const customer = await response.json();
+                console.log('Customer data:', customer);
+
+                // Modal içeriğini hazırla
+               const content = `
+    <div class="container-fluid p-0">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">Ad:</label>
+                    <input type="text" class="form-control" value="${customer.firstName}" readonly>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">Soyad:</label>
+                    <input type="text" class="form-control" value="${customer.lastName}" readonly>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">Email:</label>
+                    <input type="email" class="form-control" value="${customer.email || '-'}" readonly>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">Telefon:</label>
+                    <input type="text" class="form-control" value="${customer.phone || '-'}" readonly>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">Şirket:</label>
+                    <input type="text" class="form-control" value="${customer.company || '-'}" readonly>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">Pozisyon:</label>
+                    <input type="text" class="form-control" value="${customer.position || '-'}" readonly>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label class="form-label">Adres:</label>
+                    <input type="text" class="form-control" value="${customer.address || '-'}" readonly>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">Şehir:</label>
+                    <input type="text" class="form-control" value="${customer.city || '-'}" readonly>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">Ülke:</label>
+                    <input type="text" class="form-control" value="${customer.country || '-'}" readonly>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">Borç:</label>
+                    <input type="text" class="form-control" value="₺${customer.debt?.toLocaleString('tr-TR', { minimumFractionDigits: 2 }) || '0,00'}" readonly>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">Alacak:</label>
+                    <input type="text" class="form-control" value="₺${customer.credit?.toLocaleString('tr-TR', { minimumFractionDigits: 2 }) || '0,00'}" readonly>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label class="form-label">Notlar:</label>
+                    <textarea class="form-control" rows="3" readonly>${customer.notes || 'Not bulunmuyor'}</textarea>
+                </div>
+            </div>
+        </div>
+    </div>`;
+
+                // İçeriği modal'a ekle
+                modalBody.innerHTML = content;
+
+            } catch (error) {
+                console.error('Error:', error);
+                const modalBody = document.querySelector('#showCustomerModal .modal-body');
+                modalBody.innerHTML = `
+                    <div class="alert alert-danger m-3">
+                        <i class="fas fa-exclamation-circle me-2"></i> 
+                        Hata: ${error.message}
+                    </div>`;
+            }
+        }
+    </script>
+}
