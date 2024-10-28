@@ -86,6 +86,10 @@ footer {
 .form-group {
     flex: 1 1 200px;
     min-width: 200px;
+    margin-bottom: 0; /* Form grupları arasındaki boşluğu kaldır */
+}
+.form-control {
+    height: 38px; /* Input yüksekliklerini standartlaştır */
 }
 
 /* Table responsive ayarlama */
@@ -124,4 +128,100 @@ footer {
 .btn-primary {
     
     margin-right: 20px;
+}
+/* Mobil görünüm için */
+@media (max-width: 768px) {
+    .row.align-items-end {
+        gap: 1rem;
+    }
+
+    .col-md-4.d-flex {
+        margin-top: 1rem;
+    }
+
+    .btn {
+        flex: 1;
+    }
+}
+
+/* Kart stilini özelleştirme */
+.card {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border: none;
+}
+
+/* Form elemanları için stil */
+.form-control {
+    height: 38px;
+    border-radius: 4px;
+}
+
+.form-label {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #495057;
+}
+
+/* Butonlar için stil */
+.btn {
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 1rem;
+}
+
+.btn-sm {
+    height: 32px;
+    padding: 0 0.5rem;
+}
+
+/* Tablo stilleri */
+.table {
+    margin-bottom: 0;
+}
+
+    .table th {
+        background-color: #f8f9fa;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .table td {
+        vertical-align: middle;
+    }
+
+/* Responsive düzenlemeler */
+@media (max-width: 768px) {
+    .col-md-3 {
+        margin-bottom: 1rem;
+    }
+
+    .text-end {
+        text-align: left !important;
+    }
+
+    .d-flex.gap-2 {
+        gap: 0.5rem !important;
+    }
+}
+/* Loading animasyonu için stil */
+.loading {
+    position: relative;
+    min-height: 200px;
+}
+
+    .loading:after {
+        content: 'Yükleniyor...';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1.2rem;
+        color: #666;
+    }
+
+/* Tablo satır hover efekti */
+.table-hover tbody tr:hover {
+    background-color: rgba(0,0,0,.075);
+    cursor: pointer;
 }

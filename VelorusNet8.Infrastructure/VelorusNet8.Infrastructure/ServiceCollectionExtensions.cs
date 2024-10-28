@@ -14,6 +14,9 @@ using VelorusNet8.Infrastructure.Repositories.AngularDersleri;
 using VelorusNet8.Application.Service.AngularCustomer;
 using VelorusNet8.Application.Interface;
 using VelorusNet8.Infrastructure.Services;
+using VelorusNet8.Infrastructure.Interface;
+using VelorusNet8.Infrastructure.Queries;
+using VelorusNet8.Infrastructure.Mapping;
 
 
 
@@ -34,7 +37,8 @@ public static class ServiceCollectionExtensions
                                  options.UseSqlServer(connectionString));
 
         // Diğer servisler...
-
+        services.AddAutoMapper(typeof(InfrastructureMappingProfile).Assembly);
+        services.AddScoped<IAngularCustomerQueries, AngularCustomerQueries>();
         // Redis Cache Service'i ekleyin
         services.AddSingleton<ICacheService, RedisCacheService>(provider =>
         {

@@ -9,7 +9,6 @@
   <ItemGroup>
     <Folder Include="CrossCutting\" />
     <Folder Include="Extensions\" />
-    <Folder Include="Mapping\" />
     <Folder Include="Utilities\" />
   </ItemGroup>
 

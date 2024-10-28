@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using VelorusNet8.Application.Commands.AngularDersleri.AngularCustomer;
+using VelorusNet8.Application.DTOs.AngularDersleri;
 using VelorusNet8.Application.Interface.AngularDersleri;
 
 namespace VelorusNet8.Application.Service.AngularCustomer;

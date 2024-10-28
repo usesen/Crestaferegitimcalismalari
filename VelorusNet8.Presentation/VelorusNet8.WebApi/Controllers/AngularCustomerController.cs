@@ -9,6 +9,7 @@ using VelorusNet8.Application.Commands.AngularDersleri.AngularCustomer;
 using VelorusNet8.Application.Interface.AngularDersleri;
 using VelorusNet8.Domain.Entities.Aggregates.AngularDersleri;
 using Microsoft.EntityFrameworkCore;
+using VelorusNet8.Infrastructure.Interface;
 
 namespace VelorusNet8.WebApi.Controllers;
 
@@ -19,12 +20,15 @@ public class AngularCustomerController : ControllerBase
     private readonly IAngularCustomerService _angularcustomerService;
     private readonly IMapper _mapper;
     private readonly IMediator _mediatR;
+    private readonly IAngularCustomerQueries _customerQueries; // Yeni eklenen
 
-    public AngularCustomerController(IAngularCustomerService angularcustomerService, IMediator mediatR, IMapper mapper)
+
+    public AngularCustomerController(IAngularCustomerService angularcustomerService, IMediator mediatR, IMapper mapper, IAngularCustomerQueries customerQueries)
     {
         _angularcustomerService = angularcustomerService;
         _mediatR = mediatR;
         _mapper = mapper;
+        _customerQueries = customerQueries;
     }
 
     [HttpGet("getall")]
@@ -115,4 +119,27 @@ public class AngularCustomerController : ControllerBase
         await _angularcustomerService.DeleteAngularCustomerAsync(id, cancellationToken);
         return NoContent();
     }
+
+    // Yeni endpoint
+    [HttpGet("getpaged")]
+    public async Task<IActionResult> GetPaged(
+        [FromQuery] PaginationRequestDto request,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            Console.WriteLine($"Controller - Sort Column: {request.SortColumn}");
+            Console.WriteLine($"Controller - Sort Direction: {request.SortDirection}"); 
+
+            var result = await _customerQueries.GetPaginatedAsync(request, cancellationToken);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            // Hata mesajını loglayın
+            return StatusCode(500, "Internal server error: " + ex.Message);
+        }
+    }
+
+
 }

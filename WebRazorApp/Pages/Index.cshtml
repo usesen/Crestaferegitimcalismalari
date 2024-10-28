@@ -1,77 +1,345 @@
 ﻿@page
 @model WebRazorApp.Pages.IndexModel
-
+<style>
+    .sortable {
+        cursor: pointer;
+        user-select: none;
+    }
+    .sortable:hover {
+        background-color: #f8f9fa;
+    }
+    .sortable i {
+        margin-left: 5px;
+    }
+    .fa-sort-up {
+        color: #198754;
+    }
+    .fa-sort-down {
+        color: #198754;
+    }
+</style>
 <div class="container mt-5">
-    <h2>Kayıt Arama</h2>
-    <form class="form-inline mb-3">
-        <div class="form-group mx-sm-3 mb-2">
-            <label for="firstName" class="sr-only">Name</label>
-            <input type="text" id="firstName" class="form-control" placeholder="Name" />
-        </div>
-        <div class="form-group mx-sm-3 mb-2">
-            <label for="company" class="sr-only">Company</label>
-            <input type="text" id="company" class="form-control" placeholder="Company" />
-        </div>
-        <div class="form-group mx-sm-3 mb-2">
-            <label for="country" class="sr-only">Country</label>
-            <input type="text" id="country" class="form-control" placeholder="Country" />
-        </div>
-        <button type="submit" class="btn btn-primary mb-2" style="margin-right: 20px;">
-            <i class="fas fa-search"></i> Ara
-        </button>
-        <button type="button" class="btn btn-success m-lg-2">
-            <i class="fas fa-plus"></i> Yeni Kayıt
-        </button>
-    </form>
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title mb-4">Kayıt Arama</h2>
 
-  
-    <div class="table-responsive">
-        <table class="table table-bordered mt-3">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Company</th>
-                    <th>City</th>
-                    <th>Country</th>
-                    <th>İşlemler</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>John Down</td>
-                    <td>john.doe@example.com</td>
-                    <td>Acme Corp</td>
-                    <td>New York</td>
-                    <td>USA</td>
-                    <td>
-                        <button class="btn btn-info btn-sm">
-                            <i class="fas fa-eye"></i> Göster
-                        </button>
-                        <button class="btn btn-warning btn-sm">
-                            <i class="fas fa-edit"></i> Değiştir
-                        </button>
-                        <button class="btn btn-danger btn-sm">
-                            <i class="fas fa-times"></i> İptal
-                        </button>
-                    </td>
+            <!-- Arama Formu -->
+            <div class="row g-3 align-items-end justify-content-between mb-4">
+                <!-- Form Elemanları -->
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="firstName" class="form-label">Name</label>
+                        <input type="text" id="firstName" class="form-control" placeholder="Name" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="company" class="form-label">Company</label>
+                        <input type="text" id="company" class="form-control" placeholder="Company" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="country" class="form-label">Country</label>
+                        <input type="text" id="country" class="form-control" placeholder="Country" />
+                    </div>
+                </div>
 
-                </tr>
-                <!-- Diğer satırlar buraya eklenebilir -->
-            </tbody>
-        </table>
+                <!-- Butonlar -->
+                <div class="col-md-3 text-end">
+                    <!-- text-end ile butonları sağa yasla -->
+                    <div class="d-flex gap-2 justify-content-end">
+                        <button type="submit" class="btn btn-primary" onclick="search()>
+                            <i class="fas fa-search"></i> Ara
+                        </button>
+                        <button type="button" class="btn btn-success">
+                            <i class="fas fa-plus"></i> Yeni Kayıt
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tablo -->
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+           <thead class="table-light">
+            <tr>
+        <th class="sortable" onclick="sortBy('id')">
+                Id 
+                <i class="fas fa-sort" id="sort-id"></i>
+            </th>
+            <th class="sortable" onclick="sortBy('name')">
+                Name 
+                <i class="fas fa-sort" id="sort-name"></i>
+            </th>
+            <th class="sortable" onclick="sortBy('email')">
+                Email 
+                <i class="fas fa-sort" id="sort-email"></i>
+            </th>
+            <th class="sortable" onclick="sortBy('company')">
+                Company 
+                <i class="fas fa-sort" id="sort-company"></i>
+            </th>
+            <th class="sortable" onclick="sortBy('city')">
+                City 
+                <i class="fas fa-sort" id="sort-city"></i>
+            </th>
+            <th class="sortable" onclick="sortBy('country')">
+                Country 
+                <i class="fas fa-sort" id="sort-country"></i>
+            </th>
+            <th class="text-center">İşlemler</th>
+        </tr>
+    </thead>
+                    <tbody id="customerTableBody">
+                        <!-- Veriler JavaScript ile doldurulacak -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Sayfalama -->
+            <nav aria-label="Page navigation" class="mt-3">
+                <ul class="pagination justify-content-end mb-0">
+                    <li class="page-item"><a class="page-link" href="#">Önceki</a></li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#">Sonraki</a></li>
+                </ul>
+            </nav>
+        </div>
     </div>
-
-    <!-- Sayfalama için basit bir örnek -->
-    <nav aria-label="Page navigation" class="mt-4">
-        <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="#">Önceki</a></li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">Sonraki</a></li>
-        </ul>
-    </nav>
 </div>
+<!-- JavaScript kodunu ekleyelim -->
+<script>
+// Global değişkenler
+const API_BASE_URL = 'https://localhost:7254';
+const pageSize = 5;
+let currentPage = 1;
+let currentSort = {
+    column: 'id',
+    direction: 'asc'
+};
+ let searchParams = {
+    name: '',
+    company: '',
+    country: ''
+};
+
+ 
+// Ara butonuna click event ekleyelim
+document.querySelector('button[type="submit"]').addEventListener('click', function() {
+    searchParams = {
+        name: document.getElementById('firstName')?.value?.trim() || '',
+        company: document.getElementById('company')?.value?.trim() || '',
+        country: document.getElementById('country')?.value?.trim() || ''
+    };
+    
+    console.log('Search params:', searchParams); // Debug için
+    currentPage = 1; // Arama yapıldığında ilk sayfaya dön
+    loadCustomers(1);
+});
+function loadCustomers(page = 1) {
+    const tableBody = document.getElementById('customerTableBody');
+    tableBody.innerHTML = '<tr><td colspan="7" class="text-center">Yükleniyor...</td></tr>';
+
+    // Sadece dolu olan parametreleri URL'e ekleyelim
+    const params = new URLSearchParams({
+        PageNumber: page,
+        PageSize: pageSize,
+        SortColumn: currentSort.column,
+        SortDirection: currentSort.direction
+    });
+
+    // Sadece dolu olan search parametrelerini ekleyelim
+    if (searchParams.name) params.append('SearchName', searchParams.name);
+    if (searchParams.company) params.append('SearchCompany', searchParams.company);
+    if (searchParams.country) params.append('SearchCountry', searchParams.country);
+
+    const url = `${API_BASE_URL}/api/AngularCustomer/getpaged?${params.toString()}`;
+
+    console.log('Request URL:', url); // Debug için
+
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                console.log('Response status:', response.status); // Debug için
+                return response.json().then(err => {
+                    throw new Error(JSON.stringify(err, null, 2));
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            displayCustomers(data);
+            updatePagination(data);
+            updateSortIcons();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="7" class="text-center text-danger">
+                        <i class="fas fa-exclamation-circle"></i> 
+                        Veriler yüklenirken bir hata oluştu: ${error.message}
+                    </td>
+                </tr>
+            `;
+        });
+} 
+
+
+
+function sortBy(column) {
+    console.log('Sorting by:', column); // Debug için
+
+    if (currentSort.column === column) {
+        currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+    } else {
+        currentSort.column = column;
+        currentSort.direction = 'asc';
+    }
+    
+    console.log('Current sort:', currentSort); // Debug için
+    
+    updateSortIcons();
+    loadCustomers(currentPage);
+}
+
+
+function updateSortIcons() {
+    // Tüm sort ikonlarını resetle
+    document.querySelectorAll('.fa-sort, .fa-sort-up, .fa-sort-down').forEach(icon => {
+        icon.className = 'fas fa-sort';
+    });
+
+    // Aktif sort kolonunun ikonunu güncelle
+    const activeIcon = document.getElementById(`sort-${currentSort.column}`);
+    if (activeIcon) {
+        activeIcon.className = `fas fa-sort-${currentSort.direction === 'asc' ? 'up' : 'down'}`;
+    }
+}
+
+function displayCustomers(data) {
+    const tableBody = document.getElementById('customerTableBody');
+    tableBody.innerHTML = '';
+    
+    data.items.forEach(customer => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${customer.id}</td>
+            <td>${customer.firstName} ${customer.lastName}</td>
+            <td>${customer.email}</td>
+            <td>${customer.company}</td>
+            <td>${customer.city}</td>
+            <td>${customer.country}</td>
+            <td class="text-center">
+                <button class="btn btn-info btn-sm" onclick="showCustomer(${customer.id})">
+                    <i class="fas fa-eye"></i>
+                </button>
+                <button class="btn btn-warning btn-sm" onclick="editCustomer(${customer.id})">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-danger btn-sm" onclick="deleteCustomer(${customer.id})">
+                    <i class="fas fa-times"></i>
+                </button>
+            </td>
+        `;
+        tableBody.appendChild(row);
+    });
+}
+    // İşlem fonksiyonları (daha sonra implement edilebilir)
+    function showCustomer(id) {
+        console.log('Show customer:', id);
+    }
+
+    function editCustomer(id) {
+        console.log('Edit customer:', id);
+    }
+
+    function deleteCustomer(id) {
+        console.log('Delete customer:', id);
+    }
+
+  function updatePagination(data) {
+        const pagination = document.querySelector('.pagination');
+        if (!pagination) return;
+
+        pagination.innerHTML = '';
+
+        // Önceki sayfa
+        const prevLi = document.createElement('li');
+        prevLi.className = `page-item ${data.currentPage === 1 ? 'disabled' : ''}`;
+        prevLi.innerHTML = `
+            <a class="page-link" href="#" onclick="changePage(${data.currentPage - 1}); return false;">
+                Önceki
+            </a>
+        `;
+        pagination.appendChild(prevLi);
+
+        // Sayfa numaraları
+        for (let i = 1; i <= data.totalPages; i++) {
+            const li = document.createElement('li');
+            li.className = `page-item ${data.currentPage === i ? 'active' : ''}`;
+            li.innerHTML = `
+                <a class="page-link" href="#" onclick="changePage(${i}); return false;">
+                    ${i}
+                </a>
+            `;
+            pagination.appendChild(li);
+        }
+
+        // Sonraki sayfa
+        const nextLi = document.createElement('li');
+        nextLi.className = `page-item ${data.currentPage === data.totalPages ? 'disabled' : ''}`;
+        nextLi.innerHTML = `
+            <a class="page-link" href="#" onclick="changePage(${data.currentPage + 1}); return false;">
+                Sonraki
+            </a>
+        `;
+        pagination.appendChild(nextLi);
+    }
+
+    function changePage(page) {
+        if (page < 1) return;
+        currentPage = page;
+        loadCustomers(page);
+    }
+   // Sayfa yüklendiğinde çağır
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log('Page loaded, calling loadCustomers()'); // Debug için
+    loadCustomers(1);
+});
+// Input'lara keypress event ekleyelim
+document.querySelectorAll('.form-control').forEach(input => {
+    input.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            document.querySelector('button[type="submit"]').click();
+        }
+    });
+});
+
+function search() {
+    // Önce tüm searchParams'ı temizleyelim
+    searchParams = {
+        name: '',
+        company: '',
+        country: ''
+    };
+    
+    // Sadece dolu olan alanları ekleyelim
+    const nameValue = document.getElementById('firstName')?.value?.trim();
+    const companyValue = document.getElementById('company')?.value?.trim();
+    const countryValue = document.getElementById('country')?.value?.trim();
+    
+    // Sadece dolu olanları searchParams'a ekleyelim
+    if (nameValue) searchParams.name = nameValue;
+    if (companyValue) searchParams.company = companyValue;
+    if (countryValue) searchParams.country = countryValue;
+    
+    console.log('Search params:', searchParams); // Debug için
+    
+    currentPage = 1; // Arama yapıldığında ilk sayfaya dön
+    loadCustomers(1);
+}
+</script>

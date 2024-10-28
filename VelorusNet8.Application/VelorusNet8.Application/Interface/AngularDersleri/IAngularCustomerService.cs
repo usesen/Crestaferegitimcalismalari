@@ -11,4 +11,6 @@ public  interface  IAngularCustomerService
     Task DeleteAngularCustomerAsync(int id,CancellationToken cancellationToken);
     Task<CreateAngularCustomerCommand?> GetAngularCustomerByIdAsync(int id,CancellationToken cancellationToken);
     Task<IEnumerable<CreateAngularCustomerCommand>> GetAllAngularCustomersAsync(CancellationToken cancellationToken);
+    // Yeni pagination metodu ekleniyor
+ 
 }
