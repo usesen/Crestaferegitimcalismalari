@@ -110,8 +110,7 @@
         </div>
     </div>
 </div>
-<!-- Modal partial'ı çağır
-<partial name="_CustomerDetailModal" /> -->
+ 
 <!-- Modal direkt sayfada -->
 <div class="modal fade" id="showCustomerModal"  data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
     <div class="modal-dialog modal-lg">
@@ -432,24 +431,32 @@ function search() {
                     <input type="text" class="form-control" value="${customer.position || '-'}" readonly>
                 </div>
             </div>
+             <!-- Adres Bilgileri -->
             <div class="col-12">
                 <div class="form-group">
                     <label class="form-label">Adres:</label>
                     <input type="text" class="form-control" value="${customer.address || '-'}" readonly>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label">Şehir:</label>
                     <input type="text" class="form-control" value="${customer.city || '-'}" readonly>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label">Ülke:</label>
                     <input type="text" class="form-control" value="${customer.country || '-'}" readonly>
                 </div>
             </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label">Posta Kodu:</label>
+                    <input type="text" class="form-control" value="${customer.postalCode || '-'}" readonly>
+                </div>
+            </div>
+
             <div class="col-md-6">
                 <div class="form-group">
                     <label class="form-label">Borç:</label>
@@ -460,6 +467,18 @@ function search() {
                 <div class="form-group">
                     <label class="form-label">Alacak:</label>
                     <input type="text" class="form-control" value="₺${customer.credit?.toLocaleString('tr-TR', { minimumFractionDigits: 2 }) || '0,00'}" readonly>
+                </div>
+            </div>
+               <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">Borç:</label>
+                    <input type="text" class="form-control" value="₺${customer.balanceDebt?.toLocaleString('tr-TR', { minimumFractionDigits: 2 }) || '0,00'}" readonly>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">Alacak:</label>
+                    <input type="text" class="form-control" value="₺${customer.balanceCredit?.toLocaleString('tr-TR', { minimumFractionDigits: 2 }) || '0,00'}" readonly>
                 </div>
             </div>
             <div class="col-12">
