@@ -15,25 +15,28 @@ let customerModal = null;
 let deleteConfirmModal = null;
 let customerIdToDelete = null;
 
-// Sayfa yüklendiğinde
-document.addEventListener('DOMContentLoaded', () => {
-    // Modal'ları initialize et
-    customerModal = new bootstrap.Modal(document.getElementById('showCustomerModal'));
-    deleteConfirmModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+// Arama fonksiyonu
+function search(e) {
+    if (e) e.preventDefault();
 
+    searchParams = {
+        name: document.getElementById('firstName')?.value?.trim() || '',
+        company: document.getElementById('company')?.value?.trim() || '',
+        country: document.getElementById('country')?.value?.trim() || ''
+    };
 
-
-    // Event listener'ları ekle
-    setupEventListeners();
-
-    // İlk yükleme
+    console.log('Search params:', searchParams);
+    currentPage = 1;
     loadCustomers(1);
-});
+}
 
 // Event Listener'ları kurma
 function setupEventListeners() {
     // Arama butonu için event listener
-    document.querySelector('button[type="submit"]').addEventListener('click', search);
+    const searchButton = document.querySelector('button[type="submit"]');
+    if (searchButton) {
+        searchButton.addEventListener('click', search);
+    }
 
     // Input'lara Enter event'i ekle
     document.querySelectorAll('.form-control').forEach(input => {
@@ -49,23 +52,38 @@ function setupEventListeners() {
     if (confirmDeleteBtn) {
         confirmDeleteBtn.addEventListener('click', confirmDelete);
     }
+
+    // Arama form elemanları için event listener'lar
+    const firstNameInput = document.getElementById('firstName');
+    const companyInput = document.getElementById('company');
+    const countryInput = document.getElementById('country');
+
+    if (firstNameInput) firstNameInput.addEventListener('input', search);
+    if (companyInput) companyInput.addEventListener('input', search);
+    if (countryInput) countryInput.addEventListener('input', search);
 }
 
-// Arama fonksiyonu
-function search() {
-    searchParams = {
-        name: document.getElementById('firstName')?.value?.trim() || '',
-        company: document.getElementById('company')?.value?.trim() || '',
-        country: document.getElementById('country')?.value?.trim() || ''
-    };
+// Tek bir DOMContentLoaded event listener
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM yüklendi');
 
-    console.log('Search params:', searchParams);
-    currentPage = 1;
+    // Modal'ları initialize et
+    customerModal = new bootstrap.Modal(document.getElementById('showCustomerModal'));
+    deleteConfirmModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+
+    // Event listener'ları ekle
+    setupEventListeners();
+
+    // İlk yükleme
     loadCustomers(1);
-}
+    console.log('İlk yükleme yapıldı');
+});
+
+ 
 
 // Müşteri listesini yükleme
 function loadCustomers(page = 1) {
+    showLoading();
     const tableBody = document.getElementById('customerTableBody');
     tableBody.innerHTML = '<tr><td colspan="7" class="text-center">Yükleniyor...</td></tr>';
 
@@ -81,25 +99,25 @@ function loadCustomers(page = 1) {
     if (searchParams.country) params.append('SearchCountry', searchParams.country);
 
     const url = `${API_CONFIG.baseUrl}${API_CONFIG.endpoints.customer}/getpaged?${params.toString()}`;
-
-    fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(err => {
-                    throw new Error(err.message || 'Veriler yüklenirken bir hata oluştu');
-                });
-            }
-            return response.json();
-        })
-        .then(data => {
-            displayCustomers(data);
-            updatePagination(data);
-            updateSortIcons();
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showAlert('error', error.message); // Toastr ile hata mesajı
-            tableBody.innerHTML = `
+    try {
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => {
+                        throw new Error(err.message || 'Veriler yüklenirken bir hata oluştu');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                displayCustomers(data);
+                updatePagination(data);
+                updateSortIcons();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('error', error.message); // Toastr ile hata mesajı
+                tableBody.innerHTML = `
                 <tr>
                     <td colspan="7" class="text-center text-danger">
                         <i class="fas fa-exclamation-circle"></i> 
@@ -107,7 +125,14 @@ function loadCustomers(page = 1) {
                     </td>
                 </tr>
             `;
-        });
+            });
+    } catch (error) {
+        console.error('Error:', error);
+        showAlert('error', 'Veriler yüklenirken bir hata oluştu!');
+    } finally {
+        hideLoading();
+    }
+   
 }
 // Müşteri listesini görüntüleme
 function displayCustomers(data) {
@@ -123,6 +148,10 @@ function displayCustomers(data) {
             <td>${customer.company}</td>
             <td>${customer.city}</td>
             <td>${customer.country}</td>
+            <td>${formatMoney(customer.debt)}</td>
+            <td>${formatMoney(customer.credit)}</td>
+            <td>${formatMoney(customer.balanceDebt)}</td>
+            <td>${formatMoney(customer.balanceCredit)}</td>
             <td class="text-center">
                 <button class="btn btn-info btn-sm" onclick="showCustomer(${customer.id})">
                     <i class="fas fa-eye"></i>
@@ -238,7 +267,7 @@ function deleteCustomer(id) {
 
 async function confirmDelete() {
     try {
-        const response = await fetch(`${API_BASE_URL}/api/AngularCustomer/${customerIdToDelete}`, {
+        const response = await fetch(`${API_CONFIG.baseUrl}${API_CONFIG.endpoints.customer}/${customerIdToDelete}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
@@ -281,6 +310,7 @@ async function confirmDelete() {
 }
 
 async function showCustomer(id) {
+    showLoading();
     try {
         const response = await fetch(`${API_CONFIG.baseUrl}${API_CONFIG.endpoints.customer}/${id}`);
 
@@ -318,7 +348,7 @@ async function showCustomer(id) {
             <div class="col-md-6">
                 <div class="form-group">
                     <label class="form-label custom-label">Telefon</label>
-                    <div class="form-control">${customer.phone || '-'}</div>
+                     <div class="form-control">${formatPhone(customer.phone)}</div>
                 </div>
             </div>
 
@@ -365,32 +395,30 @@ async function showCustomer(id) {
             </div>
 
             <!-- Finansal Bilgiler -->
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label class="form-label custom-label">Borç</label>
-                    <div class="form-control">₺${customer.debt?.toLocaleString('tr-TR', { minimumFractionDigits: 2 }) || '0,00'}</div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label custom-label">Borç</label>
+                        <div class="form-control">${formatMoney(customer.debt)}</div>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label class="form-label custom-label">Alacak</label>
-                    <div class="form-control">₺${customer.credit?.toLocaleString('tr-TR', { minimumFractionDigits: 2 }) || '0,00'}</div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label custom-label">Alacak</label>
+                        <div class="form-control">${formatMoney(customer.credit)}</div>
+                    </div>
                 </div>
-            </div>
-
-            <!-- Bakiye Borç ve Bakiye Alacak -->
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label class="form-label custom-label">Bakiye Borç</label>
-                    <div class="form-control">₺${customer.balanceDebt?.toLocaleString('tr-TR', { minimumFractionDigits: 2 }) || '0,00'}</div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label custom-label">Bakiye Borç</label>
+                        <div class="form-control">${formatMoney(customer.balanceDebt)}</div>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label class="form-label custom-label">Bakiye Alacak</label>
-                    <div class="form-control">₺${customer.balanceCredit?.toLocaleString('tr-TR', { minimumFractionDigits: 2 }) || '0,00'}</div>
-                </div>
-            </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label custom-label">Bakiye Alacak</label>
+                        <div class="form-control">${formatMoney(customer.balanceCredit)}</div>
+                    </div>
+                </div>          
 
             <!-- Notlar -->
             <div class="col-12">
@@ -416,9 +444,12 @@ async function showCustomer(id) {
     } catch (error) {
         console.error('Error in showCustomer:', error);
         showAlert('error', error.message);
+    } finally {
+        hideLoading();
     }
 }
 async function editCustomer(id) {
+    showLoading();
     try {
         const response = await fetch(`${API_CONFIG.baseUrl}${API_CONFIG.endpoints.customer}/${id}`);
 
@@ -455,7 +486,7 @@ async function editCustomer(id) {
             <div class="col-md-6">
                 <div class="form-group">
                     <label class="form-label custom-label">Telefon</label>
-                    <input type="tel" class="form-control" name="phone" value="${customer.phone || ''}">
+                    <input type="tel" class="form-control" name="phone" value="${formatPhone(customer.phone)}">
                 </div>
             </div>
 
@@ -567,9 +598,12 @@ async function editCustomer(id) {
     } catch (error) {
         console.error('Error:', error);
         showAlert('error', 'Müşteri bilgileri yüklenirken bir hata oluştu!');
+    } finally {
+        hideLoading();
     }
 }
 async function saveCustomer() {
+    showLoading();
     try {
         const form = document.getElementById('editCustomerForm');
         const formData = new FormData(form);
@@ -614,12 +648,53 @@ async function saveCustomer() {
     } catch (error) {
         console.error('Error:', error);
         showAlert('error', error.message);
+    } finally {
+        hideLoading();
     }
 }
 
+
 function createCustomer() {
-    const content = `
-    <div class="container-fluid p-0">
+
+    // Modal başlığını güncelle
+    const modalTitle = document.querySelector('#showCustomerModal .modal-title');
+    if (modalTitle) {
+        modalTitle.innerHTML = `<i class="fas fa-plus-circle me-2"></i>Yeni Müşteri`;
+    }
+
+    // Modal footer'ı güncelle
+    const modalFooter = document.querySelector('#showCustomerModal .modal-footer');
+    if (modalFooter) {
+        modalFooter.innerHTML = `
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <i class="fas fa-times me-2"></i>İptal
+            </button>
+            <button type="button" class="btn btn-success" onclick="saveNewCustomer()">
+                <i class="fas fa-save me-2"></i>Kaydet
+            </button>
+        `;
+    }
+
+    // İçeriği modal'a ekle
+    const modalBody = document.querySelector('#showCustomerModal .modal-body');
+    if (modalBody) {
+        modalBody.innerHTML = createCustomerFormTemplate(); // Form şablonunu ayrı bir fonksiyona taşıyalım
+    }
+
+    // Form validasyonunu aktif et
+    setupFormValidation('createCustomerForm');
+
+    // Temizle butonunu ekle
+    addResetButton('createCustomerForm');
+
+    // Modalı göster
+    customerModal.show();
+}
+
+// Form şablonunu ayrı bir fonksiyon olarak tanımlayalım
+function createCustomerFormTemplate() {
+    return `
+      <div class="container-fluid p-0">
         <form id="createCustomerForm" class="row g-3">
             <!-- Kişisel Bilgiler -->
             <div class="col-md-6">
@@ -727,33 +802,12 @@ function createCustomer() {
                 </div>
             </div>
         </form>
-    </div>`;
-
-    // Modal başlığını güncelle
-    const modalTitle = document.querySelector('#showCustomerModal .modal-title');
-    modalTitle.innerHTML = `<i class="fas fa-plus-circle me-2"></i>Yeni Müşteri`;
-
-    // Modal footer'ı güncelle
-    const modalFooter = document.querySelector('#showCustomerModal .modal-footer');
-    modalFooter.innerHTML = `
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-            <i class="fas fa-times me-2"></i>İptal
-        </button>
-        <button type="button" class="btn btn-success" onclick="saveNewCustomer()">
-            <i class="fas fa-save me-2"></i>Kaydet
-        </button>
-    `;
-
-    // İçeriği modal'a ekle
-    const modalBody = document.querySelector('#showCustomerModal .modal-body');
-    modalBody.innerHTML = content;
-    // Form validasyonunu aktif et
-    setupFormValidation('createCustomerForm');
-    // Modalı göster
-    customerModal.show();
+    </div>
+  `;
 }
 
 async function saveNewCustomer() {
+    showLoading();
     try {
         const form = document.getElementById('createCustomerForm');
 
@@ -798,5 +852,127 @@ async function saveNewCustomer() {
     } catch (error) {
         console.error('Error:', error);
         showAlert('error', error.message);
+    }
+    finally {
+        hideLoading();
+    }
+}
+
+// main.js'e ekleyin
+function showLoading() {
+    const loadingHtml = `
+        <div class="loading-spinner">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Yükleniyor...</span>
+            </div>
+        </div>`;
+    document.body.insertAdjacentHTML('beforeend', loadingHtml);
+}
+
+function hideLoading() {
+    const spinner = document.querySelector('.loading-spinner');
+    if (spinner) spinner.remove();
+}
+// main.js'e ekleyelim
+function addResetButton(formId) {
+    const form = document.getElementById(formId);
+    const resetBtn = document.createElement('button');
+    resetBtn.type = 'button';
+    resetBtn.className = 'btn btn-secondary me-2';
+    resetBtn.innerHTML = '<i class="fas fa-undo me-1"></i> Temizle';
+    resetBtn.onclick = () => {
+        form.reset();
+        // Validasyon işaretlerini temizle
+        form.querySelectorAll('.is-valid, .is-invalid').forEach(el => {
+            el.classList.remove('is-valid', 'is-invalid');
+        });
+        // Hata mesajlarını temizle
+        form.querySelectorAll('.invalid-feedback').forEach(el => {
+            el.textContent = '';
+        });
+    };
+
+    // Butonu kaydet butonunun yanına ekle
+    const submitBtn = form.querySelector('button[type="submit"]');
+    submitBtn.parentNode.insertBefore(resetBtn, submitBtn);
+}
+
+// main.js'e ekleyelim
+async function exportToExcel() {
+    try {
+        showLoading();
+
+        // Tüm müşterileri al
+        const response = await fetch(`${API_CONFIG.baseUrl}${API_CONFIG.endpoints.customer}`);
+        if (!response.ok) throw new Error('Veriler alınamadı!');
+        const data = await response.json();
+
+        // Excel için veriyi hazırla
+        const excelData = data.items.map(customer => ({
+            'Ad': customer.firstName,
+            'Soyad': customer.lastName,
+            'Email': customer.email,
+            'Telefon': formatPhone(customer.phone),
+            'Şirket': customer.company || '',
+            'Pozisyon': customer.position || '',
+            'Adres': customer.address || '',
+            'Şehir': customer.city || '',
+            'Ülke': customer.country || '',
+            'Posta Kodu': customer.postalCode || '',
+            'Borç': formatMoney(customer.debt),
+            'Alacak': formatMoney(customer.credit),
+            'Bakiye Borç': formatMoney(customer.balanceDebt),
+            'Bakiye Alacak': formatMoney(customer.balanceCredit),
+            'Notlar': customer.notes || ''
+        }));
+
+        // Excel dosyası oluştur
+        const worksheet = XLSX.utils.json_to_sheet(excelData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Müşteriler');
+
+        // Sütun genişliklerini ayarla
+        const maxWidth = 20;
+        worksheet['!cols'] = Object.keys(excelData[0]).map(() => ({ wch: maxWidth }));
+
+        // Dosyayı indir
+        const date = new Date().toISOString().split('T')[0];
+        XLSX.writeFile(workbook, `Müşteriler_${date}.xlsx`);
+
+        showAlert('success', 'Excel dosyası başarıyla indirildi!');
+
+    } catch (error) {
+        console.error('Export error:', error);
+        showAlert('error', 'Excel dosyası oluşturulurken bir hata oluştu!');
+    } finally {
+        hideLoading();
+    }
+}
+
+// Reset butonu ekleme fonksiyonu
+function addResetButton(formId) {
+    const form = document.getElementById(formId);
+    if (!form) return; // Form yoksa çık
+
+    const resetBtn = document.createElement('button');
+    resetBtn.type = 'button';
+    resetBtn.className = 'btn btn-secondary me-2';
+    resetBtn.innerHTML = '<i class="fas fa-undo me-1"></i> Temizle';
+    resetBtn.onclick = () => {
+        form.reset();
+        // Validasyon işaretlerini temizle
+        form.querySelectorAll('.is-valid, .is-invalid').forEach(el => {
+            el.classList.remove('is-valid', 'is-invalid');
+        });
+        // Hata mesajlarını temizle
+        form.querySelectorAll('.invalid-feedback').forEach(el => {
+            el.textContent = '';
+        });
+    };
+
+    // Modal footer'a ekle
+    const modalFooter = document.querySelector('#showCustomerModal .modal-footer');
+    if (modalFooter) {
+        modalFooter.insertBefore(resetBtn, modalFooter.firstChild);
     }
 }
