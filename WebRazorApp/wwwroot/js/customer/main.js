@@ -159,16 +159,14 @@ function displayCustomers(data) {
     data.items.forEach(customer => {
         const row = document.createElement('tr');
         row.innerHTML = `
+       
             <td>${customer.id}</td>
             <td>${customer.firstName} ${customer.lastName}</td>
             <td>${customer.email}</td>
             <td>${customer.company}</td>
             <td>${customer.city}</td>
             <td>${customer.country}</td>
-            <td>${formatMoney(customer.debt)}</td>
-            <td>${formatMoney(customer.credit)}</td>
-            <td>${formatMoney(customer.balanceDebt)}</td>
-            <td>${formatMoney(customer.balanceCredit)}</td>
+            
             <td class="text-center">
                 <button class="btn btn-info btn-sm" onclick="showCustomer(${customer.id})">
                     <i class="fas fa-eye"></i>
@@ -622,6 +620,7 @@ async function editCustomer(id) {
 async function saveCustomer() {
     showLoading();
     try {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
         const form = document.getElementById('editCustomerForm');
         const formData = new FormData(form);
         const customer = Object.fromEntries(formData.entries());
@@ -650,7 +649,8 @@ async function saveCustomer() {
         const response = await fetch(`${API_CONFIG.baseUrl}${API_CONFIG.endpoints.customer}/${customer.id}`, {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken  // CSRF token eklendi
             },
             body: JSON.stringify(customer)
         });
@@ -1079,4 +1079,14 @@ function formatMoneyForCSV(value) {
         .replace(/\./g, '*')  // Binlik ayracını geçici olarak yıldız yap
         .replace(/,/g, '.')   // Ondalık ayracını nokta yap
         .replace(/\*/g, ','); // Binlik ayracını virgül yap
+}
+// Yardımcı fonksiyon
+function sanitizeInput(text) {
+    if (!text) return '';
+    return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
 }
