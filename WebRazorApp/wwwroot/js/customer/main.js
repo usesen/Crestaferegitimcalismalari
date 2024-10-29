@@ -427,3 +427,187 @@ async function showCustomer(id) {
         }
     }
 }
+
+async function editCustomer(id) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/AngularCustomer/${id}`);
+
+        if (!response.ok) {
+            throw new Error('Müşteri bilgileri alınamadı!');
+        }
+
+        const customer = await response.json();
+
+        const content = `
+    <div class="container-fluid p-0">
+        <form id="editCustomerForm" class="row g-3">
+            <!-- Kişisel Bilgiler -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label custom-label">Ad</label>
+                    <input type="text" class="form-control" name="firstName" value="${customer.firstName || ''}" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label custom-label">Soyad</label>
+                    <input type="text" class="form-control" name="lastName" value="${customer.lastName || ''}" required>
+                </div>
+            </div>
+
+            <!-- İletişim Bilgileri -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label custom-label">Email</label>
+                    <input type="email" class="form-control" name="email" value="${customer.email || ''}" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label custom-label">Telefon</label>
+                    <input type="tel" class="form-control" name="phone" value="${customer.phone || ''}">
+                </div>
+            </div>
+
+            <!-- İş Bilgileri -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label custom-label">Şirket</label>
+                    <input type="text" class="form-control" name="company" value="${customer.company || ''}">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label custom-label">Pozisyon</label>
+                    <input type="text" class="form-control" name="position" value="${customer.position || ''}">
+                </div>
+            </div>
+
+            <!-- Adres Bilgileri -->
+            <div class="col-12">
+                <div class="form-group">
+                    <label class="form-label custom-label">Adres</label>
+                    <textarea class="form-control" name="address" rows="2">${customer.address || ''}</textarea>
+                </div>
+            </div>
+
+            <!-- Şehir, Ülke, Posta Kodu -->
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label custom-label">Şehir</label>
+                    <input type="text" class="form-control" name="city" value="${customer.city || ''}">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label custom-label">Ülke</label>
+                    <input type="text" class="form-control" name="country" value="${customer.country || ''}">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label custom-label">Posta Kodu</label>
+                    <input type="text" class="form-control" name="postalCode" value="${customer.postalCode || ''}">
+                </div>
+            </div>
+
+             <!-- Finansal Bilgiler -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label custom-label">Borç</label>
+                    <input type="number" step="0.01" class="form-control" name="debt" value="${customer.debt || 0}">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label custom-label">Alacak</label>
+                    <input type="number" step="0.01" class="form-control" name="credit" value="${customer.credit || 0}">
+                </div>
+            </div>
+
+            <!-- Bakiye Borç ve Bakiye Alacak -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label custom-label">Bakiye Borç</label>
+                    <input type="number" step="0.01" class="form-control" name="balanceDebt" value="${customer.balanceDebt || 0}">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label custom-label">Bakiye Alacak</label>
+                    <input type="number" step="0.01" class="form-control" name="balanceCredit" value="${customer.balanceCredit || 0}">
+                </div>
+            </div>
+
+            <!-- Notlar -->
+            <div class="col-12">
+                <div class="form-group">
+                    <label class="form-label custom-label">Notlar</label>
+                    <textarea class="form-control" name="notes" rows="3">${customer.notes || ''}</textarea>
+                </div>
+            </div>
+
+            <input type="hidden" name="id" value="${customer.id}">
+        </form>
+    </div>`;
+
+        // Modal başlığını güncelle
+        const modalTitle = document.querySelector('#showCustomerModal .modal-title');
+        modalTitle.innerHTML = `<i class="fas fa-edit me-2"></i>Müşteri Düzenle (#${customer.id})`;
+
+        // Modal footer'ı güncelle
+        const modalFooter = document.querySelector('#showCustomerModal .modal-footer');
+        modalFooter.innerHTML = `
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <i class="fas fa-times me-2"></i>İptal
+            </button>
+            <button type="button" class="btn btn-primary" onclick="saveCustomer()">
+                <i class="fas fa-save me-2"></i>Kaydet
+            </button>
+        `;
+
+        // İçeriği modal'a ekle
+        const modalBody = document.querySelector('#showCustomerModal .modal-body');
+        modalBody.innerHTML = content;
+
+        // Modalı göster
+        customerModal.show();
+
+    } catch (error) {
+        console.error('Error:', error);
+        showAlert('error', 'Müşteri bilgileri yüklenirken bir hata oluştu!');
+    }
+}
+async function saveCustomer() {
+    try {
+        const form = document.getElementById('editCustomerForm');
+        const formData = new FormData(form);
+        const customer = Object.fromEntries(formData.entries());
+
+        // Sayısal değerleri dönüştür
+        customer.debt = parseFloat(customer.debt) || 0;
+        customer.credit = parseFloat(customer.credit) || 0;
+        customer.balanceDebt = parseFloat(customer.balanceDebt) || 0;
+        customer.balanceCredit = parseFloat(customer.balanceCredit) || 0;
+
+        const response = await fetch(`${API_BASE_URL}/api/AngularCustomer/${customer.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(customer)
+        });
+
+        if (!response.ok) {
+            throw new Error('Müşteri güncellenirken bir hata oluştu!');
+        }
+
+        showAlert('success', 'Müşteri başarıyla güncellendi!');
+        customerModal.hide();
+        loadCustomers(currentPage);
+
+    } catch (error) {
+        console.error('Error:', error);
+        showAlert('error', error.message);
+    }
+}
