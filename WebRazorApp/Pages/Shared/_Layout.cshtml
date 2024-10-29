@@ -13,8 +13,27 @@
         <!-- Custom CSS -->
         <link rel="stylesheet" href="~/css/site.css" />
         <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
-        
-   
+
+    @section Styles {
+        <style>
+            .sortable {
+                cursor: pointer;
+                user-select: none;
+            }
+
+                .sortable:hover {
+                    background-color: #f8f9fa;
+                }
+
+                .sortable i {
+                    margin-left: 5px;
+                }
+
+            .fa-sort-up, .fa-sort-down {
+                color: #198754;
+            }
+        </style>
+    }
 </head>
 <body>
     <header>

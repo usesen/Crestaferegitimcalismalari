@@ -225,3 +225,11 @@ footer {
     background-color: rgba(0,0,0,.075);
     cursor: pointer;
 }
+ 
+.custom-label {
+    color: #6c7293; /* Modern gri-mavi */
+    font-size: 0.9rem; /* Biraz daha küçük font */
+    margin-bottom: 0.3rem; /* Label ile input arası mesafe */
+}
+
+ 
