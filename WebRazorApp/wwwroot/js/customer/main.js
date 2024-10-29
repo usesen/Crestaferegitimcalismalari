@@ -559,7 +559,8 @@ async function editCustomer(id) {
         // İçeriği modal'a ekle
         const modalBody = document.querySelector('#showCustomerModal .modal-body');
         modalBody.innerHTML = content;
-
+        // Form validasyonunu aktif et
+        setupFormValidation('editCustomerForm');
         // Modalı göster
         customerModal.show();
 
@@ -746,7 +747,8 @@ function createCustomer() {
     // İçeriği modal'a ekle
     const modalBody = document.querySelector('#showCustomerModal .modal-body');
     modalBody.innerHTML = content;
-
+    // Form validasyonunu aktif et
+    setupFormValidation('createCustomerForm');
     // Modalı göster
     customerModal.show();
 }
