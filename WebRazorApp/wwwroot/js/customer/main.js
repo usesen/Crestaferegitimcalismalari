@@ -574,11 +574,24 @@ async function saveCustomer() {
         const formData = new FormData(form);
         const customer = Object.fromEntries(formData.entries());
 
+        // HTML5 form validasyonu
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+
         // Sayısal değerleri dönüştür
         customer.debt = parseFloat(customer.debt) || 0;
         customer.credit = parseFloat(customer.credit) || 0;
         customer.balanceDebt = parseFloat(customer.balanceDebt) || 0;
         customer.balanceCredit = parseFloat(customer.balanceCredit) || 0;
+
+        // Özel validasyon kuralları
+        const errors = validateCustomerForm(customer);
+        if (errors.length > 0) {
+            errors.forEach(error => showAlert('warning', error));
+            return;
+        }
 
         const response = await fetch(`${API_CONFIG.baseUrl}${API_CONFIG.endpoints.customer}/${customer.id}`, {
             method: 'PUT',
@@ -742,7 +755,7 @@ async function saveNewCustomer() {
     try {
         const form = document.getElementById('createCustomerForm');
 
-        // Form validasyonu
+        // HTML5 form validasyonu
         if (!form.checkValidity()) {
             form.reportValidity();
             return;
@@ -756,6 +769,13 @@ async function saveNewCustomer() {
         customer.credit = parseFloat(customer.credit) || 0;
         customer.balanceDebt = parseFloat(customer.balanceDebt) || 0;
         customer.balanceCredit = parseFloat(customer.balanceCredit) || 0;
+
+        // Özel validasyon kuralları
+        const errors = validateCustomerForm(customer);
+        if (errors.length > 0) {
+            errors.forEach(error => showAlert('warning', error));
+            return;
+        }
 
         const response = await fetch(`${API_CONFIG.baseUrl}${API_CONFIG.endpoints.customer}`, {
             method: 'POST',
