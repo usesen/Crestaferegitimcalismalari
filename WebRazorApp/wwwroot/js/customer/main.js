@@ -14,7 +14,24 @@ let searchParams = {
 let customerModal = null;
 let deleteConfirmModal = null;
 let customerIdToDelete = null;
+// Debounced search - sadece search'i wrap ediyor
+const debouncedSearch = debounce(search, 500);
+// Debounce yardımcı fonksiyonu
+//Debounce, kullanıcı input'a yazarken her tuşa basışta API çağrısı yapmak yerine, kullanıcı yazmayı bitirdikten 
+//belirli bir süre sonra(örneğin 500ms) API çağrısı yapılmasını sağlayan bir tekniktir.
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
 
+ 
 // Arama fonksiyonu
 function search(e) {
     if (e) e.preventDefault();
@@ -58,9 +75,9 @@ function setupEventListeners() {
     const companyInput = document.getElementById('company');
     const countryInput = document.getElementById('country');
 
-    if (firstNameInput) firstNameInput.addEventListener('input', search);
-    if (companyInput) companyInput.addEventListener('input', search);
-    if (countryInput) countryInput.addEventListener('input', search);
+    if (firstNameInput) firstNameInput.addEventListener('input', debouncedSearch);
+    if (companyInput) companyInput.addEventListener('input', debouncedSearch);
+    if (countryInput) countryInput.addEventListener('input', debouncedSearch);
 }
 
 // Tek bir DOMContentLoaded event listener
