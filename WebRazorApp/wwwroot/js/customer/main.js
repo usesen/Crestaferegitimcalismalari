@@ -909,57 +909,7 @@ function addResetButton(formId) {
     submitBtn.parentNode.insertBefore(resetBtn, submitBtn);
 }
 
-// main.js'e ekleyelim
-async function exportToExcel() {
-    try {
-        showLoading();
 
-        // Tüm müşterileri al
-        const response = await fetch(`${API_CONFIG.baseUrl}${API_CONFIG.endpoints.customer}`);
-        if (!response.ok) throw new Error('Veriler alınamadı!');
-        const data = await response.json();
-
-        // Excel için veriyi hazırla
-        const excelData = data.items.map(customer => ({
-            'Ad': customer.firstName,
-            'Soyad': customer.lastName,
-            'Email': customer.email,
-            'Telefon': formatPhone(customer.phone),
-            'Şirket': customer.company || '',
-            'Pozisyon': customer.position || '',
-            'Adres': customer.address || '',
-            'Şehir': customer.city || '',
-            'Ülke': customer.country || '',
-            'Posta Kodu': customer.postalCode || '',
-            'Borç': formatMoney(customer.debt),
-            'Alacak': formatMoney(customer.credit),
-            'Bakiye Borç': formatMoney(customer.balanceDebt),
-            'Bakiye Alacak': formatMoney(customer.balanceCredit),
-            'Notlar': customer.notes || ''
-        }));
-
-        // Excel dosyası oluştur
-        const worksheet = XLSX.utils.json_to_sheet(excelData);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'Müşteriler');
-
-        // Sütun genişliklerini ayarla
-        const maxWidth = 20;
-        worksheet['!cols'] = Object.keys(excelData[0]).map(() => ({ wch: maxWidth }));
-
-        // Dosyayı indir
-        const date = new Date().toISOString().split('T')[0];
-        XLSX.writeFile(workbook, `Müşteriler_${date}.xlsx`);
-
-        showAlert('success', 'Excel dosyası başarıyla indirildi!');
-
-    } catch (error) {
-        console.error('Export error:', error);
-        showAlert('error', 'Excel dosyası oluşturulurken bir hata oluştu!');
-    } finally {
-        hideLoading();
-    }
-}
 
 // Reset butonu ekleme fonksiyonu
 function addResetButton(formId) {
@@ -987,4 +937,107 @@ function addResetButton(formId) {
     if (modalFooter) {
         modalFooter.insertBefore(resetBtn, modalFooter.firstChild);
     }
+}
+
+// CSV Export fonksiyonu
+async function exportToCSV() {
+    try {
+        showLoading();
+
+        const response = await fetch(`${API_CONFIG.baseUrl}${API_CONFIG.endpoints.customer}/getpaged?PageNumber=1&PageSize=1000`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) throw new Error('Veriler alınamadı!');
+        const data = await response.json();
+
+        const headers = [
+            'Ad',
+            'Soyad',
+            'Email',
+            'Telefon',
+            'Şirket',
+            'Pozisyon',
+            'Adres',
+            'Şehir',
+            'Ülke',
+            'Posta Kodu',
+            'Borç',
+            'Alacak',
+            'Bakiye Borç',
+            'Bakiye Alacak',
+            'Notlar'
+        ];
+
+        // CSV satırları oluştur
+        const csvRows = [
+            headers.join(';'), // Virgül yerine noktalı virgül kullanıyoruz
+            ...data.items.map(customer => [
+                customer.firstName || '',
+                customer.lastName || '',
+                customer.email || '',
+                formatPhone(customer.phone) || '',
+                customer.company || '',
+                customer.position || '',
+                customer.address || '',
+                customer.city || '',
+                customer.country || '',
+                customer.postalCode || '',
+                formatMoneyForCSV(customer.debt),
+                formatMoneyForCSV(customer.credit),
+                formatMoneyForCSV(customer.balanceDebt),
+                formatMoneyForCSV(customer.balanceCredit),
+                customer.notes || ''
+            ].join(';'))  // Virgül yerine noktalı virgül kullanıyoruz
+        ];
+
+        // CSV içeriğini oluştur
+        const csvContent = '\ufeff' + csvRows.join('\n'); // BOM ekledik
+
+        // CSV dosyasını indir
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const date = new Date().toISOString().split('T')[0];
+
+        // Tarih ve saat formatını oluştur
+        const now = new Date();
+        const dateStr = now.toISOString()
+            .replace(/T/, '_')     // T yerine alt çizgi koy
+            .replace(/\..+/, '')   // Milisaniyeleri kaldır
+            .replace(/:/g, '-');   // Windows dosya adı uyumluluğu için : yerine -
+
+
+        link.href = URL.createObjectURL(blob);
+        link.download = `Musteriler_${dateStr}.csv`;
+        link.style.display = 'none';
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        showAlert('success', 'CSV dosyası başarıyla indirildi! 📥');
+
+    } catch (error) {
+        console.error('Export error:', error);
+        showAlert('error', 'CSV dosyası oluşturulurken bir hata oluştu! ❌');
+    } finally {
+        hideLoading();
+    }
+}
+// Para formatı için yardımcı fonksiyon
+function formatMoneyForCSV(value) {
+    if (!value) return '0';
+
+    // Sayıyı düzgün formata çevir (1234.56 -> 1.234,56)
+    return Number(value)
+        .toLocaleString('tr-TR', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        })
+        .replace(/\./g, '*')  // Binlik ayracını geçici olarak yıldız yap
+        .replace(/,/g, '.')   // Ondalık ayracını nokta yap
+        .replace(/\*/g, ','); // Binlik ayracını virgül yap
 }
