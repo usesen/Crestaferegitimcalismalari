@@ -614,6 +614,8 @@ async function saveCustomer() {
             form.reportValidity();
             return;
         }
+        // Telefon numarasını temizle
+        customer.phone = cleanPhoneNumber(customer.phone);
 
         // Sayısal değerleri dönüştür
         customer.debt = parseFloat(customer.debt) || 0;
@@ -806,6 +808,13 @@ function createCustomerFormTemplate() {
   `;
 }
 
+// Yardımcı fonksiyonlar
+function cleanPhoneNumber(phone) {
+    // Telefon numarasından tüm özel karakterleri ve boşlukları temizle
+    return phone ? phone.replace(/[^\d]/g, '') : '';
+}
+ 
+
 async function saveNewCustomer() {
     showLoading();
     try {
@@ -819,6 +828,9 @@ async function saveNewCustomer() {
 
         const formData = new FormData(form);
         const customer = Object.fromEntries(formData.entries());
+
+        // Telefon numarasını temizle
+        customer.phone = cleanPhoneNumber(customer.phone);
 
         // Sayısal değerleri dönüştür
         customer.debt = parseFloat(customer.debt) || 0;
