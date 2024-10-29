@@ -944,7 +944,21 @@ async function exportToCSV() {
     try {
         showLoading();
 
-        const response = await fetch(`${API_CONFIG.baseUrl}${API_CONFIG.endpoints.customer}/getpaged?PageNumber=1&PageSize=1000`, {
+        // Mevcut arama parametrelerini kullan
+        const params = new URLSearchParams({
+            PageNumber: 1,
+            PageSize: 1000,
+            SortColumn: currentSort.column,
+            SortDirection: currentSort.direction
+        });
+
+        // Arama parametrelerini ekle
+        if (searchParams.name) params.append('SearchName', searchParams.name);
+        if (searchParams.company) params.append('SearchCompany', searchParams.company);
+        if (searchParams.country) params.append('SearchCountry', searchParams.country);
+
+        // Filtrelenmiş datayı getir
+        const response = await fetch(`${API_CONFIG.baseUrl}${API_CONFIG.endpoints.customer}/getpaged?${params.toString()}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -954,6 +968,13 @@ async function exportToCSV() {
         if (!response.ok) throw new Error('Veriler alınamadı!');
         const data = await response.json();
 
+        // Eğer data boşsa uyarı ver
+        if (!data.items || data.items.length === 0) {
+            showAlert('warning', 'Aktarılacak kayıt bulunamadı!');
+            return;
+        }
+
+        // ... geri kalan export kodu aynı ...
         const headers = [
             'Ad',
             'Soyad',
@@ -972,9 +993,8 @@ async function exportToCSV() {
             'Notlar'
         ];
 
-        // CSV satırları oluştur
         const csvRows = [
-            headers.join(';'), // Virgül yerine noktalı virgül kullanıyoruz
+            headers.join(';'),
             ...data.items.map(customer => [
                 customer.firstName || '',
                 customer.lastName || '',
@@ -991,27 +1011,29 @@ async function exportToCSV() {
                 formatMoneyForCSV(customer.balanceDebt),
                 formatMoneyForCSV(customer.balanceCredit),
                 customer.notes || ''
-            ].join(';'))  // Virgül yerine noktalı virgül kullanıyoruz
+            ].join(';'))
         ];
 
-        // CSV içeriğini oluştur
-        const csvContent = '\ufeff' + csvRows.join('\n'); // BOM ekledik
+        const csvContent = '\ufeff' + csvRows.join('\n');
 
-        // CSV dosyasını indir
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        const date = new Date().toISOString().split('T')[0];
-
-        // Tarih ve saat formatını oluştur
+        // Tarih ve saat ile dosya adı oluştur
         const now = new Date();
         const dateStr = now.toISOString()
-            .replace(/T/, '_')     // T yerine alt çizgi koy
-            .replace(/\..+/, '')   // Milisaniyeleri kaldır
-            .replace(/:/g, '-');   // Windows dosya adı uyumluluğu için : yerine -
+            .replace(/T/, '_')
+            .replace(/\..+/, '')
+            .replace(/:/g, '-');
 
+        // Filtreleme varsa dosya adına ekle
+        let fileName = `Musteriler_${dateStr}`;
+        if (searchParams.name || searchParams.company || searchParams.country) {
+            fileName += '_Filtered';
+        }
+        fileName += '.csv';
 
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = `Musteriler_${dateStr}.csv`;
+        link.download = fileName;
         link.style.display = 'none';
 
         document.body.appendChild(link);
