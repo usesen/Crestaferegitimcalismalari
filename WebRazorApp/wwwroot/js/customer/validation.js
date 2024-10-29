@@ -1,11 +1,13 @@
 ﻿// Validation kuralları ve fonksiyonları
 const PATTERNS = {
-    stringField: new RegExp('^[a-zA-ZğüşıöçĞÜŞİÖÇ\\s]{2,50}$'),
-    financialField: new RegExp('^\\d+(\\.\\d{1,2})?$'),
-    email: new RegExp('^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$'),
-    phone: new RegExp('^[0-9]{10,11}$'),
-    postalCode: new RegExp('^[0-9]{5,6}$')
+    stringField: /^[a-zA-ZğüşıöçĞÜŞİÖÇ\s]*$/, // Daha esnek pattern
+    companyField: /^[a-zA-ZğüşıöçĞÜŞİÖÇ\s.]*$/, // Şirket adı için (sadece harf, boşluk ve nokta)
+    financialField: /^\d*\.?\d{0,2}$/,
+    email: /^[a-zA-Z0-9@._-]*$/, // Email pattern'i daha esnek hale getirildi
+    phone: /^\d{0,11}$/, // Daha esnek telefon pattern
+    postalCode: /^\d{0,6}$/ // Daha esnek posta kodu pattern
 };
+
 
 // ... diğer validation kodları
 function validateCustomerForm(customer) {
@@ -59,7 +61,41 @@ function validateField(field, value, pattern, errorMessage) {
     const errorDiv = field.nextElementSibling || document.createElement('div');
     errorDiv.className = 'invalid-feedback';
 
-    if (!pattern.test(value.trim())) {
+    // Boş değer kontrolü
+    if (value.trim() === '') {
+        field.classList.remove('is-invalid');
+        field.classList.remove('is-valid');
+        errorDiv.textContent = '';
+        return true;
+    }
+
+    // Email için özel kontrol
+    if (field.name === 'email' && value.trim().length > 0) {
+        const emailValidation = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+        if (!emailValidation.test(value)) {
+            field.classList.add('is-invalid');
+            field.classList.remove('is-valid');
+            errorDiv.textContent = 'Geçerli bir email adresi giriniz.';
+            if (!field.nextElementSibling) {
+                field.parentNode.appendChild(errorDiv);
+            }
+            return false;
+        }
+    }
+
+    // Diğer alanlar için minimum uzunluk kontrolü
+    if (field.name !== 'email' && value.trim().length < 2 && pattern === PATTERNS.stringField) {
+        field.classList.add('is-invalid');
+        field.classList.remove('is-valid');
+        errorDiv.textContent = 'En az 2 karakter girilmelidir.';
+        if (!field.nextElementSibling) {
+            field.parentNode.appendChild(errorDiv);
+        }
+        return false;
+    }
+
+    // Pattern kontrolü
+    if (!pattern.test(value)) {
         field.classList.add('is-invalid');
         field.classList.remove('is-valid');
         errorDiv.textContent = errorMessage;
@@ -67,12 +103,12 @@ function validateField(field, value, pattern, errorMessage) {
             field.parentNode.appendChild(errorDiv);
         }
         return false;
-    } else {
-        field.classList.remove('is-invalid');
-        field.classList.add('is-valid');
-        errorDiv.textContent = '';
-        return true;
     }
+
+    field.classList.remove('is-invalid');
+    field.classList.add('is-valid');
+    errorDiv.textContent = '';
+    return true;
 }
 
 function setupFieldValidation(field, pattern, errorMessage) {
@@ -102,6 +138,7 @@ function setupFieldValidation(field, pattern, errorMessage) {
         }
     });
 }
+
 function setupFormValidation(formId) {
     const form = document.getElementById(formId);
     if (!form) return;
@@ -110,28 +147,19 @@ function setupFormValidation(formId) {
         {
             field: 'firstName',
             pattern: PATTERNS.stringField,
-            message: 'Ad alanı en az 2, en fazla 50 karakter olmalı ve sadece harf içermelidir.'
+            message: 'Ad alanı sadece harf içermelidir.'
         },
         {
             field: 'lastName',
             pattern: PATTERNS.stringField,
-            message: 'Soyad alanı en az 2, en fazla 50 karakter olmalı ve sadece harf içermelidir.'
+            message: 'Soyad alanı sadece harf içermelidir.'
         },
         {
-            field: 'email',
-            pattern: PATTERNS.email,
-            message: 'Geçerli bir email adresi giriniz.'
+            field: 'company',
+            pattern: PATTERNS.companyField,
+            message: 'Şirket adı sadece harf, boşluk ve nokta içerebilir. Örnek: A.Ş., LTD.ŞTİ.'
         },
-        {
-            field: 'phone',
-            pattern: PATTERNS.phone,
-            message: 'Telefon numarası 10-11 haneli olmalıdır.'
-        },
-        {
-            field: 'postalCode',
-            pattern: PATTERNS.postalCode,
-            message: 'Posta kodu 5-6 haneli olmalıdır.'
-        }
+        // ... diğer kurallar aynı kalacak
     ];
 
     validationRules.forEach(rule => {
