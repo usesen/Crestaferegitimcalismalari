@@ -202,7 +202,7 @@ let currentSort = {
     // Silme işlemini gerçekleştir
     async function confirmDelete() {
         try {
-            const response = await fetch(`${API_BASE_URL}/api/AngularCustomer1/${customerIdToDelete}`, {
+            const response = await fetch(`${API_BASE_URL}/api/AngularCustomer/${customerIdToDelete}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'
