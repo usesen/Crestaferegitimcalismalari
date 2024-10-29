@@ -49,7 +49,7 @@
                 <div class="col-md-3 text-end">
                     <!-- text-end ile butonları sağa yasla -->
                     <div class="d-flex gap-2 justify-content-end">
-                        <button type="submit" class="btn btn-primary" onclick="search()>
+                        <button type="submit" class="btn btn-primary" onclick="search()">
                             <i class="fas fa-search"></i> Ara
                         </button>
                         <button type="button" class="btn btn-success">
@@ -132,6 +132,31 @@
         </div>
     </div>
 </div>
+<!-- Silme Onay Modalı -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Silme Onayı
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bu kaydı silmek istediğinizden emin misiniz?</p>
+                <p class="mb-0 text-danger">Bu işlem geri alınamaz!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>İptal
+                </button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteButton">
+                    <i class="fas fa-trash me-2"></i>Sil
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- JavaScript kodunu ekleyelim -->
 <script>
 // Global değişkenler
@@ -147,8 +172,100 @@ let currentSort = {
     company: '',
     country: ''
 };
-
  
+    // Global değişken olarak ekleyelim
+    let deleteConfirmModal = null;
+    let customerIdToDelete = null;
+
+    // Sayfa yüklendiğinde
+    document.addEventListener('DOMContentLoaded', () => {
+        // Toastr ayarları
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "3000"
+        };
+        // ... mevcut kodlar ...
+        deleteConfirmModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+
+        // Silme onay butonuna click event ekleyelim
+        document.getElementById('confirmDeleteButton').addEventListener('click', confirmDelete);
+        loadCustomers(1);
+    });
+    // Silme modalını göster
+    function deleteCustomer(id) {
+        console.log('Deleting customer:', id);
+        customerIdToDelete = id;
+        deleteConfirmModal.show();
+    }
+    // Silme işlemini gerçekleştir
+    async function confirmDelete() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/AngularCustomer1/${customerIdToDelete}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                // HTTP durum koduna göre özel mesajlar
+                switch (response.status) {
+                    case 404:
+                        showAlert('error', 'Kayıt bulunamadı! 🔍');
+                        break;
+                    case 400:
+                        showAlert('error', 'Geçersiz istek! ⚠️');
+                        break;
+                    case 401:
+                        showAlert('error', 'Yetkiniz yok! 🔒');
+                        break;
+                    case 403:
+                        showAlert('error', 'Bu işlem için izniniz yok! 🚫');
+                        break;
+                    case 500:
+                        showAlert('error', 'Sunucu hatası! Lütfen tekrar deneyin. ⚡');
+                        break;
+                    default:
+                        showAlert('error', 'Silme işlemi başarısız oldu! ❌');
+                }
+                deleteConfirmModal.hide();
+                return; // İşlemi sonlandır
+            }
+
+            // Modal'ı kapat
+            deleteConfirmModal.hide();
+
+            // Başarılı mesajı göster
+            showAlert('success', 'Kayıt başarıyla silindi! 👍');
+
+            // Tabloyu yenile
+            loadCustomers(currentPage);
+
+        } catch (error) {
+            console.error('Error:', error);
+            showAlert('error', 'Beklenmeyen bir hata oluştu! 🔥');
+            deleteConfirmModal.hide();
+        }
+    }
+
+    function showAlert(type, message) {
+        switch (type) {
+            case 'success':
+                toastr.success(message);
+                break;
+            case 'error':
+                toastr.error(message);
+                break;
+            case 'warning':
+                toastr.warning(message);
+                break;
+            case 'info':
+                toastr.info(message);
+                break;
+        }
+    }
 // Ara butonuna click event ekleyelim
 document.querySelector('button[type="submit"]').addEventListener('click', function() {
     searchParams = {
@@ -504,4 +621,11 @@ function search() {
             }
         }
     </script>
+     
+    <!-- jQuery (Toastr için gerekli) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+ 
 }
