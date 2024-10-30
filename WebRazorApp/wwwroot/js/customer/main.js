@@ -11,9 +11,10 @@ let searchParams = {
     company: '',
     country: ''
 };
-let customerModal = null;
+
 let deleteConfirmModal = null;
 let customerIdToDelete = null;
+let showCustomerModal = null;
 // Debounced search - sadece search'i wrap ediyor
 const debouncedSearch = debounce(search, 500);
 // Debounce yardımcı fonksiyonu
@@ -83,10 +84,9 @@ function setupEventListeners() {
 // Tek bir DOMContentLoaded event listener
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM yüklendi');
-
+ 
     // Modal'ları initialize et
-    customerModal = new bootstrap.Modal(document.getElementById('showCustomerModal'));
-    deleteConfirmModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+    initializeModals();
 
     // Event listener'ları ekle
     setupEventListeners();
@@ -447,14 +447,25 @@ async function showCustomer(id) {
 
         // Modal başlığını güncelle
         const modalTitle = document.querySelector('#showCustomerModal .modal-title');
-        modalTitle.innerHTML = `<i class="fas fa-user me-2"></i>Müşteri Detayları (#${customer.id})`;
+        if (modalTitle) {
+            modalTitle.innerHTML = `<i class="fas fa-user me-2"></i>Müşteri Detayları (#${customer.id})`;
+        }
 
+        // Modal footer'ı sadece kapat butonu ile güncelle
+        const modalFooter = document.querySelector('#showCustomerModal .modal-footer');
+        if (modalFooter) {
+            modalFooter.innerHTML = `
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Kapat
+                </button>
+            `;
+        }
         // İçeriği modal'a ekle
         const modalBody = document.querySelector('#showCustomerModal .modal-body');
         modalBody.innerHTML = content;
 
         // Modal'ı göster
-        customerModal.show();
+        showCustomerModal.show();
 
     } catch (error) {
         console.error('Error in showCustomer:', error);
@@ -608,7 +619,7 @@ async function editCustomer(id) {
         // Form validasyonunu aktif et
         setupFormValidation('editCustomerForm');
         // Modalı göster
-        customerModal.show();
+        showCustomerModal.show();
 
     } catch (error) {
         console.error('Error:', error);
@@ -661,7 +672,7 @@ async function saveCustomer() {
         }
 
         showAlert('success', 'Müşteri başarıyla güncellendi!');
-        customerModal.hide();
+        showCustomerModal.hide();
         loadCustomers(currentPage);
 
     } catch (error) {
@@ -671,10 +682,33 @@ async function saveCustomer() {
         hideLoading();
     }
 }
+// Modal işlemleri için yardımcı fonksiyonlar
+function initializeModals() {
+    // showCustomerModal initialize
+    const customerModalElement = document.getElementById('showCustomerModal');
+    if (customerModalElement) {
+        showCustomerModal = new bootstrap.Modal(customerModalElement);
+        customerModalElement.addEventListener('hidden.bs.modal', function () {
+            resetModalState();
+        });
+    } else {
+        console.error('Customer modal element not found!');
+    }
 
+    // deleteConfirmModal initialize
+    const deleteModalElement = document.getElementById('deleteConfirmModal');
+    if (deleteModalElement) {
+        deleteConfirmModal = new bootstrap.Modal(deleteModalElement);
+    }
+}
 
 function createCustomer() {
+    // Modal yoksa oluştur
+    if (!showCustomerModal) {
+        initializeModals();
+    }
 
+    resetModalState();
     // Modal başlığını güncelle
     const modalTitle = document.querySelector('#showCustomerModal .modal-title');
     if (modalTitle) {
@@ -685,7 +719,7 @@ function createCustomer() {
     const modalFooter = document.querySelector('#showCustomerModal .modal-footer');
     if (modalFooter) {
         modalFooter.innerHTML = `
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="resetModalState()">
                 <i class="fas fa-times me-2"></i>İptal
             </button>
             <button type="button" class="btn btn-success" onclick="saveNewCustomer()">
@@ -693,7 +727,7 @@ function createCustomer() {
             </button>
         `;
     }
-
+ 
     // İçeriği modal'a ekle
     const modalBody = document.querySelector('#showCustomerModal .modal-body');
     if (modalBody) {
@@ -707,7 +741,7 @@ function createCustomer() {
     addResetButton('createCustomerForm');
 
     // Modalı göster
-    customerModal.show();
+    showCustomerModal.show();
 }
 
 // Form şablonunu ayrı bir fonksiyon olarak tanımlayalım
@@ -844,8 +878,20 @@ async function saveNewCustomer() {
         }
 
         const formData = new FormData(form);
-        const customer = Object.fromEntries(formData.entries());
+       // const customer = Object.fromEntries(formData.entries());
+        const customer = {};
 
+        // Her bir form alanını sanitize et
+        for (let [key, value] of formData.entries()) {
+            // Para alanları hariç her şeyi sanitize et
+            if (!['debt', 'credit', 'balanceDebt', 'balanceCredit'].includes(key)) {
+                customer[key] = sanitizeInput(value);
+            } else {
+                customer[key] = value;
+            }
+        }
+
+        console.log('Sanitized customer data:', customer);
         // Telefon numarasını temizle
         customer.phone = cleanPhoneNumber(customer.phone);
 
@@ -875,7 +921,7 @@ async function saveNewCustomer() {
         }
 
         showAlert('success', 'Müşteri başarıyla eklendi!');
-        customerModal.hide();
+        showCustomerModal.hide();
         loadCustomers(currentPage);
 
     } catch (error) {
@@ -1080,13 +1126,53 @@ function formatMoneyForCSV(value) {
         .replace(/,/g, '.')   // Ondalık ayracını nokta yap
         .replace(/\*/g, ','); // Binlik ayracını virgül yap
 }
-// Yardımcı fonksiyon
+ 
+// Daha güçlü bir sanitize fonksiyonu
 function sanitizeInput(text) {
     if (!text) return '';
-    return text
+
+    // HTML özel karakterleri dönüştür
+    const escaped = text
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
+        .replace(/'/g, '&#039;')
+        .replace(/javascript:/gi, '')  // javascript: protokolünü engelle
+        .replace(/data:/gi, '')        // data: protokolünü engelle
+        .replace(/\bon\w+\s*=/gi, ''); // on* event handler'ları engelle
+
+    return escaped;
+}
+function resetModalState() {
+    // Form'u temizle
+    const form = document.getElementById('createCustomerForm');
+    if (form) {
+        form.reset();
+    }
+
+    // Validation göstergelerini temizle
+    const inputs = form?.querySelectorAll('.form-control');
+    inputs?.forEach(input => {
+        input.classList.remove('is-valid', 'is-invalid');
+    });
+
+    // Hata mesajlarını temizle
+    const errorMessages = form?.querySelectorAll('.invalid-feedback');
+    errorMessages?.forEach(error => {
+        error.textContent = '';
+    });
+
+    // Modal başlığını sıfırla
+    const modalTitle = document.querySelector('#showCustomerModal .modal-title');
+    if (modalTitle) {
+        modalTitle.textContent = 'Yeni Müşteri';
+    }
+
+    // Modal butonlarını sıfırla
+    const saveButton = document.querySelector('#showCustomerModal .btn-primary');
+    if (saveButton) {
+        saveButton.textContent = 'Kaydet';
+        saveButton.onclick = saveNewCustomer;
+    }
 }
