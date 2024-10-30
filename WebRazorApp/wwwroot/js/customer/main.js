@@ -877,17 +877,24 @@ async function saveNewCustomer() {
             return;
         }
 
-        const formData = new FormData(form);
-       // const customer = Object.fromEntries(formData.entries());
-        const customer = {};
+        //const formData = new FormData(form); eskisi
+        // const customer = Object.fromEntries(formData.entries()); eskisi 
+        // Form verilerini topla ve temizle
+        const formData = new FormData();
+        // Görünür input'ları topla
+        form.querySelectorAll('input:not([style*="display:none"]), select, textarea').forEach(element => {
+            const originalName = formManager.getOriginalName(element.name);
+            if (originalName) {
+                formData.append(originalName, element.value);
+            }
+        });
 
-        // Her bir form alanını sanitize et
+  
+        // Form verilerini objeye dönüştür
+        const customer = {};
         for (let [key, value] of formData.entries()) {
-            // Para alanları hariç her şeyi sanitize et
-            if (!['debt', 'credit', 'balanceDebt', 'balanceCredit'].includes(key)) {
+            if (!key.includes('fake_')) {  // Sahte input'ları atla
                 customer[key] = sanitizeInput(value);
-            } else {
-                customer[key] = value;
             }
         }
 
@@ -1175,4 +1182,221 @@ function resetModalState() {
         saveButton.textContent = 'Kaydet';
         saveButton.onclick = saveNewCustomer;
     }
+}
+// Mapping objesi oluşturalım ve bunu closure içinde saklayalım
+const createFormManager = () => {
+    const fieldMap = new Map();
+
+    return {
+        generateFieldName: (originalName) => {
+            const randomSuffix = Date.now();
+            const randomStr = Math.random().toString(36).substring(7);
+            const encodedName = btoa(originalName); // Base64 encoding
+            const fieldName = `field_${randomSuffix}_${randomStr}`;
+            fieldMap.set(fieldName, originalName);
+            return fieldName;
+        },
+
+        getOriginalName: (fieldName) => {
+            return fieldMap.get(fieldName);
+        },
+
+        clearMapping: () => {
+            fieldMap.clear();
+        }
+    };
+};
+// Form manager'ı oluştur
+const formManager = createFormManager();
+function createCustomerFormTemplate() {
+    return `
+      <div class="container-fluid p-0">
+        <form id="createCustomerForm" class="row g-3" autocomplete="off">
+            <!-- Kişisel Bilgiler -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label custom-label">Ad</label>
+                    <input type="text" 
+                           class="form-control" 
+                           name="${formManager.generateFieldName('firstName')}" 
+                           autocomplete="new-password"
+                           autocapitalize="off"
+                           required>
+                    <input type="text" style="display:none">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label custom-label">Soyad</label>
+                    <input type="text" 
+                           class="form-control" 
+                           name="${formManager.generateFieldName('lastName')}" 
+                           autocomplete="new-password"
+                           autocapitalize="off"
+                           required>
+                    <input type="text" style="display:none">
+                </div>
+            </div>
+
+            <!-- İletişim Bilgileri -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label custom-label">Email</label>
+                    <input type="email" 
+                           class="form-control" 
+                           name="${formManager.generateFieldName('email')}" 
+                           autocomplete="new-password"
+                           autocapitalize="off"
+                           required>
+                    <input type="text" style="display:none">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label custom-label">Telefon</label>
+                    <input type="tel" 
+                           class="form-control" 
+                           name="${formManager.generateFieldName('phone')}" 
+                           autocomplete="new-password"
+                           autocapitalize="off">
+                    <input type="text" style="display:none">
+                </div>
+            </div>
+
+            <!-- İş Bilgileri -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label custom-label">Şirket</label>
+                    <input type="text" 
+                           class="form-control" 
+                           name="${formManager.generateFieldName('company')}" 
+                           autocomplete="new-password"
+                           autocapitalize="off">
+                    <input type="text" style="display:none">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label custom-label">Pozisyon</label>
+                    <input type="text" 
+                           class="form-control" 
+                           name="${formManager.generateFieldName('position')}" 
+                           autocomplete="new-password"
+                           autocapitalize="off">
+                    <input type="text" style="display:none">
+                </div>
+            </div>
+
+            <!-- Adres Bilgileri -->
+            <div class="col-12">
+                <div class="form-group">
+                    <label class="form-label custom-label">Adres</label>
+                    <textarea class="form-control" 
+                              name="${formManager.generateFieldName('address')}" 
+                              autocomplete="new-password"
+                              rows="2"></textarea>
+                    <input type="text" style="display:none">
+                </div>
+            </div>
+
+            <!-- Şehir, Ülke, Posta Kodu -->
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label custom-label">Şehir</label>
+                    <input type="text" 
+                           class="form-control" 
+                           name="${formManager.generateFieldName('city')}" 
+                           autocomplete="new-password"
+                           autocapitalize="off">
+                    <input type="text" style="display:none">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label custom-label">Ülke</label>
+                    <input type="text" 
+                           class="form-control" 
+                           name="${formManager.generateFieldName('country')}" 
+                           autocomplete="new-password"
+                           autocapitalize="off">
+                    <input type="text" style="display:none">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label custom-label">Posta Kodu</label>
+                    <input type="text" 
+                           class="form-control" 
+                           name="${formManager.generateFieldName('postalCode')}" 
+                           autocomplete="new-password"
+                           autocapitalize="off">
+                    <input type="text" style="display:none">
+                </div>
+            </div>
+
+            <!-- Finansal Bilgiler -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label custom-label">Borç</label>
+                    <input type="number" 
+                           step="0.01" 
+                           class="form-control" 
+                           name="${formManager.generateFieldName('debt')}" 
+                           value="0"
+                           autocomplete="new-password">
+                    <input type="text" style="display:none">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label custom-label">Alacak</label>
+                    <input type="number" 
+                           step="0.01" 
+                           class="form-control" 
+                           name="${formManager.generateFieldName('credit')}" 
+                           value="0"
+                           autocomplete="new-password">
+                    <input type="text" style="display:none">
+                </div>
+            </div>
+
+            <!-- Bakiye Borç ve Bakiye Alacak -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label custom-label">Bakiye Borç</label>
+                    <input type="number" 
+                           step="0.01" 
+                           class="form-control" 
+                           name="${formManager.generateFieldName('balanceDebt')}" 
+                           value="0"
+                           autocomplete="new-password">
+                    <input type="text" style="display:none">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label custom-label">Bakiye Alacak</label>
+                    <input type="number" 
+                           step="0.01" 
+                           class="form-control" 
+                           name="${formManager.generateFieldName('balanceCredit')}" 
+                           value="0"
+                           autocomplete="new-password">
+                    <input type="text" style="display:none">
+                </div>
+            </div>
+
+            <!-- Notlar -->
+            <div class="col-12">
+                <div class="form-group">
+                    <label class="form-label custom-label">Notlar</label>
+                    <textarea class="form-control" 
+                              name="${formManager.generateFieldName('notes')}" 
+                              autocomplete="new-password"
+                              rows="3"></textarea>
+                    <input type="text" style="display:none">
+                </div>
+            </div>
+        </form>
+    </div>`;
 }
