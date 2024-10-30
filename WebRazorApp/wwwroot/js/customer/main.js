@@ -79,6 +79,33 @@ function setupEventListeners() {
     if (firstNameInput) firstNameInput.addEventListener('input', debouncedSearch);
     if (companyInput) companyInput.addEventListener('input', debouncedSearch);
     if (countryInput) countryInput.addEventListener('input', debouncedSearch);
+    // Temizleme ikonları için event listener'lar
+    document.querySelectorAll('.clear-icon').forEach(icon => {
+        icon.addEventListener('click', function () {
+            const input = this.parentElement.querySelector('.form-control');
+            if (input) {
+                input.value = '';
+                input.focus();
+                // Arama işlemini tetikle
+                debouncedSearch();
+            }
+        });
+    });
+    // Input değişikliklerini izle
+    document.querySelectorAll('.search-group .form-control').forEach(input => {
+        input.addEventListener('input', function () {
+            const clearIcon = this.parentElement.querySelector('.clear-icon');
+            if (clearIcon) {
+                clearIcon.style.display = this.value ? 'block' : 'none';
+            }
+        });
+
+        // Sayfa yüklendiğinde mevcut değerlere göre ikonları göster/gizle
+        const clearIcon = input.parentElement.querySelector('.clear-icon');
+        if (clearIcon) {
+            clearIcon.style.display = input.value ? 'block' : 'none';
+        }
+    });
 }
 
 // Tek bir DOMContentLoaded event listener
