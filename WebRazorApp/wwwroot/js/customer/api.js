@@ -1,16 +1,6 @@
-﻿// API yapılandırması
-const API_CONFIG = {
-    baseUrl: '/api',
-    endpoints: {
-        customer: '/customers'
-    }
-};
-
-// API işlemleri için sınıf
-class CustomerAPI {
+﻿class CustomerAPI {
     static async getCustomers(params) {
-        const url = `${API_CONFIG.baseUrl}${API_CONFIG.endpoints.customer}/getpaged?${params.toString()}`;
-        const response = await fetch(url);
+        const response = await fetch(`${API_CONFIG.baseUrl}${API_CONFIG.endpoints.customer}/getpaged?${params.toString()}`);
         if (!response.ok) {
             throw new Error('Veriler yüklenirken bir hata oluştu');
         }
@@ -28,9 +18,7 @@ class CustomerAPI {
     static async createCustomer(customerData) {
         const response = await fetch(`${API_CONFIG.baseUrl}${API_CONFIG.endpoints.customer}`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(customerData)
         });
         if (!response.ok) {
@@ -42,9 +30,7 @@ class CustomerAPI {
     static async updateCustomer(id, customerData) {
         const response = await fetch(`${API_CONFIG.baseUrl}${API_CONFIG.endpoints.customer}/${id}`, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(customerData)
         });
         if (!response.ok) {
@@ -59,6 +45,14 @@ class CustomerAPI {
         });
         if (!response.ok) {
             throw new Error('Müşteri silinirken bir hata oluştu!');
+        }
+        return response.json();
+    }
+
+    static async exportCustomers(params) {
+        const response = await fetch(`${API_CONFIG.baseUrl}${API_CONFIG.endpoints.customer}/getpaged?${params.toString()}`);
+        if (!response.ok) {
+            throw new Error('Veriler alınamadı!');
         }
         return response.json();
     }
