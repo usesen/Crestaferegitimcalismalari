@@ -37,7 +37,7 @@ body {
 }
 
     .navbar-item a {
-        color: #fff;
+        color: #5e0202;
         text-decoration: none;
         padding: 0.5rem 1rem;
         transition: background-color 0.3s;
@@ -45,10 +45,28 @@ body {
 
         .navbar-item a:hover {
             background-color: #555 !important; /* Arka plan rengini sabitle */
-            color: #fff !important; /* Metin rengini sabitle */
+            color: #5e0202 !important; /* Metin rengini sabitle */
             border-radius: 5px;
         }
+/* Navbar brand için özel stil */
+.navbar-light .navbar-brand,
+.navbar-brand {
+    color: #2c3e50 !important; /* Koyu mavi-gri ton */
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
 
+    .navbar-light .navbar-brand:hover,
+    .navbar-brand:hover {
+        color: #34495e !important; /* Hover durumunda biraz daha koyu */
+    }
+
+/* Kullanıcı adı için stil */
+.navbar-nav .me-3,
+#login-name {
+    color: #2c3e50 !important;
+    font-weight: 500;
+}
 /* Altbilgi (footer) stili */
 footer {
     background-color: #f1f1f1;
@@ -304,3 +322,4 @@ footer {
 .search-group:hover .input-group-text {
     border-color: #86b7fe;
 }
+
